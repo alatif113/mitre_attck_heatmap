@@ -1,0 +1,41 @@
+<form class="splunk-formatter-section" section-label="Layout">
+    <splunk-control-group label="Sort Key" help="">
+        <splunk-radio-input name="{{VIZ_NAMESPACE}}.sortKey" value="name">
+            <option value="name">Name</option>
+            <option value="id">ID</option>
+            <option value="percent">Percent</option>
+        </splunk-radio-input>
+    </splunk-control-group>
+    <splunk-control-group label="Sort Order" help="">    
+        <splunk-radio-input name="{{VIZ_NAMESPACE}}.sortOrder" value="asc">
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+        </splunk-radio-input>
+    </splunk-control-group>
+    <splunk-control-group label="Legend Title" help="">    
+        <splunk-text-input name="{{VIZ_NAMESPACE}}.legendTitle" value="">
+        </splunk-text-input>
+    </splunk-control-group>
+</form>
+<form class="splunk-formatter-section" section-label="Color">
+    <splunk-control-group label="Lower Bound" help="">
+        <splunk-color-picker name="{{VIZ_NAMESPACE}}.startColor" value="#dc4e41">
+        </splunk-color-picker>
+    </splunk-control-group>
+    <splunk-control-group label="Midpoint" help="">
+        <splunk-color-picker name="{{VIZ_NAMESPACE}}.midColor" value="#F7BC38">
+        </splunk-color-picker>
+    </splunk-control-group>
+    <splunk-control-group label="Upper Bound" help="">
+        <splunk-color-picker name="{{VIZ_NAMESPACE}}.endColor" value="#F8696B">
+        </splunk-color-picker>
+    </splunk-control-group>
+    <splunk-control-group label="Lower Bound" help="">
+        <splunk-text-input name="{{VIZ_NAMESPACE}}.startVal" value="0">
+        </splunk-text-input>
+    </splunk-control-group>
+    <splunk-control-group label="Upper Bound" help="">
+        <splunk-text-input name="{{VIZ_NAMESPACE}}.endVal" value="100">
+        </splunk-text-input>
+    </splunk-control-group>
+</form>

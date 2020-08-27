@@ -1,0 +1,11 @@
+[lookups/mitre_techniques.csv]
+export = system
+owner = admin
+version = 7.3.1
+modtime = 1581653909.791370000
+
+[lookups/mitre_tactics.csv]
+export = system
+owner = admin
+version = 7.3.1
+modtime = 1581811191.453814000

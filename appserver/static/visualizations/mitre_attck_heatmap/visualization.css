@@ -1,0 +1,206 @@
+/*
+ * CSS rules for visualization.
+ * Class namespacing is good practice.
+ */
+.mitre-container {
+    line-height: normal !important;
+    padding: 20px;
+    padding-right: 10px;
+    box-sizing: border-box;
+}
+
+.mitre-col {
+    float: left;
+    width: 8.3%;
+    padding-right: 10px;
+    position: relative;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.mitre-name {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.mitre-count {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.mitre-desc {
+    font-size: 14px;
+}
+
+.mitre-tactic {
+    cursor: pointer;
+    position: relative;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+.mitre-tactic .mitre-title {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+
+.mitre-tactic .mitre-meter {
+    width: 100%;
+    height: 10px;
+    background: #31373e;
+    border-radius: 10px;
+    position: relative;
+    margin-top: 5px;
+    transition: height 0.15s ease-in-out;
+    overflow: hidden;
+    text-align: left;
+}
+
+.mitre-tactic:hover .mitre-meter {
+    height: 75px;
+    border-radius: 3px;
+}
+
+.mitre-tactic .mitre-meter-fill {
+    position: relative;
+    width: 25%;
+    background: rgb(240, 129, 114);
+    height: 100%;
+    border-radius: 10px;
+    box-sizing: border-box;
+    transition: all 0.15s ease-in-out;
+}
+
+.mitre-tactic:hover .mitre-meter-fill {
+    width: 100% !important;
+    border-radius: 3px;
+}
+
+.mitre-tactic .mitre-count-container {
+    padding: 10px;
+    color: #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+}
+
+.mitre-tactic:hover .mitre-count-container {
+    display: block;
+}
+
+.mitre-technique {
+    font-size: 13px;
+    transition: all 0.15s ease-out;
+    position: relative;
+    cursor: pointer;
+    box-sizing: border-box;
+    margin-top: 1px;
+    margin-right: 1px;
+    color: #fff;
+    display: inline-block;
+}
+
+.mitre-technique.no-data {
+    background-color: #31373e;
+    color: #5e6c7b;
+}
+
+.mitre-technique:hover {
+    outline: 3px solid #fff;
+    z-index: 1000;
+}
+
+.mitre-technique .mitre-title {
+    text-align: center;
+    line-height: 30px;
+    width: 45px;
+    height: 30px;
+}
+
+.mitre-technique .mitre-count-container {
+    position: absolute;
+    background: #000;
+    padding: 10px;
+    left: 50%;
+    top: 100%;
+    margin-left: -75px;
+    margin-top: 10px;
+    visibility: hidden;
+    transition: all 0.15s ease;
+    z-index: 1000;
+    color: #fff;
+    opacity: 0;
+    width: 150px;
+    pointer-events: none;
+    text-align: left;
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+    box-sizing: border-box;
+}
+
+.mitre-technique .mitre-count-container::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    left: 50%;
+    margin-left: -10px;
+    border-left: 10px solid transparent;
+    box-sizing: border-box;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #000;
+    display: block;
+    position: absolute;
+    top: -20px;
+}
+
+.mitre-technique:hover .mitre-count-container {
+    visibility: visible;
+    opacity: 1;
+    margin-top: 22px;
+}
+
+.mitre-color-map {
+    width: 300px;
+    font-size: 12px;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.mitre-color-map-meter {
+    width: 100%;
+    height: 10px;
+    margin: 10px 0px;
+    border-radius: 10px;
+}
+
+.mitre-color-map-text {
+    width: 100%;
+    position: relative;
+}
+
+.mitre-color-map-text span {
+    width: 32.5%;
+    display: inline-block;
+}
+
+.mitre-color-map-start {
+    text-align: left;
+}
+
+.mitre-color-map-mid {
+    text-align: center;
+}
+
+.mitre-color-map-end {
+    text-align: right;
+}
+
