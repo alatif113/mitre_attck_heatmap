@@ -86,9 +86,9 @@ define(["api/SplunkVisualizationBase","api/SplunkVisualizationUtils"], function(
 	            fieldlist.push(field.name);
 	        }); 
 
-	        if(!(fieldlist.includes('id')) || !(fieldlist.includes('name')) || !(fieldlist.includes('tactic')) || !(fieldlist.includes('count')) || !(fieldlist.includes('description'))) {
+	        if(!(fieldlist.includes('id')) || !(fieldlist.includes('name')) || !(fieldlist.includes('tactic')) || !(fieldlist.includes('count'))) {
 	            throw new SplunkVisualizationBase.VisualizationError(
-	                'Search results must have fields id, name, tactic, count, and description.'
+	                'Search results must have fields id, name, tactic, and count'
 	            );
 	        }
 
@@ -117,41 +117,28 @@ define(["api/SplunkVisualizationBase","api/SplunkVisualizationUtils"], function(
 	        colorMap[2].color = this._hexToRgb(endColor);
 
 	        let legendTitle = vizUtils.escapeHtml(config[this.getPropertyNamespaceInfo().propertyNamespace + 'legendTitle']);
-	        let sortKey = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortKey'] || 'id'; 
+	        let sortKey = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortKey'] || 'data-id'; 
 	        let sortOrder = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortOrder'] || 'asc';
 	        
 	        let $content = $(`
-	            <div>
-	                <div class="mitre-col mitre-col-TA0001"></div>
-	                <div class="mitre-col mitre-col-TA0002"></div>
-	                <div class="mitre-col mitre-col-TA0003"></div>
-	                <div class="mitre-col mitre-col-TA0004"></div>
-	                <div class="mitre-col mitre-col-TA0005"></div>
-	                <div class="mitre-col mitre-col-TA0006"></div>
-	                <div class="mitre-col mitre-col-TA0007"></div>
-	                <div class="mitre-col mitre-col-TA0008"></div>
-	                <div class="mitre-col mitre-col-TA0009"></div>
-	                <div class="mitre-col mitre-col-TA0010"></div>
-	                <div class="mitre-col mitre-col-TA0011"></div>
-	                <div class="mitre-col mitre-col-TA0040"></div>
-	            </div>
+	        <div class="mtr-viz-container"></div>
 	        `);
 
 	        $colorMeter = $(`
-	            <div class="mitre-color-map">
-	                <div class="mitre-color-map-title">` + legendTitle + `</div>
-	                <div class="mitre-color-map-meter"></div>
-	                <div class="mitre-color-map-text">
-	                    <span class="mitre-color-map-start">` + startVal + `</span>
-	                    <span class="mitre-color-map-mid">` + (endVal - startVal)/2 + `</span>
-	                    <span class="mitre-color-map-end">` + endVal + `</span>
+	            <div class="mtr-legend">
+	                <div class="mtr-legend-title">` + legendTitle + `</div>
+	                <div class="mtr-legend-meter"></div>
+	                <div class="mtr-legend-val">
+	                    <span>` + startVal + `</span>
+	                    <span>` + (endVal - startVal)/2 + `</span>
+	                    <span>` + endVal + `</span>
 	                </div>
 	            </div>
 	        `);
 
 	        let gradient = '(45deg, ' + startColor + ' 0%, ' + midColor + ' 50%, ' + endColor + ' 100%)';
 
-	        $colorMeter.find('.mitre-color-map-meter')
+	        $colorMeter.find('.mtr-legend-meter')
 	            .css('background', '-moz-linear-gradient' + gradient)
 	            .css('background', '-webkit-linear-gradient' + gradient)
 	            .css('background', 'linear-gradient' + gradient);
@@ -160,68 +147,106 @@ define(["api/SplunkVisualizationBase","api/SplunkVisualizationUtils"], function(
 	            let id = vizUtils.escapeHtml(r.id);
 	            let name = vizUtils.escapeHtml(r.name);
 	            let count = vizUtils.escapeHtml(r.count);
-	            let description = vizUtils.escapeHtml(r.description);
-	            let col_class = '.mitre-col-' + r.tactic;
+	            let tactic = vizUtils.escapeHtml(r.tactic);
 	            let percent = this._getPercent(startVal, endVal, count); 
 	            let colorString = self._getColor(percent);
-	            let $cell = null;
-	            
-	            if(id == r.tactic) {
-	                $cell = $(`
-	                    <div class="mitre-tactic mitre-cell" id="` + id + `" count="` + count + `">
-	                        <div class="mitre-title">` + name + `</div>
-	                        <div class="mitre-meter">
-	                            <div class="mitre-meter-fill"></div>
-	                            <div class="mitre-count-container">
-	                                <div class="mitre-count">` + count + `</div>
-	                                <div class="mitre-desc">` + description + `</div>
+
+	            let $tactic_col = $(`.mtr-tactic-col[data-tactic="${tactic}"]`, $content)[0];
+	            if (!$tactic_col) {
+	                $tactic_col = $(`<div class="mtr-tactic-col" data-tactic="${tactic}">`);
+	                $tactic_col.appendTo($content).append(`
+	                    <div class="mtr-tactic">
+	                        <div class="mtr-tactic-title">${tactic}</div>
+	                        <div class="mtr-meter-container">
+	                            <div class="mtr-meter-fill" style="background: ${colorString}; width: ${percent}%;"></div>
+	                        </div>
+	                        <div class="mtr-stats-container">
+	                            <div class="mtr-total mtr-stat">
+	                                <div class="mtr-stats-label">Total</div>
+	                                <div class="mtr-stats-val">12345</div>
+	                            </div>
+	                            <div class="mtr-count mtr-stat">
+	                                <div class="mtr-stats-label">Count</div>
+	                                <div class="mtr-stats-val">12</div>
+	                            </div>
+	                            <div class="mtr-mean mtr-stat">
+	                                <div class="mtr-stats-label">Mean</div>
+	                                <div class="mtr-stats-val">543</div>
 	                            </div>
 	                        </div>
 	                    </div>
-	                `); 
-
-	                $cell.prependTo($content.find(col_class));
-
-	            } else {
-	                $cell = $(`
-	                    <div class="mitre-technique mitre-cell" id="` + id + `" name="` + name + `" count="` + count + `">
-	                        <div class="mitre-title">` + id + `</div>
-	                        <div class="mitre-count-container">
-	                            <div class="mitre-name">` + name + `</div>
-	                            <div class="mitre-count">` + count + `</div>
-	                            <div class="mitre-desc">` + description + `</div>
-	                        </div>
-	                    </div>
+	                    <div class="mtr-technique-col"></div>
 	                `);
-
-	                if(count) {
-	                    $cell.css('background-color', colorString);
-	                } else {
-	                    $cell.addClass('no-data');
-	                }
-
-	                $cell.appendTo($content.find(col_class));
 	            }
 
-	            $cell.click(function(e) {
+	            if (!count) colorString = "";
+
+	            let $technique = $(`
+	                <div class="mtr-technique" data-id="${id}" data-name="${name}" data-value="${count}">
+	                    <div class="mtr-technique-title">${id}</div>
+	                    <div class="mtr-technique-tooltip">
+	                        <div class="mtr-name"><span>${id}</span> ${name}</div>
+	                        <div class="mtr-val">${count.toLocaleString()}</div>
+	                    </div>
+	                </div>
+	            `);
+
+	            if (count) {
+	                $('.mtr-technique-title', $technique).css('background', colorString);
+	            } else {
+	                $('.mtr-technique-title', $technique).addClass('mtr-null-val');
+	            }
+
+	            $technique.prependTo($('.mtr-technique-col', $tactic_col));
+
+	            $technique.click(function(e) {
 	                self._drilldown(id, e);
 	            });
 
 	        }, this);
 
-	        $content.children().each(function() {
-	            let upperBound = endVal * $('.mitre-technique', this).not('.no-data').size();
-	            let count = $('.mitre-tactic', this).attr('count');
-	            let percent = self._getPercent(startVal, upperBound, count); 
+	        $('.mtr-tactic-col', $content).each(function() {
+	            let sum = 0;
+	            let count = 0;
+	            let total = 0;
+	            $('.mtr-val', this).each(function() {
+	                total += 1;
+	                let val = $(this).text();
+	                if (val && !isNaN(val)) {
+	                    sum += +val;
+	                    count += 1;
+	                }
+	            });
+	            let mean = Math.round(sum / count);
+	            let coverage = Math.round(count / total * 100);
+	            if (!mean) mean = 0;
+	            if (!coverage) coverage = 0;
+
+	            let percent = self._getPercent(startVal, endVal, mean); 
 	            let colorString = self._getColor(percent);
-	            $('.mitre-meter-fill', this).css('width', percent + '%').css('background-color', colorString);
-	    
-	            $elements = self._sortElements($(this).children('.mitre-technique'), sortKey, sortOrder);
-	            $(this).append($elements);
-	        })
+
+	            $('.mtr-meter-fill', this).css('background', colorString).css('width', percent + '%');
+	            $('.mtr-stat', this).css('background', colorString);
+	            $('.mtr-total .mtr-stats-val', this).text(sum.toLocaleString());
+	            $('.mtr-count .mtr-stats-val', this).text(count.toLocaleString() + ` (${coverage}%)`);
+	            $('.mtr-mean .mtr-stats-val', this).text(mean.toLocaleString());
+	        });
+
+	        $('.mtr-technique-col', $content).each(function() {
+	            self._sortElements($(this), sortKey, sortOrder);
+	            $(this).append(`
+	                <div class="mtr-technique mtr-placeholder">
+	                    <div class="mtr-technique-title">T0000</div>
+	                </div>
+	                <div class="mtr-technique mtr-placeholder">
+	                    <div class="mtr-technique-title">T0000</div>
+	                </div>
+	            `);
+	        });
 
 	        $content.appendTo(this.$el);
 	        $colorMeter.appendTo(this.$el);
+
 	    },
 
 	    // Search data params
@@ -283,17 +308,16 @@ define(["api/SplunkVisualizationBase","api/SplunkVisualizationUtils"], function(
 	        return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
 	    },
 
-	    _sortElements: function($elements, key, order) {
+	    _sortElements: function($container, key, order) {
 	        let flip = (order == 'asc') ? 1 : -1;
-
-	        return $elements.sort(function(a, b) {
-	            if (key == 'id' || key == 'name') {
+	        $children = $container.children().sort(function(a, b) {
+	            if (key == 'data-id' || key == 'data-name') {
 	                return flip * ($(a).attr(key) < $(b).attr(key) ? -1 : 1);
 	            }
 
-	            if (key == 'percent') {
-	                aVal = parseInt($(a).attr('count'));
-	                bVal = parseInt($(b).attr('count'));
+	            if (key == 'data-value') {
+	                aVal = parseInt($(a).attr(key));
+	                bVal = parseInt($(b).attr(key));
 	                if (!aVal) aVal = -1;
 	                if (!bVal) bVal = -1;
 	                return flip * (aVal < bVal ? -1 : 1);
@@ -301,6 +325,7 @@ define(["api/SplunkVisualizationBase","api/SplunkVisualizationUtils"], function(
 
 	            return 0;
 	        });
+	        $container.append($children);
 	    },
 
 	    _drilldown: function(id, e) {
