@@ -88,9 +88,9 @@ define(["api/SplunkVisualizationBase","api/SplunkVisualizationUtils"], function(
 	            fieldlist.push(field.name);
 	        }); 
 
-	        if(!(fieldlist.includes('id')) || !(fieldlist.includes('name')) || !(fieldlist.includes('tactic')) || !(fieldlist.includes('count'))) {
+	        if(!(fieldlist.includes('id')) || !(fieldlist.includes('count'))) {
 	            throw new SplunkVisualizationBase.VisualizationError(
-	                'Search results must have fields id, name, tactic, and count'
+	                'Search results must have fields id and count'
 	            );
 	        }
 
@@ -199,7 +199,7 @@ define(["api/SplunkVisualizationBase","api/SplunkVisualizationUtils"], function(
 	            let id = vizUtils.escapeHtml(r.id);
 	            let count = vizUtils.escapeHtml(r.count);
 	            let percent = self._getPercent(startVal, endVal, count); 
-	            let description = vizUtils.escapeHtml(r.description);
+	            let description = vizUtils.escapeHtml(r.description) || "";
 	            let colorString = self._getColor(percent);
 
 	            description = '<p>' + description.split('\\n').join('</p><p>') + '</p>';
