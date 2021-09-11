@@ -118,7 +118,7 @@ return SplunkVisualizationBase.extend({
                                         <div class="mtr-stats-val">12</div>
                                     </div>
                                     <div class="mtr-mean mtr-stat">
-                                        <div class="mtr-stats-label">Average per Techniques</div>
+                                        <div class="mtr-stats-label">Average per Technique</div>
                                         <div class="mtr-stats-val">543</div>
                                     </div>
                                 </div>
