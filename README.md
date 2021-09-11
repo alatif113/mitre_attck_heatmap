@@ -1,4 +1,4 @@
-# MITRE ATT&CK&reg; Heatmap
+# MITRE ATT&CK<sup>&reg;</sup> Heatmap
 
 Custom Visualizations give you new interactive ways to visualize your data during search and investigation, and to better communicate results in dashboards and reports. After installing this app youll find a MITRE ATT&CK Heatmap diagram as an additional item in the visualization picker in Search and Dashboard.
 
@@ -29,6 +29,10 @@ The visualization rquires at least 3 fields to be present within the search outp
 This app is currently unsupported for Internet Explorer.
 
 ## LICENSE from the MITRE Corporation (MITRE)
+
+Both MITRE ATT&CK<sup>&reg;</sup> and ATT&CK<sup>&reg;</sup> are registered trademarks of The MITRE Corporation.
+
+ are registered trademarks of The MITRE Corporation.
 
 The MITRE Corporation (MITRE) hereby grants you a non-exclusive, royalty-free license to use ATT&CK Evaluations for research, development, and commercial purposes. Any copy you make for such purposes is authorized provided that you reproduce MITRE's copyright designation and this license in any such copy.
 
