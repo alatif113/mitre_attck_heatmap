@@ -113,6 +113,7 @@ define(["api/SplunkVisualizationBase","api/SplunkVisualizationUtils"], function(
 	        let endColor = config[this.getPropertyNamespaceInfo().propertyNamespace + 'endColor'] || '#dc4e41';
 	        let startVal = config[this.getPropertyNamespaceInfo().propertyNamespace + 'startVal'] || 0;
 	        let endVal = config[this.getPropertyNamespaceInfo().propertyNamespace + 'endVal'] || 100;
+	        let display = config[this.getPropertyNamespaceInfo().propertyNamespace + 'display'] || 'id';
 
 	        colorMap[0].color = this._hexToRgb(startColor);
 	        colorMap[1].color = this._hexToRgb(midColor);
@@ -174,9 +175,10 @@ define(["api/SplunkVisualizationBase","api/SplunkVisualizationUtils"], function(
 	        })
 
 	        enterpriseAttack.techniques.forEach(function(technique) {
+	            let title = (display == 'id') ?  technique.id : technique.name;
 	            let $technique = $(`
-	                <div class="mtr-technique" data-id="${technique.id}" data-value="">
-	                    <div class="mtr-technique-title">${technique.id}</div>
+	                <div class="mtr-technique mtr-display-${display}" data-id="${technique.id}" data-name="${technique.name}" data-value="">
+	                    <div class="mtr-technique-title">${title}</div>
 	                    <div class="mtr-technique-tooltip">
 	                        <div class="mtr-id">${technique.id}</div>
 	                        <div class="mtr-name">${technique.name}</div>
@@ -350,6 +352,7 @@ define(["api/SplunkVisualizationBase","api/SplunkVisualizationUtils"], function(
 	    }
 	    });
 	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
 
 /***/ }),
 /* 1 */

@@ -1,4 +1,10 @@
 <form class="splunk-formatter-section" section-label="Layout">
+    <splunk-control-group label="Display" help="">    
+        <splunk-radio-input name="{{VIZ_NAMESPACE}}.display" value="id">
+            <option value="id">ID</option>
+            <option value="name">Name</option>
+        </splunk-radio-input>
+    </splunk-control-group>
     <splunk-control-group label="Sort Key" help="">
         <splunk-radio-input name="{{VIZ_NAMESPACE}}.sortKey" value="name">
             <option value="data-name">Name</option>

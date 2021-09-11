@@ -6,3 +6,4 @@ display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.sortOrder 
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.startVal = <float>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.endVal = <float>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.legendTitle = <string>
+display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.display = <string>
