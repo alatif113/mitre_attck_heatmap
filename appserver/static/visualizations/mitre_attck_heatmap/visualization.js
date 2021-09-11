@@ -207,18 +207,13 @@ define(["api/SplunkVisualizationBase","api/SplunkVisualizationUtils"], function(
 	            description = '<p>' + description.split('\\n').join('</p><p>') + '</p>';
 
 	            let $technique = $(`.mtr-technique[data-id="${id}"]`, $content)
-	            
+
 	            $technique.attr('data-value', count);
-	            $('.mtr-val', $technique).text(count);
+	            
 	            $('.mtr-desc', $technique).html(description);
 	            $('.mtr-desc p', $technique).addClass('mtr-desc-p');
-
-	            if (count) {
-	                $('.mtr-technique-title', $technique).css('background', color.background).css('color', color.foreground);
-	            } else {
-	                $('.mtr-technique-title', $technique).addClass('mtr-null-val');
-	            }
-
+	            $('.mtr-val', $technique).text(count);
+	            $('.mtr-technique-title', $technique).css('background', color.background).css('color', color.foreground);
 	        });
 
 	        $('.mtr-tactic-col', $content).each(function() {

@@ -3,7 +3,7 @@
 	--med-gray: #31373E;
 	--light-gray: #3C444D;
 	--text-white: #FFFFFF;
-	--text-gray: rgb(206, 214, 223);
+	--text-gray: rgb(175, 182, 189);
 	--transition: all cubic-bezier(0.65, 0.05, 0.36, 1) 200ms;
 	--font-xlarge: 1.4rem;
 	--font-large: 1.2rem;
@@ -209,10 +209,6 @@
 	white-space: nowrap;
 }
 
-.mtr-technique-title.mtr-null-val {
-	color: var(--text-gray);
-}
-
 .mtr-technique:hover .mtr-technique-title {
 	-webkit-transform: scale(1.2) translateY(-.5em);
 	-ms-transform: scale(1.2) translateY(-.5em);
@@ -239,7 +235,7 @@
 	-webkit-transition: var(--transition);
 	-o-transition: var(--transition);
 	transition: var(--transition);
-	color: var(--text-gray);
+	color: var(--text-white);
 	font-size: var(--font-small);
 	margin-left: 25px;
 	overflow-wrap: break-word;
@@ -292,7 +288,7 @@
 .mtr-name {
 	font-size: var(--font-large);
 	padding-bottom: .5em;
-	border-bottom: 1px solid var(--text-gray);
+	border-bottom: 1px solid var(--text-white);
 	margin-bottom: .5em;
 }
 
@@ -333,5 +329,5 @@
 	-ms-flex-pack: justify;
 	justify-content: space-between;
 	font-size: var(--font-xsmall);
-	color: var(--text-gray);
+	color: var(--text-white);
 }
