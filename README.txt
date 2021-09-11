@@ -1,3 +1,29 @@
+# MITRE ATT&CK Heatmap
+
+Custom Visualizations give you new interactive ways to visualize your data during search and investigation, and to better communicate results in dashboards and reports. After installing this app youll find a MITRE ATT&CK Heatmap diagram as an additional item in the visualization picker in Search and Dashboard.
+
+## Usage
+
+`| table <att&ck_technique_id> <numerical_value> [description]`
+
+OR
+
+`| stats <aggregation> by <att&ck_technique_id>`
+
+The visualization rquires at least 3 fields to be present within the search output:
+1. **att&ck_technique_id**: The ID of a MITRE ATT&CK Technique (e.g. T0001)
+2. **numerical_value / aggregation**: A numerical value or aggregation to associate with the technique (e.g. count, sum, average)
+3. **(Optional) descroption**: An optional description to associate with the technique, to display within a tooltop on mouse hover.  
+
+### Example search query
+
+| stats count AS "Detection Count" first(description) as description by id
+| table id "Detection Count" description
+
+## Support
+
+This app is currently unsupported for Internet Explorer
+
 ## LICENSE from the MITRE Corporation (MITRE)
 
 The MITRE Corporation (MITRE) hereby grants you a non-exclusive, royalty-free license to use ATT&CK Evaluations for research, development, and commercial purposes. Any copy you make for such purposes is authorized provided that you reproduce MITRE's copyright designation and this license in any such copy.

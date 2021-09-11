@@ -221,14 +221,14 @@
 	visibility: hidden;
 }
 
-.mtr-technique.mtr-display-name .mtr-technique-title {
+.mtr-technique.mtr-display-name {
 	overflow: hidden;
 	-o-text-overflow: ellipsis;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
 
-.mtr-technique:hover .mtr-technique-title {
+.mtr-technique:hover {
 	-webkit-transform: scale(1.2) translateY(-.5em);
 	-ms-transform: scale(1.2) translateY(-.5em);
 	transform: scale(1.2) translateY(-.5em);
