@@ -19,8 +19,10 @@ The visualization rquires at least 3 fields to be present within the search outp
 
 ### Example search query
 
-```| stats count AS "Detection Count" first(description) as description by id
-| table id "Detection Count" description```
+```
+| stats count AS "Detection Count" first(description) as description by id
+| table id "Detection Count" description
+```
 
 ## Support
 
