@@ -34,18 +34,13 @@ return SplunkVisualizationBase.extend({
     // Optionally implement to format data returned from search. 
     // The returned object will be passed to updateView as 'data'
     formatData: function(data) {
-        if(data.results.length < 1){
+        if(data.rows.length < 1) {
             return false;
         }
 
-        let fieldlist = [];
-        data.fields.forEach(function(field) {
-            fieldlist.push(field.name);
-        }); 
-
-        if(!(fieldlist.includes('id')) || !(fieldlist.includes('count'))) {
+        if(data.rows[0].length < 2) {
             throw new SplunkVisualizationBase.VisualizationError(
-                'Search results must have fields id and count'
+                'Search results must have at least 2 fields: id, count'
             );
         }
 
@@ -56,7 +51,7 @@ return SplunkVisualizationBase.extend({
     //  'data' will be the data object returned from formatData or from the search
     //  'config' will be the configuration property object
     updateView: function(data, config) {
-        
+
         if (!data) return;
 
         this.$el.empty();
@@ -78,9 +73,7 @@ return SplunkVisualizationBase.extend({
         let sortKey = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortKey'] || 'data-id'; 
         let sortOrder = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortOrder'] || 'asc';
         
-        let $content = $(`
-        <div class="mtr-viz-container"></div>
-        `);
+        let $content = $(`<div class="mtr-viz-container"></div>`);
 
         $colorMeter = $(`
             <div class="mtr-legend">
@@ -111,15 +104,15 @@ return SplunkVisualizationBase.extend({
                                 <div class="mtr-stats-container">
                                     <div class="mtr-total mtr-stat">
                                         <div class="mtr-stats-label">Total</div>
-                                        <div class="mtr-stats-val">12345</div>
+                                        <div class="mtr-stats-val"></div>
                                     </div>
                                     <div class="mtr-count mtr-stat">
                                         <div class="mtr-stats-label">Unique Techniques</div>
-                                        <div class="mtr-stats-val">12</div>
+                                        <div class="mtr-stats-val"></div>
                                     </div>
                                     <div class="mtr-mean mtr-stat">
                                         <div class="mtr-stats-label">Average per Technique</div>
-                                        <div class="mtr-stats-val">543</div>
+                                        <div class="mtr-stats-val"></div>
                                     </div>
                                 </div>
                             </div>
@@ -132,15 +125,7 @@ return SplunkVisualizationBase.extend({
         enterpriseAttack.techniques.forEach(function(technique) {
             let title = (display == 'id') ?  technique.id : technique.name;
             let $technique = $(`
-                <div class="mtr-technique mtr-display-${display}" data-id="${technique.id}" data-name="${technique.name}" data-value="">
-                    <div class="mtr-technique-title">${title}</div>
-                    <div class="mtr-technique-tooltip">
-                        <div class="mtr-id">${technique.id}</div>
-                        <div class="mtr-name">${technique.name}</div>
-                        <div class="mtr-val"></div>
-                        <div class="mtr-desc"></div>
-                    </div>
-                </div>
+                <div class="mtr-technique mtr-display-${display}" data-id="${technique.id}" data-name="${technique.name}" data-value="" data-percent="" data-desc="">${title}</div>
             `);
 
             technique.tactics.forEach(function(tactic) {
@@ -152,32 +137,87 @@ return SplunkVisualizationBase.extend({
             });
         })
 
-        data.results.forEach(function(r) {
-            let id = vizUtils.escapeHtml(r.id);
-            let count = vizUtils.escapeHtml(r.count);
-            let percent = self._getPercent(startVal, endVal, count); 
-            let description = vizUtils.escapeHtml(r.description) || "";
-            let color = self._getColor(percent);
-
-            description = '<p>' + description.split('\\n').join('</p><p>') + '</p>';
-
+        data.rows.forEach(function(r) {
+            let id = vizUtils.escapeHtml(r[0]);
+            let count = vizUtils.escapeHtml(r[1]);
             let $technique = $(`.mtr-technique[data-id="${id}"]`, $content)
 
-            $technique.attr('data-value', count);
+            if (!$technique || count == '' || count == null || isNaN(count)) return;
+
+            let percent = self._getPercent(startVal, endVal, count); 
+            let color = self._getColor(percent);
+            let description = vizUtils.escapeHtml(r[2]) || "";
+
+            if(percent < 2) percent = 2;
             
-            $('.mtr-desc', $technique).html(description);
-            $('.mtr-desc p', $technique).addClass('mtr-desc-p');
-            $('.mtr-val', $technique).text(count);
-            $('.mtr-technique-title', $technique).css('background', color.background).css('color', color.foreground);
+            $technique.attr('data-value', count);
+            $technique.attr('data-percent', percent);
+            $technique.attr('data-desc', description);
+            $technique
+                .css('background', color.background)
+                .css('color', color.foreground);
+        });
+
+        $('.mtr-technique', $content).hover(function() {
+            let id = $(this).attr('data-id');
+            let name = $(this).attr('data-name');
+            let percent = parseInt($(this).attr('data-percent'));
+            let description = $(this).attr('data-desc');
+            let value = parseInt($(this).attr('data-value')) || '';
+            let color = self._getColor(percent);
+
+            if(percent < 2) percent = 2;
+
+            let $tooltip = $(`
+                <div class="mtr-technique-tooltip">
+                    <div class="mtr-id">${id}</div>
+                    <div class="mtr-name">${name}</div>
+                    <div class="mtr-meter-container">
+                        <div class="mtr-meter-fill"></div>
+                    </div>
+                    <div class="mtr-label"></div>
+                    <div class="mtr-val">${value}</div>
+                    <div class="mtr-desc"></div>
+                </div>
+            `);
+
+            let offset = $(this).offset()
+
+            if (offset.left > $(window).width() - 400) {
+                offset.left -= 355;
+                $tooltip.addClass('mtr-technique-tooltip-left');
+            } else {
+                offset.left += $(this).outerWidth() + 25;
+                $tooltip.addClass('mtr-technique-tooltip-right');
+            }
+
+            $tooltip.offset(offset);
+            $tooltip.append('<p>' + description.split('\\n').join('</p><p>') + '</p>');
+            $tooltip.appendTo(document.body);
+            $tooltip[0].offsetWidth = $tooltip[0].offsetWidth
+            $tooltip.addClass('show');
+
+            if (value) {
+                $('.mtr-label', $tooltip).text(data.fields[1].name);
+                $('.mtr-meter-fill', $tooltip)
+                    .css('background', color.background)
+                    .css('width', $(this)
+                    .attr('data-percent') + '%');
+                if (color.luminance < 0.1) {
+                    $('.mtr-meter-container', $tooltip).addClass('dark');
+                }
+            }
+        }, function() {
+            $('.mtr-technique-tooltip').remove();
         });
 
         $('.mtr-tactic-col', $content).each(function() {
             let sum = 0;
             let count = 0;
             let total = 0;
-            $('.mtr-val', this).each(function() {
+            $('.mtr-technique', this).each(function() {
                 total += 1;
-                let val = $(this).text();
+                let val = $(this).attr('data-value');
                 if (val && !isNaN(val)) {
                     sum += +val;
                     count += 1;
@@ -191,20 +231,28 @@ return SplunkVisualizationBase.extend({
             let percent = self._getPercent(startVal, endVal, mean); 
             let color = self._getColor(percent);
 
-            $('.mtr-meter-fill', this).css('background', color.background).css('color', color.foreground).css('width', percent + '%');
-            $('.mtr-stat', this).css('background', color.background).css('color', color.foreground).css('border-color', color.foreground);
-            $('.mtr-total .mtr-stats-val', this).text(sum.toLocaleString());
-            $('.mtr-count .mtr-stats-val', this).text(count.toLocaleString() + ` (${coverage}%)`);
-            $('.mtr-mean .mtr-stats-val', this).text(mean.toLocaleString());
+            if(percent < 2) percent = 2;
+
+            $('.mtr-tactic .mtr-meter-fill', this)
+                .css('background', color.background)
+                .css('color', color.foreground)
+                .css('width', percent + '%');
+            $('.mtr-tactic .mtr-stat', this)
+                .css('background', color.background)
+                .css('color', color.foreground)
+                .css('border-color', color.foreground);
+            $('.mtr-tactic .mtr-total .mtr-stats-val', this).text(sum.toLocaleString());
+            $('.mtr-tactic .mtr-count .mtr-stats-val', this).text(count.toLocaleString() + ` (${coverage}%)`);
+            $('.mtr-tactic .mtr-mean .mtr-stats-val', this).text(mean.toLocaleString());
         });
 
         $('.mtr-technique-col', $content).each(function() {
             self._sortElements($(this), sortKey, sortOrder);
             $(this).append(`
-                <div class="mtr-technique mtr-placeholder">
+                <div class="mtr-technique mtr-placeholder mtr-display-${display}">
                     <div class="mtr-technique-title">T0000</div>
                 </div>
-                <div class="mtr-technique mtr-placeholder">
+                <div class="mtr-technique mtr-placeholder mtr-display-${display}">
                     <div class="mtr-technique-title">T0000</div>
                 </div>
             `);
@@ -218,7 +266,7 @@ return SplunkVisualizationBase.extend({
     // Search data params
     getInitialDataParams: function() {
         return ({
-            outputMode: SplunkVisualizationBase.RAW_OUTPUT_MODE            
+            outputMode: SplunkVisualizationBase.ROW_MAJOR_OUTPUT_MODE            
         });
     },
     
@@ -277,6 +325,7 @@ return SplunkVisualizationBase.extend({
 
         return {
             background: 'rgb(' + [color.r, color.g, color.b].join(',') + ')',
+            luminance: luminance,
             foreground: foreground
         }
     },
