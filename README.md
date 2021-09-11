@@ -8,6 +8,8 @@ This app uses Enterprise ATT&CK v9. For more information visit https://attack.mi
 
 ## Usage
 
+### Search Query
+
 `| table <att&ck_technique_id> <numerical_value> [description]`
 
 OR
