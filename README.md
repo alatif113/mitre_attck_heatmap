@@ -4,6 +4,8 @@ Custom Visualizations give you new interactive ways to visualize your data durin
 
 This app uses Enterprise ATT&CK v9. For more information visit https://attack.mitre.org/versions/v9/
 
+![alt text](https://github.com/alatif113/mitre_attack_heatmap/tree/master/statuc/screenshot.PNG?raw=true)
+
 ## Usage
 
 `| table <att&ck_technique_id> <numerical_value> [description]`
