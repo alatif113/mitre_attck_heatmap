@@ -3,6 +3,6 @@
 access = read : [ * ], write : [ admin ]
 export = system
 
-[views]
+[vizualizations/mitre_attack_heatmap]
 access = read : [ * ], write : [ admin ]
 export = none
