@@ -2,6 +2,8 @@
 
 Custom Visualizations give you new interactive ways to visualize your data during search and investigation, and to better communicate results in dashboards and reports. After installing this app youll find a MITRE ATT&CK Heatmap diagram as an additional item in the visualization picker in Search and Dashboard.
 
+This app uses Enterprise ATT&CK v9. For more information visit https://attack.mitre.org/versions/v9/
+
 ## Usage
 
 `| table <att&ck_technique_id> <numerical_value> [description]`
@@ -17,12 +19,12 @@ The visualization rquires at least 3 fields to be present within the search outp
 
 ### Example search query
 
-| stats count AS "Detection Count" first(description) as description by id
-| table id "Detection Count" description
+```| stats count AS "Detection Count" first(description) as description by id
+| table id "Detection Count" description```
 
 ## Support
 
-This app is currently unsupported for Internet Explorer
+This app is currently unsupported for Internet Explorer.
 
 ## LICENSE from the MITRE Corporation (MITRE)
 
