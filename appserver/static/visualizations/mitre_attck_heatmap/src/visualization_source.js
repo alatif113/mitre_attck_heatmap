@@ -157,7 +157,7 @@ return SplunkVisualizationBase.extend({
             let count = vizUtils.escapeHtml(r.count);
             let percent = self._getPercent(startVal, endVal, count); 
             let description = vizUtils.escapeHtml(r.description) || "";
-            let colorString = self._getColor(percent);
+            let color = self._getColor(percent);
 
             description = '<p>' + description.split('\\n').join('</p><p>') + '</p>';
 
@@ -169,7 +169,7 @@ return SplunkVisualizationBase.extend({
             $('.mtr-desc p', $technique).addClass('mtr-desc-p');
 
             if (count) {
-                $('.mtr-technique-title', $technique).css('background', colorString);
+                $('.mtr-technique-title', $technique).css('background', color.background).css('color', color.foreground);
             } else {
                 $('.mtr-technique-title', $technique).addClass('mtr-null-val');
             }
@@ -194,10 +194,10 @@ return SplunkVisualizationBase.extend({
             if (!coverage) coverage = 0;
 
             let percent = self._getPercent(startVal, endVal, mean); 
-            let colorString = self._getColor(percent);
+            let color = self._getColor(percent);
 
-            $('.mtr-meter-fill', this).css('background', colorString).css('width', percent + '%');
-            $('.mtr-stat', this).css('background', colorString);
+            $('.mtr-meter-fill', this).css('background', color.background).css('color', color.foreground).css('width', percent + '%');
+            $('.mtr-stat', this).css('background', color.background).css('color', color.foreground).css('border-color', color.foreground);
             $('.mtr-total .mtr-stats-val', this).text(sum.toLocaleString());
             $('.mtr-count .mtr-stats-val', this).text(count.toLocaleString() + ` (${coverage}%)`);
             $('.mtr-mean .mtr-stats-val', this).text(mean.toLocaleString());
@@ -276,7 +276,14 @@ return SplunkVisualizationBase.extend({
             g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
             b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
         };
-        return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
+
+        let luminance = ( 0.299 * color.r + 0.587 * color.g + 0.114 * color.b)/255;
+        let foreground = (luminance > 0.65) ? 'rgb(0,0,0)' : 'rgb(255,255,255)';
+
+        return {
+            background: 'rgb(' + [color.r, color.g, color.b].join(',') + ')',
+            foreground: foreground
+        }
     },
 
     _sortElements: function($container, key, order) {
