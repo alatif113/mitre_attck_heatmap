@@ -36,8 +36,6 @@ This app is currently unsupported for Internet Explorer.
 
 Both MITRE ATT&CK<sup>&reg;</sup> and ATT&CK<sup>&reg;</sup> are registered trademarks of The MITRE Corporation.
 
- are registered trademarks of The MITRE Corporation.
-
 The MITRE Corporation (MITRE) hereby grants you a non-exclusive, royalty-free license to use ATT&CK Evaluations for research, development, and commercial purposes. Any copy you make for such purposes is authorized provided that you reproduce MITRE's copyright designation and this license in any such copy.
 
 "(C) 2018 The MITRE Corporation. This work is reproduced and distributed with the permission of The MITRE Corporation."
