@@ -19,12 +19,10 @@
 	display: flex;
 	width: 100%;
 	padding: 2em;
-	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
 .mtr-viz-container * {
-	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	line-height: 1.2em;
 }
@@ -72,7 +70,6 @@
 	margin: .5em 0;
 	overflow: hidden;
 	-webkit-transition: var(--transition-short);
-	-o-transition: var(--transition-short);
 	transition: var(--transition-short);
 	z-index: 20;
 }
@@ -99,14 +96,12 @@
 
 .mtr-tactic .mtr-meter-fill {
     -webkit-transition: var(--transition-short);
-	-o-transition: var(--transition-short);
 	transition: var(--transition-short);
 }
 
 .mtr-technique-tooltip .mtr-meter-fill {
     width: 0%;
 	-webkit-transition: var(--transition-long);
-	-o-transition: var(--transition-long);
 	transition: var(--transition-long);
 }
 
@@ -117,7 +112,6 @@
 .mtr-stats-container {
 	color: var(--text-white);
 	width: 100%;
-	-webkit-box-sizing: content-box;
 	box-sizing: content-box;
 	display: -webkit-box;
 	display: -ms-flexbox;
@@ -132,7 +126,6 @@
 	background: red;
 	padding: .7em 0;
 	-webkit-transition: var(--transition-short);
-	-o-transition: var(--transition-short);
 	transition: var(--transition-short);
 	opacity: 0;
 	border-bottom: 1px solid rgba(255, 255, 255, 0.5);
@@ -140,20 +133,17 @@
 
 .mtr-tactic:hover .mtr-stat {
 	-webkit-transform: scale(1) translateY(0px);
-	-ms-transform: scale(1) translateY(0px);
 	transform: scale(1) translateY(0px);
 	opacity: 1;
 }
 
 .mtr-stat:nth-child(2) {
 	-webkit-transition-delay: 75ms;
-	-o-transition-delay: 75ms;
 	transition-delay: 75ms;
 }
 
 .mtr-stat:nth-child(3) {
 	-webkit-transition-delay: 150ms;
-	-o-transition-delay: 150ms;
 	transition-delay: 150ms;
 	border-bottom: none !important;
 }
@@ -177,7 +167,6 @@
 	justify-content: flex-start;
 	margin-top: 1.8em;
 	-webkit-transition: var(--transition-short);
-	-o-transition: var(--transition-short);
 	transition: var(--transition-short)
 }
 
@@ -194,7 +183,6 @@
 	background: var(--light-gray);
 	text-align: center;
 	-webkit-transition: var(--transition-short);
-	-o-transition: var(--transition-short);
 	transition: var(--transition-short);
 	cursor: pointer;
 	padding: 0.5em;
@@ -223,16 +211,13 @@
 
 .mtr-technique.mtr-display-name {
 	overflow: hidden;
-	-o-text-overflow: ellipsis;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
 
 .mtr-technique:hover {
 	-webkit-transform: scale(1.2) translateY(-.5em);
-	-ms-transform: scale(1.2) translateY(-.5em);
 	transform: scale(1.2) translateY(-.5em);
-	-webkit-box-shadow: 0px 7px 15px rgba(0, 0, 0, 0.3);
 	box-shadow: 0px 7px 15px rgba(0, 0, 0, 0.3);
 	color: var(--text-white);
 }
@@ -246,7 +231,6 @@
 	visibility: hidden;
 	opacity: 0;
 	-webkit-transition: var(--transition-short);
-	-o-transition: var(--transition-short);
 	transition: var(--transition-short);
 	color: var(--text-white);
 	font-size: var(--font-small);
@@ -319,7 +303,6 @@
 	left: 50%;
 	position: absolute;
 	-webkit-transform: translateX(-50%);
-	-ms-transform: translateX(-50%);
 	transform: translateX(-50%);
 }
 
