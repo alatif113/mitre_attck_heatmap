@@ -5,6 +5,7 @@
   "main": "visualization.js",
   "scripts": {
     "babel": "babel build --out-dir src",
+    "terser": "terser src/visualization_source.js --compress --mangle --output src/visualization_source.js",
     "build": "$SPLUNK_HOME/bin/splunk cmd node ./node_modules/webpack/bin/webpack.js",
     "devbuild": "$SPLUNK_HOME/bin/splunk cmd node ./node_modules/webpack/bin/webpack.js --progress",
     "watch": "$SPLUNK_HOME/bin/splunk cmd node ./node_modules/webpack/bin/webpack.js -d --watch --progress"
@@ -15,6 +16,8 @@
     "@babel/cli": "^7.15.4",
     "@babel/core": "^7.15.5",
     "@babel/preset-env": "^7.15.6",
+    "npm-run-all": "^4.1.5",
+    "terser": "^5.8.0",
     "webpack": "^1.12.6"
   },
   "dependencies": {

@@ -7,5 +7,6 @@
         }
       ]
     ],
-    "minified": true
+    "minified": true,
+    "compact": true
   }
