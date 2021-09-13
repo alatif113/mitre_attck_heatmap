@@ -4,6 +4,7 @@
   "description": "Visualization app template. Put a description here.",
   "main": "visualization.js",
   "scripts": {
+    "babel": "babel build --out-dir src",
     "build": "$SPLUNK_HOME/bin/splunk cmd node ./node_modules/webpack/bin/webpack.js",
     "devbuild": "$SPLUNK_HOME/bin/splunk cmd node ./node_modules/webpack/bin/webpack.js --progress",
     "watch": "$SPLUNK_HOME/bin/splunk cmd node ./node_modules/webpack/bin/webpack.js -d --watch --progress"
@@ -11,6 +12,9 @@
   "author": "Splunk",
   "license": "MIT",
   "devDependencies": {
+    "@babel/cli": "^7.15.4",
+    "@babel/core": "^7.15.5",
+    "@babel/preset-env": "^7.15.6",
     "webpack": "^1.12.6"
   },
   "dependencies": {
