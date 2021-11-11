@@ -132,6 +132,8 @@ return SplunkVisualizationBase.extend({
                 $technique_new = $technique.clone()
                 $technique_new.click(function(e) {
                     self._drilldown(technique.id, e);
+                    console.log(technique.id);
+                    console.log($(this).attr('data-id'));
                 });
                 $technique_new.prependTo($(`.mtr-tactic-col[data-tactic="${tactic}"] .mtr-technique-col`, $content));
             });
