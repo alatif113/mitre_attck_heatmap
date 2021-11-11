@@ -129,11 +129,11 @@ return SplunkVisualizationBase.extend({
             `);
 
             technique.tactics.forEach(function(tactic) {
-                $technique.clone().prependTo($(`.mtr-tactic-col[data-tactic="${tactic}"] .mtr-technique-col`, $content));
-            });
-
-            $technique.click(function(e) {
-                self._drilldown(id, e);
+                $technique_new = $technique.clone()
+                $technique_new.click(function(e) {
+                    self._drilldown(technique.id, e);
+                });
+                $technique_new.prependTo($(`.mtr-tactic-col[data-tactic="${tactic}"] .mtr-technique-col`, $content));
             });
         })
 
