@@ -199,7 +199,7 @@ return SplunkVisualizationBase.extend({
             }
 
             $tooltip.offset(offset);
-            $tooltip.append('<p>' + description.split('\\n').join('</p><p>') + '</p>');
+            $('.mtr-desc', $tooltip).append('<p>' + description.split('\\n').join('</p><p>') + '</p>');
             $tooltip.appendTo(document.body);
             $tooltip[0].offsetWidth = $tooltip[0].offsetWidth
             $tooltip.addClass('show');

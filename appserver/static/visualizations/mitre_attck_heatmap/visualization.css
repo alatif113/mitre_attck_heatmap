@@ -251,6 +251,10 @@
 	overflow-wrap: break-word;
 }
 
+.mtr-technique-tooltip p {
+	color: var(--text-white);
+}
+
 .mtr-technique-tooltip-right {
     margin-left: 0.5em;
 }
