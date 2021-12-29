@@ -217,7 +217,7 @@
 }
 
 .mtr-technique:hover {
-	z-index: 1;
+	z-index: 30;
 }
 
 .mtr-placeholder {
