@@ -7,3 +7,4 @@ display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.startVal =
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.endVal = <float>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.legendTitle = <string>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.display = <string>
+display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.theme = <string>

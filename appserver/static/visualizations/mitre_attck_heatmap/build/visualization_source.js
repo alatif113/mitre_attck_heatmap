@@ -38,6 +38,8 @@ return SplunkVisualizationBase.extend({
             return false;
         }
 
+        console.log(data);
+
         if(data.rows[0].length < 2) {
             throw new SplunkVisualizationBase.VisualizationError(
                 'Search results must have at least 2 fields: id, count'
@@ -58,20 +60,22 @@ return SplunkVisualizationBase.extend({
 
         let self = this;
         let colorMap = this.colorMap;
+        let theme = config[this.getPropertyNamespaceInfo().propertyNamespace + 'theme'] || 'light';
         let startColor = config[this.getPropertyNamespaceInfo().propertyNamespace + 'startColor'] || '#53a051';
         let midColor = config[this.getPropertyNamespaceInfo().propertyNamespace + 'midColor'] || '#f8be34';
         let endColor = config[this.getPropertyNamespaceInfo().propertyNamespace + 'endColor'] || '#dc4e41';
         let startVal = config[this.getPropertyNamespaceInfo().propertyNamespace + 'startVal'] || 0;
         let endVal = config[this.getPropertyNamespaceInfo().propertyNamespace + 'endVal'] || 100;
         let display = config[this.getPropertyNamespaceInfo().propertyNamespace + 'display'] || 'id';
+        let legendTitle = vizUtils.escapeHtml(config[this.getPropertyNamespaceInfo().propertyNamespace + 'legendTitle']);
+        let sortKey = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortKey'] || 'data-id'; 
+        let sortOrder = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortOrder'] || 'asc';
+
+        this.$el.attr('class', '').addClass(theme);
 
         colorMap[0].color = this._hexToRgb(startColor);
         colorMap[1].color = this._hexToRgb(midColor);
         colorMap[2].color = this._hexToRgb(endColor);
-
-        let legendTitle = vizUtils.escapeHtml(config[this.getPropertyNamespaceInfo().propertyNamespace + 'legendTitle']);
-        let sortKey = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortKey'] || 'data-id'; 
-        let sortOrder = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortOrder'] || 'asc';
         
         let $content = $(`<div class="mtr-viz-container"></div>`);
 
@@ -129,11 +133,7 @@ return SplunkVisualizationBase.extend({
             `);
 
             technique.tactics.forEach(function(tactic) {
-                $technique_new = $technique.clone()
-                $technique_new.click(function(e) {
-                    self._drilldown(technique.id, e);
-                });
-                $technique_new.prependTo($(`.mtr-tactic-col[data-tactic="${tactic}"] .mtr-technique-col`, $content));
+                $technique.clone().prependTo($(`.mtr-tactic-col[data-tactic="${tactic}"] .mtr-technique-col`, $content));
             });
         })
 
@@ -141,6 +141,13 @@ return SplunkVisualizationBase.extend({
             let id = vizUtils.escapeHtml(r[0]);
             let count = vizUtils.escapeHtml(r[1]);
             let $technique = $(`.mtr-technique[data-id="${id}"]`, $content)
+
+            $technique.click(function(e) {
+                drilldown_data = {}
+                r.forEach((d, i) => { drilldown_data[data.fields[i].name] = d })
+                console.log(drilldown_data)
+                self._drilldown(drilldown_data, e);
+            });
 
             if (!$technique || count == '' || count == null || isNaN(count)) return;
 
@@ -340,8 +347,8 @@ return SplunkVisualizationBase.extend({
             if (key == 'data-value') {
                 aVal = parseInt($(a).attr(key));
                 bVal = parseInt($(b).attr(key));
-                if (!aVal) aVal = -1;
-                if (!bVal) bVal = -1;
+                if (!Number.isInteger(aVal)) aVal = -1;
+                if (!Number.isInteger(bVal)) bVal = -1;
                 return flip * (aVal < bVal ? -1 : 1);
             }
 
@@ -350,10 +357,10 @@ return SplunkVisualizationBase.extend({
         $container.append($children);
     },
 
-    _drilldown: function(id, e) {
+    _drilldown: function(data, e) {
         this.drilldown({
             action: SplunkVisualizationBase.FIELD_VALUE_DRILLDOWN,
-            data: {'id': id}
+            data: data
         }, e);
     }
     });
