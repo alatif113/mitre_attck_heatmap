@@ -197,14 +197,13 @@ return SplunkVisualizationBase.extend({
             }
 
             $('.mtr-desc', $tooltip).append('<p>' + description.split('\\n').join('</p><p>') + '</p>');
-            $tooltip.appendTo($(this));
+            $tooltip.appendTo($(this)).animate({opacity: 1}, 200, 'linear');
 
             if (value) {
                 $('.mtr-label', $tooltip).text(data.fields[1].name);
                 $('.mtr-meter-fill', $tooltip)
                     .css('background', color.background)
-                    .css('width', $(this)
-                    .attr('data-percent') + '%');
+                    .animate({width: $(this).attr('data-percent') + '%'}, 50, 'linear');
                 if (color.luminance < 0.1) {
                     $('.mtr-meter-container', $tooltip).addClass('dark');
                 }

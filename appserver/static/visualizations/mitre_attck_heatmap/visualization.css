@@ -247,13 +247,12 @@
 	background: var(--bg-black);
 	padding: 1em;
 	width: 300px;
-	-webkit-transition: var(--transition-long);
-	transition: var(--transition-long);
 	color: var(--text-white);
 	font-size: var(--font-xsmall);
 	overflow-wrap: break-word;
 	top: 0;
     margin: 0;
+	opacity: 0;
 }
 
 .mtr-technique-tooltip .mtr-name {
