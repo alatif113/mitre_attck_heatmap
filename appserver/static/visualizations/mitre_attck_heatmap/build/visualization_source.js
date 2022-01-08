@@ -100,7 +100,7 @@ return SplunkVisualizationBase.extend({
             .css('background', 'linear-gradient' + gradient);
 
         enterpriseAttack.tactics.forEach(function(tactic) {
-            $tactic_col = $(`<div class="mtr-tactic-col" data-tactic="${tactic.short_name}">`);
+            $tactic_col = $(`<div class="mtr-tactic-col" data-name="${tactic.name}" data-tactic="${tactic.short_name}">`);
             $tactic_col.appendTo($content).append(`
                     <div class="mtr-tactic">
                         <div class="mtr-tactic-title">${tactic.name}</div>
@@ -125,6 +125,11 @@ return SplunkVisualizationBase.extend({
                     </div>
                     <div class="mtr-technique-col"></div>
             `);
+
+            $('.mtr-tactic-title', $content).click(function(e) {
+                drilldown_data = {mtr_tactic: $(this).parents('.mtr-tactic-col').attr('data-name')};
+                self._drilldown(drilldown_data, e);    
+            })
         })
 
         enterpriseAttack.techniques.forEach(function(technique) {
@@ -146,7 +151,8 @@ return SplunkVisualizationBase.extend({
             $technique.click(function(e) {
                 drilldown_data = {}
                 r.forEach((d, i) => { drilldown_data[data.fields[i].name] = d })
-                console.log(drilldown_data)
+                drilldown_data['mtr_name'] = $(this).attr('data-name');
+                drilldown_data['mtr_tactic'] = $(this).parents('.mtr-tactic-col').attr('data-name');
                 self._drilldown(drilldown_data, e);
             });
 
