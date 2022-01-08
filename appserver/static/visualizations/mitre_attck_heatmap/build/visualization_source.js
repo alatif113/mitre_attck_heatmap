@@ -38,8 +38,6 @@ return SplunkVisualizationBase.extend({
             return false;
         }
 
-        console.log(data);
-
         if(data.rows[0].length < 2) {
             throw new SplunkVisualizationBase.VisualizationError(
                 'Search results must have at least 2 fields: id, count'
