@@ -13,6 +13,7 @@
 	--font-medium: 1rem;
 	--font-small: .9rem;
 	--font-xsmall: .8rem;
+	--font-xxsmall: .7rem;
 }
 
 .mtr-viz-container {
@@ -163,7 +164,7 @@
 }
 
 .mtr-stats-val {
-	font-size: var(--font-xlarge);
+	font-size: var(--font-large);
 }
 
 .mtr-technique-col {
@@ -191,7 +192,6 @@
 	flex-grow: 1;
     font-size: var(--font-xsmall);
 	background: var(--bg-gray-light);
-	text-align: center;
 	-webkit-transition: var(--transition-short);
 	transition: var(--transition-short);
 	cursor: pointer;
@@ -220,11 +220,16 @@
 	z-index: 30;
 }
 
+.mtr-technique > span {
+	text-align: center;
+	display: block;
+}
+
 .mtr-placeholder {
 	visibility: hidden;
 }
 
-.mtr-technique.mtr-display-name {
+.mtr-technique.mtr-display-name > span {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -242,13 +247,26 @@
 	background: var(--bg-black);
 	padding: 1em;
 	width: 300px;
-	visibility: hidden;
-	opacity: 0;
-	-webkit-transition: var(--transition-short);
-	transition: var(--transition-short);
+	-webkit-transition: var(--transition-long);
+	transition: var(--transition-long);
 	color: var(--text-white);
-	font-size: var(--font-small);
+	font-size: var(--font-xsmall);
 	overflow-wrap: break-word;
+	top: 0;
+    margin: 0;
+}
+
+.mtr-technique-tooltip .mtr-name {
+	font-size: var(--font-small);
+}
+
+.mtr-technique-tooltip .mtr-val {
+	font-size: var(--font-medium);
+}
+
+.mtr-technique-tooltip .mtr-ref {
+	font-size: var(--font-xxsmall);
+	margin-top: .5em;
 }
 
 .mtr-technique-tooltip p {
@@ -256,58 +274,11 @@
 }
 
 .mtr-technique-tooltip-right {
-    margin-left: 0.5em;
+	left: 100%;
 }
 
 .mtr-technique-tooltip-left {
-    margin-left: -0.5em;
-}
-
-.mtr-technique-tooltip.show {
-    opacity: 1;
-    visibility: visible;
-    margin: 0;
-}
-
-.mtr-technique-tooltip::before {
-	content: "";
-	position: absolute;
-	display: block;
-	width: 0;
-	height: 0;
-	top: 0;
-    border-style: solid;
-}
-
-.mtr-technique-tooltip-right::before {
-    left: unset;
 	right: 100%;
-	border-width: 0 15px 15px 0;
-	border-color: transparent var(--bg-black) transparent transparent;
-}
-
-.mtr-technique-tooltip-left::before {
-    left: 100%;
-	right: unset;
-	border-width: 15px 15px 0 0;
-	border-color: var(--bg-black) transparent transparent transparent;
-}
-
-.mtr-id,
-.mtr-label {
-	font-weight: 600;
-}
-
-.mtr-name {
-	font-size: var(--font-large);
-}
-
-.mtr-val {
-	font-size: var(--font-xlarge);
-}
-
-.mtr-desc {
-    margin-top: .5em;
 }
 
 .dashboard-row .dashboard-panel .panel-body .mtr-desc p {

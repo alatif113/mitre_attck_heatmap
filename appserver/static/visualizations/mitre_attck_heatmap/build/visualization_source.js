@@ -59,6 +59,7 @@ return SplunkVisualizationBase.extend({
         this.$el.empty();
 
         let self = this;
+        let mitre_url_prefix = 'https://attack.mitre.org/techniques/';
         let colorMap = this.colorMap;
         let theme = config[this.getPropertyNamespaceInfo().propertyNamespace + 'theme'] || 'light';
         let startColor = config[this.getPropertyNamespaceInfo().propertyNamespace + 'startColor'] || '#53a051';
@@ -129,7 +130,7 @@ return SplunkVisualizationBase.extend({
         enterpriseAttack.techniques.forEach(function(technique) {
             let title = (display == 'id') ?  technique.id : technique.name;
             let $technique = $(`
-                <div class="mtr-technique mtr-display-${display}" data-id="${technique.id}" data-name="${technique.name}" data-value="" data-percent="" data-desc="">${title}</div>
+                <div class="mtr-technique mtr-display-${display}" data-id="${technique.id}" data-name="${technique.name}" data-value="" data-percent="" data-desc=""><span>${title}</span></div>
             `);
 
             technique.tactics.forEach(function(tactic) {
@@ -185,24 +186,18 @@ return SplunkVisualizationBase.extend({
                     <div class="mtr-label"></div>
                     <div class="mtr-val">${value}</div>
                     <div class="mtr-desc"></div>
+                    <div class="mtr-ref"><a target="_blank" href="${mitre_url_prefix}${id}">${mitre_url_prefix}${id} <i class="icon-external"></i></a></div>
                 </div>
             `);
 
-            let offset = $(this).offset()
-
-            if (offset.left > $(window).width() - 400) {
-                offset.left -= 355;
+            if ($(this).offset().left > $(window).width() - 400) {
                 $tooltip.addClass('mtr-technique-tooltip-left');
             } else {
-                offset.left += $(this).outerWidth() + 25;
                 $tooltip.addClass('mtr-technique-tooltip-right');
             }
 
-            $tooltip.offset(offset);
             $('.mtr-desc', $tooltip).append('<p>' + description.split('\\n').join('</p><p>') + '</p>');
-            $tooltip.appendTo(document.body);
-            $tooltip[0].offsetWidth = $tooltip[0].offsetWidth
-            $tooltip.addClass('show');
+            $tooltip.appendTo($(this));
 
             if (value) {
                 $('.mtr-label', $tooltip).text(data.fields[1].name);
