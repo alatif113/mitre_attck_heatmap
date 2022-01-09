@@ -213,7 +213,7 @@ return SplunkVisualizationBase.extend({
                 }
             }
         }, function() {
-            $('.mtr-technique-tooltip').hide();
+            $('.mtr-technique-tooltip').remove();
         });
 
         $('.mtr-tactic-col', $content).each(function() {
