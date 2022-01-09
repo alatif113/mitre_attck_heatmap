@@ -201,7 +201,7 @@ return SplunkVisualizationBase.extend({
             }
 
             $('.mtr-desc', $tooltip).append('<p>' + description.split('\\n').join('</p><p>') + '</p>');
-            $tooltip.appendTo($(this)).animate({opacity: 1}, 200, 'linear');
+            $tooltip.appendTo($(this));
 
             if (value) {
                 $('.mtr-label', $tooltip).text(data.fields[1].name);
@@ -213,7 +213,7 @@ return SplunkVisualizationBase.extend({
                 }
             }
         }, function() {
-            $('.mtr-technique-tooltip').remove();
+            $('.mtr-technique-tooltip').hide();
         });
 
         $('.mtr-tactic-col', $content).each(function() {
