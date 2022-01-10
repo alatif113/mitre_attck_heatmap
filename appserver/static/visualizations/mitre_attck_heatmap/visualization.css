@@ -263,6 +263,10 @@
 	font-size: var(--font-medium);
 }
 
+.mtr-technique-tooltip .mtr-desc {
+	font-size: var(--font-xsmall);
+}
+
 .mtr-technique-tooltip .mtr-ref {
 	font-size: var(--font-xxsmall);
 	margin-top: .5em;
@@ -278,6 +282,10 @@
 
 .mtr-technique-tooltip-left {
 	right: 100%;
+}
+
+.mtr-technique-tooltip .more-content {
+    display: none;
 }
 
 .dashboard-row .dashboard-panel .panel-body .mtr-desc p {
@@ -312,5 +320,9 @@
 	-ms-flex-pack: justify;
 	justify-content: space-between;
 	font-size: var(--font-xsmall);
+	color: var(--text-black);
+}
+
+.dark  .mtr-legend-val {
 	color: var(--text-white);
 }

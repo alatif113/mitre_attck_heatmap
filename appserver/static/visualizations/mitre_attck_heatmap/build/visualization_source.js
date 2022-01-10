@@ -199,8 +199,28 @@ return SplunkVisualizationBase.extend({
             } else {
                 $tooltip.addClass('mtr-technique-tooltip-right');
             }
+            
+            let description_html = '';
+            let showChar = 256; 
+            if (description.length > showChar) {
+                let visible = description.substr(0, showChar);
+                let hidden = description.substr(showChar, description.length - showChar);
+                visible = visible.split('\\n').join('</p><p>');
+                hidden = hidden.split('\\n').join('</p><p>');
+                description_html = `<p>${visible} <span class="more-elipses">...</span><span class="more-content">${hidden}</span><a href="#" class="more-link">Show more</a></p>`;
+            } else {
+                description_html = description.split('\\n').join('</p><p>');
+            }
 
-            $('.mtr-desc', $tooltip).append('<p>' + description.split('\\n').join('</p><p>') + '</p>');
+            $('.mtr-desc', $tooltip).append(description_html);
+
+            $('.more-link', $tooltip).click(function(){
+                $('.more-elipses', $tooltip).hide();
+                $('.more-content', $tooltip).show();
+                $('.more-link', $tooltip).hide();
+                return false;
+            });
+
             $tooltip.appendTo($(this));
 
             if (value) {
