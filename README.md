@@ -28,6 +28,12 @@ The visualization requires at least 2 fields to be present within the search out
 | table id "Detection Count" description
 ```
 
+### Drilldowns
+
+1. **Row Fields**: all search output fields are drilldownable via $row.<<FIELD>>$
+2. Technique Name: the name of a selected technique is drilldownable via $row.mtr_name$
+3. Tactic Name: the name of a selected tactic (either by clicking an underlying technique or clicking the tactic name itself) is drilldownable via $row.mtr_tactc$
+
 ## Support
 
 This app is currently unsupported for Internet Explorer.
