@@ -19,7 +19,7 @@
     "webpack": "^1.12.6"
   },
   "dependencies": {
-    "jquery": "^2.2.4",
-    "underscore": "^1.9.2"
+    "jquery": ">=3.5.0",
+    "underscore": ">=1.12.1"
   }
 }
