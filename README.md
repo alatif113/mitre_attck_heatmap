@@ -19,7 +19,7 @@ OR
 The visualization requires at least 2 fields to be present within the search output, with an optional third:
 1. **att&ck_technique_id**: The ID of a MITRE ATT&CK Technique (e.g. T0001)
 2. **numerical_value / aggregation**: A numerical value or aggregation to associate with the technique (e.g. count, sum, average)
-3. **(Optional) descroption**: An optional description to associate with the technique, to display within a tooltop on mouse hover.  
+3. **(Optional) description**: An optional description to associate with the technique, to display within a tooltop on mouse hover.  
 
 ### Example search query
 
