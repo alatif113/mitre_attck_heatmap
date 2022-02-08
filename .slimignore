@@ -1,0 +1,15 @@
+.DS_STORE
+/local/
+/metadata/local.meta
+/default/indexes.conf
+*.py[co]
+Thumbs.db
+.gitignore
+build/
+src/
+babel.config.json
+package.json
+package-lock.json
+webpack.config.js
+node_modules/
+.git
