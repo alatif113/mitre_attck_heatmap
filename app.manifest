@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "2.0.0",
+  "info": {
+    "title": "MITRE ATT&CK Heatmap for Splunk",
+    "id": {
+      "group": null,
+      "name": "mitre_attck_heatmap",
+      "version": "1.3.0"
+    },
+    "author": [
+      {
+        "name": "Mohammed Latif",
+        "email": "alatif113@gmail.com",
+        "company": null
+      }
+    ],
+    "releaseDate": null,
+    "description": "MITRE ATT&CK Heatmap visualization",
+    "classification": {
+      "intendedAudience": null,
+      "categories": [],
+      "developmentStatus": null
+    },
+    "commonInformationModels": null,
+    "license": {
+      "name": "GNU GENERAL PUBLIC LICENSE",
+      "text": null,
+      "uri": null
+    },
+    "privacyPolicy": {
+      "name": null,
+      "text": null,
+      "uri": null
+    },
+    "releaseNotes": {
+      "name": null,
+      "text": "./README.md",
+      "uri": null
+    }
+  },
+  "dependencies": null,
+  "tasks": null,
+  "inputGroups": null,
+  "incompatibleApps": null,
+  "platformRequirements": null,
+  "supportedDeployments": [
+    "_standalone",
+    "_distributed"
+  ],
+  "targetWorkloads": null
+}
