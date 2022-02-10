@@ -78,7 +78,7 @@ return SplunkVisualizationBase.extend({
         
         let $content = $(`<div class="mtr-viz-container"></div>`);
 
-        $colorMeter = $(`
+        let $legend = $(`
             <div class="mtr-legend">
                 <div class="mtr-legend-title">` + legendTitle + `</div>
                 <div class="mtr-legend-meter"></div>
@@ -92,10 +92,46 @@ return SplunkVisualizationBase.extend({
 
         let gradient = '(45deg, ' + startColor + ' 0%, ' + midColor + ' 50%, ' + endColor + ' 100%)';
 
-        $colorMeter.find('.mtr-legend-meter')
+        $('.mtr-legend-meter', $legend)
             .css('background', '-moz-linear-gradient' + gradient)
             .css('background', '-webkit-linear-gradient' + gradient)
             .css('background', 'linear-gradient' + gradient);
+        
+        $legend.hover(function() {
+            $(this).append($(`<div class="mtr-legend-cursor"></div`))
+        }, function() {
+            $('.mtr-legend-cursor').remove();
+            $('.mtr-technique').removeClass('focused').removeClass('defocused');
+        })
+
+        let lastMove = 0;
+        let eventThrottle = 100;
+        
+        $legend.mousemove(function(e) {
+            e.preventDefault();
+            let now = Date.now();
+            if (now > lastMove + eventThrottle) {
+                let $cursor = $('.mtr-legend-cursor', this);
+                let cursor_width = $cursor.width();
+                let legend_width = $(this).width();
+                let x = e.pageX - $(this).offset().left;
+                if (x <= legend_width && x > 0) {
+                    let left = x - cursor_width / 2;
+                    $cursor.css('left', left + 'px');
+
+                    let lower =  left / legend_width * (endVal - startVal);
+                    let upper = (left + cursor_width) / legend_width * (endVal - startVal);
+                    
+                    $('.mtr-technique').each(function() {
+                        if ($(this).attr('data-value') >= lower && $(this).attr('data-value') <= upper) {
+                            $(this).addClass('focused').removeClass('defocused');
+                        } else {
+                            $(this).removeClass('focused').addClass('defocused');
+                        }
+                    })
+                };
+            }
+        })
 
         enterpriseAttack.tactics.forEach(function(tactic) {
             $tactic_col = $(`<div class="mtr-tactic-col" data-name="${tactic.name}" data-tactic="${tactic.short_name}">`);
@@ -171,6 +207,7 @@ return SplunkVisualizationBase.extend({
         });
 
         $('.mtr-technique', $content).hover(function() {
+
             let id = $(this).attr('data-id');
             let name = $(this).attr('data-name');
             let percent = parseInt($(this).attr('data-percent'));
@@ -284,8 +321,7 @@ return SplunkVisualizationBase.extend({
         });
 
         $content.appendTo(this.$el);
-        $colorMeter.appendTo(this.$el);
-
+        $legend.appendTo(this.$el);
     },
 
     // Search data params

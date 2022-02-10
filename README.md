@@ -6,6 +6,8 @@ This app uses Enterprise ATT&CK v9. For more information visit https://attack.mi
 
 ![screenshot.png](https://github.com/alatif113/mitre_attack_heatmap/blob/master/static/screenshot.gif?raw=true)
 
+![screenshot.png](https://github.com/alatif113/mitre_attack_heatmap/blob/master/static/focus.gif?raw=true)
+
 ## Usage
 
 ### Search Query
@@ -30,9 +32,9 @@ The visualization requires at least 2 fields to be present within the search out
 
 ### Drilldowns
 
-1. **Row Fields**: all search output fields are drilldownable via $row.<<FIELD>>$
-2. **Technique Name**: the name of a selected technique is drilldownable via $row.mtr_name$
-3. **Tactic Name**: the name of a selected tactic (either by clicking an underlying technique or clicking the tactic name itself) is drilldownable via $row.mtr_tactc$
+1. **Row Fields**: all search output fields are drilldownable via `$row.<<FIELD>>$`
+2. **Technique Name**: the name of a selected technique is drilldownable via `$row.mtr_name$`
+3. **Tactic Name**: the name of a selected tactic (either by clicking an underlying technique or clicking the tactic name itself) is drilldownable via `$row.mtr_tactc$`
 
 ## Support
 
