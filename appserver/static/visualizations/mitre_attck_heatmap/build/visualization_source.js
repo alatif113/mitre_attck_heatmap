@@ -66,7 +66,7 @@ return SplunkVisualizationBase.extend({
         let startVal = config[this.getPropertyNamespaceInfo().propertyNamespace + 'startVal'] || 0;
         let endVal = config[this.getPropertyNamespaceInfo().propertyNamespace + 'endVal'] || 100;
         let display = config[this.getPropertyNamespaceInfo().propertyNamespace + 'display'] || 'id';
-        let legendTitle = vizUtils.escapeHtml(config[this.getPropertyNamespaceInfo().propertyNamespace + 'legendTitle']);
+        let legendTitle = vizUtils.escapeHtml(config[this.getPropertyNamespaceInfo().propertyNamespace + 'legendTitle']) || data.fields[1].name;
         let sortKey = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortKey'] || 'data-id'; 
         let sortOrder = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortOrder'] || 'asc';
 
@@ -81,7 +81,9 @@ return SplunkVisualizationBase.extend({
         let $legend = $(`
             <div class="mtr-legend">
                 <div class="mtr-legend-title">` + legendTitle + `</div>
-                <div class="mtr-legend-meter"></div>
+                <div class="mtr-legend-meter-container">    
+                    <div class="mtr-legend-meter"></div>
+                </div>
                 <div class="mtr-legend-val">
                     <span>` + startVal + `</span>
                     <span>` + (endVal - startVal)/2 + `</span>
@@ -98,7 +100,7 @@ return SplunkVisualizationBase.extend({
             .css('background', 'linear-gradient' + gradient);
         
         $legend.hover(function() {
-            $(this).append($(`<div class="mtr-legend-cursor"></div`))
+            $('.mtr-legend-meter-container', this).append($(`<div class="mtr-legend-cursor"></div`))
         }, function() {
             $('.mtr-legend-cursor').remove();
             $('.mtr-technique').removeClass('focused').removeClass('defocused');
@@ -123,7 +125,8 @@ return SplunkVisualizationBase.extend({
                     let upper = (left + cursor_width) / legend_width * (endVal - startVal);
                     
                     $('.mtr-technique').each(function() {
-                        if ($(this).attr('data-value') >= lower && $(this).attr('data-value') <= upper) {
+                        let value = $(this).attr('data-value');
+                        if (value && value >= lower && value <= upper) {
                             $(this).addClass('focused').removeClass('defocused');
                         } else {
                             $(this).removeClass('focused').addClass('defocused');
