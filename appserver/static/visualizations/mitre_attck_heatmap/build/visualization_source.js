@@ -69,6 +69,7 @@ return SplunkVisualizationBase.extend({
         let legendTitle = vizUtils.escapeHtml(config[this.getPropertyNamespaceInfo().propertyNamespace + 'legendTitle']) || data.fields[1].name;
         let sortKey = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortKey'] || 'data-id'; 
         let sortOrder = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortOrder'] || 'asc';
+        let hideNull = config[this.getPropertyNamespaceInfo().propertyNamespace + 'hideNull'] || 'no';
 
         this.$el.attr('class', '').addClass(theme);
 
@@ -172,7 +173,7 @@ return SplunkVisualizationBase.extend({
         enterpriseAttack.techniques.forEach(function(technique) {
             let title = (display == 'id') ?  technique.id : technique.name;
             let $technique = $(`
-                <div class="mtr-technique mtr-display-${display}" data-id="${technique.id}" data-name="${technique.name}" data-value="" data-percent="" data-desc=""><span>${title}</span></div>
+                <div class="mtr-technique mtr-display-${display}" data-id="${technique.id}" data-name="${technique.name}"><span>${title}</span></div>
             `);
 
             technique.tactics.forEach(function(tactic) {
@@ -193,7 +194,8 @@ return SplunkVisualizationBase.extend({
                 self._drilldown(drilldown_data, e);
             });
 
-            if (!$technique || count == '' || count == null || isNaN(count)) return;
+            console.log(count);
+            if (!$technique || !count || count == '' || count == null || isNaN(count)) return;
 
             let percent = self._getPercent(startVal, endVal, count); 
             let color = self._getColor(percent);
@@ -213,8 +215,8 @@ return SplunkVisualizationBase.extend({
 
             let id = $(this).attr('data-id');
             let name = $(this).attr('data-name');
-            let percent = parseInt($(this).attr('data-percent'));
-            let description = $(this).attr('data-desc');
+            let percent = parseInt($(this).attr('data-percent')) || '';
+            let description = $(this).attr('data-desc') || '';
             let value = parseInt($(this).attr('data-value')) || '';
             let color = self._getColor(percent);
 
@@ -281,13 +283,26 @@ return SplunkVisualizationBase.extend({
             let count = 0;
             let total = 0;
             $('.mtr-technique', this).each(function() {
-                total += 1;
+
                 let val = $(this).attr('data-value');
+
+                if (!val && hideNull == 'yes') {
+                    $(this).remove();
+                    return;
+                }
+
+                total += 1;
                 if (val && !isNaN(val)) {
                     sum += +val;
                     count += 1;
                 }
             });
+
+            if (total == 0 && hideNull == 'yes') {
+                $(this).remove();
+                return
+            }
+
             let mean = Math.round(sum / count);
             let coverage = Math.round(count / total * 100);
             if (!mean) mean = 0;
@@ -309,6 +324,8 @@ return SplunkVisualizationBase.extend({
             $('.mtr-tactic .mtr-total .mtr-stats-val', this).text(sum.toLocaleString());
             $('.mtr-tactic .mtr-count .mtr-stats-val', this).text(count.toLocaleString() + ` (${coverage}%)`);
             $('.mtr-tactic .mtr-mean .mtr-stats-val', this).text(mean.toLocaleString());
+
+
         });
 
         $('.mtr-technique-col', $content).each(function() {

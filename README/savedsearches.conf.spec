@@ -8,3 +8,4 @@ display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.endVal = <
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.legendTitle = <string>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.display = <string>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.theme = <string>
+display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.hideNull = <string>
