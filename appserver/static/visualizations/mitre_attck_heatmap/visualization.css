@@ -252,6 +252,7 @@
 
 .mtr-placeholder {
 	visibility: hidden;
+	pointer-events: none;
 }
 
 .mtr-technique.mtr-display-name > span {

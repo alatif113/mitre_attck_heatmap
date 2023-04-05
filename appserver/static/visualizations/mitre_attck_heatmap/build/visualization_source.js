@@ -379,12 +379,12 @@ return SplunkVisualizationBase.extend({
         $('.mtr-technique-col', $content).each(function() {
             self._sortElements($(this), sortKey, sortOrder);
             $(this).append(`
-                <div class="mtr-technique-container mtr-display-${display}">
-                    <div class="mtr-technique mtr-placeholder mtr-display-${display}">
+                <div class="mtr-technique-container mtr-placeholder mtr-display-${display}">
+                    <div class="mtr-technique mtr-display-${display}">
                         <div class="mtr-technique-title">T0000</div>
                     </div>
                 </div>
-                <div class="mtr-technique-container mtr-display-${display}">
+                <div class="mtr-technique-container mtr-placeholder mtr-display-${display}">
                     <div class="mtr-technique mtr-placeholder mtr-display-${display}">
                         <div class="mtr-technique-title">T0000</div>
                     </div>
