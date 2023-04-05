@@ -222,6 +222,12 @@ return SplunkVisualizationBase.extend({
             });
         })
 
+        $('.mtr-tactic-col', $content).each(function() {
+            if (!$('.mtr-technique-container[data-id]', this).length) {
+                this.remove();
+            }
+        })
+
         data.rows.forEach(function(r) {
             let id = vizUtils.escapeHtml(r[0]);
             let count = vizUtils.escapeHtml(r[1]);
