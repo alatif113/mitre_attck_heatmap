@@ -6,7 +6,9 @@ define([
     'underscore',
     'api/SplunkVisualizationBase',
     'api/SplunkVisualizationUtils',
-    'enterpriseAttack'
+    'enterpriseAttack',
+    'icsAttack',
+    'mobileAttack'
     // Add required assets to this list
 ],
 function(
@@ -14,7 +16,9 @@ function(
     _,
     SplunkVisualizationBase,
     vizUtils,
-    enterpriseAttack
+    enterpriseAttack,
+    icsAttack,
+    mobileAttack,
 ) {
 
 // Extend from SplunkVisualizationBase
@@ -57,7 +61,6 @@ return SplunkVisualizationBase.extend({
         this.$el.empty();
 
         let self = this;
-        let mitre_url_prefix = 'https://attack.mitre.org/techniques/';
         let colorMap = this.colorMap;
         let theme = config[this.getPropertyNamespaceInfo().propertyNamespace + 'theme'] || 'light';
         let startColor = config[this.getPropertyNamespaceInfo().propertyNamespace + 'startColor'] || '#53a051';
@@ -70,6 +73,18 @@ return SplunkVisualizationBase.extend({
         let sortKey = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortKey'] || 'data-id'; 
         let sortOrder = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortOrder'] || 'asc';
         let hideNull = config[this.getPropertyNamespaceInfo().propertyNamespace + 'hideNull'] || 'no';
+        let matrixPlatform = (config[this.getPropertyNamespaceInfo().propertyNamespace + 'matrix'] || 'enterprise::').split('::');
+        let matrix = matrixPlatform[0];
+        let platform = matrixPlatform[1].split(',');
+        let matrixJSON = {};
+        
+        if (matrix == 'ics') {
+            matrixJSON = icsAttack;
+        } else if (matrix == 'mobile') {
+            matrixJSON = mobileAttack;
+        } else {
+            matrixJSON = enterpriseAttack;
+        }
 
         this.$el.attr('class', '').addClass(theme);
 
@@ -137,8 +152,8 @@ return SplunkVisualizationBase.extend({
             }
         })
 
-        enterpriseAttack.tactics.forEach(function(tactic) {
-            $tactic_col = $(`<div class="mtr-tactic-col" data-name="${tactic.name}" data-tactic="${tactic.short_name}">`);
+        matrixJSON.tactics.forEach(function(tactic) {
+            $tactic_col = $(`<div class="mtr-tactic-col" data-id="${tactic.id}" data-name="${tactic.name}" data-tactic="${tactic.short_name}">`);
             $tactic_col.appendTo($content).append(`
                     <div class="mtr-tactic">
                         <div class="mtr-tactic-title">${tactic.name}</div>
@@ -170,10 +185,23 @@ return SplunkVisualizationBase.extend({
             })
         })
 
-        enterpriseAttack.techniques.forEach(function(technique) {
+        matrixJSON.techniques.forEach(function(technique) {
+            console.log(technique)
+            console.log(`
+                selected platform: ${platform}
+                technique platform: ${technique.platform}
+            `)
+
+            if (platform != '' && 'platform' in technique && !platform.some(p=> technique.platform.indexOf(p) >= 0)) return;
+
             let title = (display == 'id') ?  technique.id : technique.name;
             let $technique = $(`
-                <div class="mtr-technique mtr-display-${display}" data-id="${technique.id}" data-name="${technique.name}"><span>${title}</span></div>
+                <div class="mtr-technique-container mtr-display-${display}" data-id="${technique.id}">
+                    <div class="mtr-technique" data-id="${technique.id}" data-name="${technique.name}" data-url="${technique.url}">
+                        <span>${title}</span>
+                    </div>
+                    <div class="mtr-sub-technique-container mtr-display-${display}""></div>
+                </div>
             `);
 
             technique.tactics.forEach(function(tactic) {
@@ -181,20 +209,33 @@ return SplunkVisualizationBase.extend({
             });
         })
 
+        matrixJSON.sub_techniques.forEach(function(sub_technique) {
+            if (platform != '' && 'platform' in sub_technique && !platform.some(p=> sub_technique.platform.indexOf(p) >= 0)) return;
+
+            let title = (display == 'id') ?  sub_technique.short_id : sub_technique.name;
+            $(`.mtr-technique-container[data-id="${sub_technique.technique}"]`, $content).each(function() {
+                $('.mtr-sub-technique-container', $(this)).append(`
+                    <div class="mtr-sub-technique mtr-display-${display}" data-id="${sub_technique.id}" data-name="${sub_technique.name}" data-url="${sub_technique.url}">
+                        <span>${title}</span>
+                    </div>
+                `);
+            });
+        })
+
         data.rows.forEach(function(r) {
             let id = vizUtils.escapeHtml(r[0]);
             let count = vizUtils.escapeHtml(r[1]);
-            let $technique = $(`.mtr-technique[data-id="${id}"]`, $content)
+            let $technique = $(`.mtr-technique[data-id="${id}"], .mtr-sub-technique[data-id="${id}"]`, $content)
 
             $technique.click(function(e) {
                 drilldown_data = {}
                 r.forEach((d, i) => { drilldown_data[data.fields[i].name] = d })
-                drilldown_data['mtr_name'] = $(this).attr('data-name');
-                drilldown_data['mtr_tactic'] = $(this).parents('.mtr-tactic-col').attr('data-name');
+                drilldown_data['mtr_technique'] = $(this).closest('.mtr-technique-container').attr('data-id');
+                drilldown_data['mtr_tactic'] = $(this).closest('.mtr-tactic-col').attr('data-id');
+                console.log(drilldown_data);
                 self._drilldown(drilldown_data, e);
             });
 
-            console.log(count);
             if (!$technique || !count || count == '' || count == null || isNaN(count)) return;
 
             let percent = self._getPercent(startVal, endVal, count); 
@@ -211,13 +252,14 @@ return SplunkVisualizationBase.extend({
                 .css('color', color.foreground);
         });
 
-        $('.mtr-technique', $content).hover(function() {
-
+        $('.mtr-technique, .mtr-sub-technique', $content).hover(function(e) {
+            
             let id = $(this).attr('data-id');
             let name = $(this).attr('data-name');
             let percent = parseInt($(this).attr('data-percent')) || '';
             let description = $(this).attr('data-desc') || '';
             let value = parseInt($(this).attr('data-value')) || '';
+            let url = $(this).attr('data-url') || '';
             let color = self._getColor(percent);
 
             if(percent < 2) percent = 2;
@@ -232,7 +274,7 @@ return SplunkVisualizationBase.extend({
                     <div class="mtr-label"></div>
                     <div class="mtr-val">${value}</div>
                     <div class="mtr-desc"></div>
-                    <div class="mtr-ref"><a target="_blank" href="${mitre_url_prefix}${id}">${mitre_url_prefix}${id} <i class="icon-external"></i></a></div>
+                    <div class="mtr-ref"><a target="_blank" href="${url}">${url} <i class="icon-external"></i></a></div>
                 </div>
             `);
 
@@ -287,7 +329,7 @@ return SplunkVisualizationBase.extend({
                 let val = $(this).attr('data-value');
 
                 if (!val && hideNull == 'yes') {
-                    $(this).remove();
+                    $(this).parent().remove();
                     return;
                 }
 
@@ -331,11 +373,15 @@ return SplunkVisualizationBase.extend({
         $('.mtr-technique-col', $content).each(function() {
             self._sortElements($(this), sortKey, sortOrder);
             $(this).append(`
-                <div class="mtr-technique mtr-placeholder mtr-display-${display}">
-                    <div class="mtr-technique-title">T0000</div>
+                <div class="mtr-technique-container mtr-display-${display}">
+                    <div class="mtr-technique mtr-placeholder mtr-display-${display}">
+                        <div class="mtr-technique-title">T0000</div>
+                    </div>
                 </div>
-                <div class="mtr-technique mtr-placeholder mtr-display-${display}">
-                    <div class="mtr-technique-title">T0000</div>
+                <div class="mtr-technique-container mtr-display-${display}">
+                    <div class="mtr-technique mtr-placeholder mtr-display-${display}">
+                        <div class="mtr-technique-title">T0000</div>
+                    </div>
                 </div>
             `);
         });
@@ -414,13 +460,15 @@ return SplunkVisualizationBase.extend({
     _sortElements: function($container, key, order) {
         let flip = (order == 'asc') ? 1 : -1;
         $children = $container.children().sort(function(a, b) {
+            let $t1 = ('.mtr-technique', $(a));
+            let $t2 = ('.mtr-technique', $(b));
             if (key == 'data-id' || key == 'data-name') {
-                return flip * ($(a).attr(key) < $(b).attr(key) ? -1 : 1);
+                return flip * ($t1.attr(key) < $t2.attr(key) ? -1 : 1);
             }
 
             if (key == 'data-value') {
-                aVal = parseInt($(a).attr(key));
-                bVal = parseInt($(b).attr(key));
+                aVal = parseInt($t1.attr(key));
+                bVal = parseInt($t2.attr(key));
                 if (!Number.isInteger(aVal)) aVal = -1;
                 if (!Number.isInteger(bVal)) bVal = -1;
                 return flip * (aVal < bVal ? -1 : 1);

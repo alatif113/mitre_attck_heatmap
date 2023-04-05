@@ -182,44 +182,70 @@
 	transition: var(--transition-short)
 }
 
-.mtr-tactic:hover+.mtr-technique-col {
-	opacity: 0.25;
+.mtr-tactic-col:hover .mtr-technique-container {
+	opacity: .25;
 }
 
-.mtr-technique {
+.mtr-tactic-col:hover .mtr-technique-container:hover {
+	opacity: 1;
+}
+
+.mtr-technique-container {
 	position: relative;
 	-webkit-box-flex: 1;
 	-ms-flex-positive: 1;
 	flex-grow: 1;
-    font-size: var(--font-xsmall);
-	background: var(--bg-gray-light);
 	-webkit-transition: var(--transition-short);
 	transition: var(--transition-short);
-	cursor: pointer;
-	padding: 0.5em;
-	font-family: "Splunk Platform Mono", Inconsolata, Consolas, "Droid Sans Mono", Monaco, "Courier New", Courier, monospace;
-	color: var(--text-black);
 }
 
-.dark .mtr-technique {
+.mtr-technique, .mtr-sub-technique {
+	position: relative;
+	background: var(--bg-gray-light);
+	cursor: pointer;
+	font-family: "Splunk Platform Mono", Inconsolata, Consolas, "Droid Sans Mono", Monaco, "Courier New", Courier, monospace;
+	color: var(--text-black);
+	padding: 0.5em;
+}
+
+.mtr-technique {
+	font-size: var(--font-xsmall);
+	-webkit-transition: var(--transition-short);
+	transition: var(--transition-short);
+	z-index: 2;
+}
+
+.mtr-sub-technique {
+	font-size: var(--font-xxsmall);
+}
+
+.dark .mtr-technique, .dark .mtr-sub-technique {
 	background: var(--bg-gray-med);
 	color: var(--text-white);
 }
 
-.mtr-technique.mtr-display-id {
+.mtr-technique-container.mtr-display-id {
 	-ms-flex-preferred-size: 0;
 	flex-basis: 0;
 }
 
-.mtr-technique.mtr-display-name {
+.mtr-technique-container.mtr-display-name {
 	-ms-flex-preferred-size: auto;
 	flex-basis: auto;
 	width: 100%;
 }
 
-.mtr-technique > span {
+.mtr-sub-technique-container.mtr-display-name {
+	width: 90%;
+}
+
+.mtr-technique > span,
+.mtr-sub-technique > span {
 	text-align: center;
 	display: block;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .mtr-placeholder {
@@ -232,10 +258,10 @@
 	white-space: nowrap;
 }
 
-.mtr-technique:hover {
+.mtr-technique-container:hover {
 	-webkit-transform: scale(1.2) translateY(-.5em);
 	transform: scale(1.2) translateY(-.5em);
-	box-shadow: 0px 7px 15px rgba(0, 0, 0, 0.3);
+	box-shadow: 0px 7px 30px rgba(0, 0, 0, .8);
 	z-index: 30;
 	opacity: 1;
 }
@@ -250,6 +276,18 @@
 
 .mtr-technique.defocused {
 	opacity: 0.15;
+}
+
+.mtr-sub-technique-container {
+	position: absolute;
+	z-index: 1;
+	display: none;
+	right: 0;
+	box-shadow: 0px 7px 30px rgba(0, 0, 0, .8);
+}
+
+.mtr-technique-container:hover .mtr-sub-technique-container {
+	display: block;
 }
 
 .mtr-technique-tooltip {

@@ -1,4 +1,25 @@
 <form class="splunk-formatter-section" section-label="Layout">
+    <splunk-control-group label="Matrix" help="">    
+        <splunk-select name="{{VIZ_NAMESPACE}}.matrix" value="enterprise::">
+            <option value="enterprise::">Enterprise - All</option>
+            <option value="enterprise::Containers">Enterprise - Containers</option>
+            <option value="enterprise::Azure AD,Google Workspace,IaaS,Office 365,SaaS">Enterprise - Cloud - All</option>
+            <option value="enterprise::Azure AD">Enterprise - Cloud - AzureAd</option>
+            <option value="enterprise::Google Workspace">Enterprise - Cloud - Google Workspace</option>
+            <option value="enterprise::IaaS">Enterprise - Cloud - IaaS</option>
+            <option value="enterprise::Office 365">Enterprise - Cloud - Office 365</option>
+            <option value="enterprise::SaaS">Enterprise - Cloud - SaaS</option>
+            <option value="enterprise::Linux">Enterprise - Linux</option>
+            <option value="enterprise::macOS">Enterprise - macOS</option>
+            <option value="enterprise::Network">Enterprise - Network</option>
+            <option value="enterprise::PRE">Enterprise - PRE</option>
+            <option value="enterprise::Windows">Enterprise - Windows</option>
+            <option value="ics::">ICS - All</option>
+            <option value="mobile::">Mobile - All</option>
+            <option value="mobile::Android">Mobile - Android</option>
+            <option value="mobile::iOS">Mobile - iOS</option>
+        </splunk-select>
+    </splunk-control-group>
     <splunk-control-group label="Display" help="">    
         <splunk-radio-input name="{{VIZ_NAMESPACE}}.display" value="id">
             <option value="id">ID</option>
