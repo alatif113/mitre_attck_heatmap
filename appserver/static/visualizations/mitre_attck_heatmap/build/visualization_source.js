@@ -391,7 +391,7 @@ return SplunkVisualizationBase.extend({
 
         if (self.animate) {
             let stepSize = (endVal - startVal) / duration / 60;
-            let stepWidth = ((endVal - startVal) * .1);
+            let stepWidth = (endVal - startVal) * .1;
             let currStep = 0;
 
             function step() {
