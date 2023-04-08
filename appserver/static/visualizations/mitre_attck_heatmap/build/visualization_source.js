@@ -73,6 +73,7 @@ return SplunkVisualizationBase.extend({
         let sortKey = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortKey'] || 'data-id'; 
         let sortOrder = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortOrder'] || 'asc';
         let hideNull = config[this.getPropertyNamespaceInfo().propertyNamespace + 'hideNull'] || 'no';
+        let showSubTechniques = config[this.getPropertyNamespaceInfo().propertyNamespace + 'showSubTechniques'] || 'yes';
         let matrixPlatform = (config[this.getPropertyNamespaceInfo().propertyNamespace + 'matrix'] || 'enterprise::').split('::');
         let matrix = matrixPlatform[0];
         let platform = matrixPlatform[1].split(',');
@@ -209,18 +210,20 @@ return SplunkVisualizationBase.extend({
             });
         })
 
-        matrixJSON.sub_techniques.forEach(function(sub_technique) {
-            if (platform != '' && 'platform' in sub_technique && !platform.some(p=> sub_technique.platform.indexOf(p) >= 0)) return;
+        if (showSubTechniques == 'yes') {
+            matrixJSON.sub_techniques.forEach(function(sub_technique) {
+                if (platform != '' && 'platform' in sub_technique && !platform.some(p=> sub_technique.platform.indexOf(p) >= 0)) return;
 
-            let title = (display == 'id') ?  sub_technique.short_id : sub_technique.name;
-            $(`.mtr-technique-container[data-id="${sub_technique.technique}"]`, $content).each(function() {
-                $('.mtr-sub-technique-container', $(this)).append(`
-                    <div class="mtr-sub-technique mtr-display-${display}" data-id="${sub_technique.id}" data-name="${sub_technique.name}" data-url="${sub_technique.url}">
-                        <span>${title}</span>
-                    </div>
-                `);
-            });
-        })
+                let title = (display == 'id') ?  sub_technique.short_id : sub_technique.name;
+                $(`.mtr-technique-container[data-id="${sub_technique.technique}"]`, $content).each(function() {
+                    $('.mtr-sub-technique-container', $(this)).append(`
+                        <div class="mtr-sub-technique mtr-display-${display}" data-id="${sub_technique.id}" data-name="${sub_technique.name}" data-url="${sub_technique.url}">
+                            <span>${title}</span>
+                        </div>
+                    `);
+                });
+            })
+        }
 
         $('.mtr-tactic-col', $content).each(function() {
             if (!$('.mtr-technique-container[data-id]', this).length) {
