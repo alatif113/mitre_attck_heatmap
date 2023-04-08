@@ -38,7 +38,18 @@ The visualization requires at least 2 fields to be present within the search out
 
 ## Support
 
-This app is currently unsupported for Internet Explorer.
+This app is currently unsupported for Internet Explorer. Please report issues to https://github.com/alatif113/mitre_attck_heatmap/issues
+
+## Change Log
+
+### v1.7.0
+- Added ability to toggle sub-techniques on/off via the visualization format menu.
+- Added ability to enable an animation on the heatmap, highlighting techniques from lowest to highest values within a given duration. 
+- Fixed bug where sorting by value or technique name was not working correctly.
+
+### v1.6.1
+- Added ability to select matrix type via the visualization format menu.
+- Added support for sub-techniques
 
 ## LICENSE from the MITRE Corporation (MITRE)
 

@@ -26,6 +26,12 @@
             <option value="name">Name</option>
         </splunk-radio-input>
     </splunk-control-group>
+    <splunk-control-group label="Sub-Techniques" help="">    
+        <splunk-radio-input name="{{VIZ_NAMESPACE}}.showSubTechniques" value="yes">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </splunk-radio-input>
+    </splunk-control-group>
     <splunk-control-group label="Hide Null" help="">    
         <splunk-radio-input name="{{VIZ_NAMESPACE}}.hideNull" value="no">
             <option value="yes">Yes</option>
@@ -99,6 +105,18 @@
     </splunk-control-group>
     <splunk-control-group label="Upper Bound" help="">
         <splunk-text-input name="{{VIZ_NAMESPACE}}.endVal" value="100">
+        </splunk-text-input>
+    </splunk-control-group>
+</form>
+<form class="splunk-formatter-section" section-label="Animation">
+    <splunk-control-group label="Animate" help="">
+        <splunk-radio-input name="{{VIZ_NAMESPACE}}.animate" value="no">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </splunk-radio-input>
+    </splunk-control-group>
+    <splunk-control-group label="Duration (sec)" help="">
+        <splunk-text-input name="{{VIZ_NAMESPACE}}.duration" value="300">
         </splunk-text-input>
     </splunk-control-group>
 </form>

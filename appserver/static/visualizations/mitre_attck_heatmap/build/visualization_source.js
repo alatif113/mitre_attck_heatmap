@@ -27,6 +27,7 @@ return SplunkVisualizationBase.extend({
     initialize: function() {
         SplunkVisualizationBase.prototype.initialize.apply(this, arguments);
         this.$el = $(this.el);
+        this.animate = false;
         this.$el.addClass('mitre-container');
         this.colorMap = [
             { pct: 0, color: { r: 0x63, g: 0xbe, b: 0x7b } },
@@ -62,6 +63,8 @@ return SplunkVisualizationBase.extend({
 
         let self = this;
         let colorMap = this.colorMap;
+        let animate = config[this.getPropertyNamespaceInfo().propertyNamespace + 'animate'] || 'no';
+        let duration = config[this.getPropertyNamespaceInfo().propertyNamespace + 'duration'] || 300;
         let theme = config[this.getPropertyNamespaceInfo().propertyNamespace + 'theme'] || 'light';
         let startColor = config[this.getPropertyNamespaceInfo().propertyNamespace + 'startColor'] || '#53a051';
         let midColor = config[this.getPropertyNamespaceInfo().propertyNamespace + 'midColor'] || '#f8be34';
@@ -73,10 +76,13 @@ return SplunkVisualizationBase.extend({
         let sortKey = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortKey'] || 'data-id'; 
         let sortOrder = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortOrder'] || 'asc';
         let hideNull = config[this.getPropertyNamespaceInfo().propertyNamespace + 'hideNull'] || 'no';
+        let showSubTechniques = config[this.getPropertyNamespaceInfo().propertyNamespace + 'showSubTechniques'] || 'yes';
         let matrixPlatform = (config[this.getPropertyNamespaceInfo().propertyNamespace + 'matrix'] || 'enterprise::').split('::');
         let matrix = matrixPlatform[0];
         let platform = matrixPlatform[1].split(',');
         let matrixJSON = {};
+
+        self.animate = (animate == 'yes') ? true : false;
         
         if (matrix == 'ics') {
             matrixJSON = icsAttack;
@@ -139,15 +145,8 @@ return SplunkVisualizationBase.extend({
 
                     let lower =  left / legend_width * (endVal - startVal);
                     let upper = (left + cursor_width) / legend_width * (endVal - startVal);
-                    
-                    $('.mtr-technique').each(function() {
-                        let value = $(this).attr('data-value');
-                        if (value && value >= lower && value <= upper) {
-                            $(this).addClass('focused').removeClass('defocused');
-                        } else {
-                            $(this).removeClass('focused').addClass('defocused');
-                        }
-                    })
+            
+                    self._setAnimationClass(lower, upper);
                 };
             }
         })
@@ -186,12 +185,6 @@ return SplunkVisualizationBase.extend({
         })
 
         matrixJSON.techniques.forEach(function(technique) {
-            console.log(technique)
-            console.log(`
-                selected platform: ${platform}
-                technique platform: ${technique.platform}
-            `)
-
             if (platform != '' && 'platform' in technique && !platform.some(p=> technique.platform.indexOf(p) >= 0)) return;
 
             let title = (display == 'id') ?  technique.id : technique.name;
@@ -209,18 +202,20 @@ return SplunkVisualizationBase.extend({
             });
         })
 
-        matrixJSON.sub_techniques.forEach(function(sub_technique) {
-            if (platform != '' && 'platform' in sub_technique && !platform.some(p=> sub_technique.platform.indexOf(p) >= 0)) return;
+        if (showSubTechniques == 'yes') {
+            matrixJSON.sub_techniques.forEach(function(sub_technique) {
+                if (platform != '' && 'platform' in sub_technique && !platform.some(p=> sub_technique.platform.indexOf(p) >= 0)) return;
 
-            let title = (display == 'id') ?  sub_technique.short_id : sub_technique.name;
-            $(`.mtr-technique-container[data-id="${sub_technique.technique}"]`, $content).each(function() {
-                $('.mtr-sub-technique-container', $(this)).append(`
-                    <div class="mtr-sub-technique mtr-display-${display}" data-id="${sub_technique.id}" data-name="${sub_technique.name}" data-url="${sub_technique.url}">
-                        <span>${title}</span>
-                    </div>
-                `);
-            });
-        })
+                let title = (display == 'id') ?  sub_technique.short_id : sub_technique.name;
+                $(`.mtr-technique-container[data-id="${sub_technique.technique}"]`, $content).each(function() {
+                    $('.mtr-sub-technique-container', $(this)).append(`
+                        <div class="mtr-sub-technique mtr-display-${display}" data-id="${sub_technique.id}" data-name="${sub_technique.name}" data-url="${sub_technique.url}">
+                            <span>${title}</span>
+                        </div>
+                    `);
+                });
+            })
+        }
 
         $('.mtr-tactic-col', $content).each(function() {
             if (!$('.mtr-technique-container[data-id]', this).length) {
@@ -238,7 +233,6 @@ return SplunkVisualizationBase.extend({
                 r.forEach((d, i) => { drilldown_data[data.fields[i].name] = d })
                 drilldown_data['mtr_technique'] = $(this).closest('.mtr-technique-container').attr('data-id');
                 drilldown_data['mtr_tactic'] = $(this).closest('.mtr-tactic-col').attr('data-id');
-                console.log(drilldown_data);
                 self._drilldown(drilldown_data, e);
             });
 
@@ -394,6 +388,30 @@ return SplunkVisualizationBase.extend({
 
         $content.appendTo(this.$el);
         $legend.appendTo(this.$el);
+
+        if (self.animate) {
+            let stepSize = (endVal - startVal) / duration / 60;
+            let stepWidth = (endVal - startVal) * .1;
+            let currStep = 0;
+
+            function step() {
+                let lower = currStep;
+                let upper = lower + stepSize + stepWidth;
+
+                self._setAnimationClass(lower, upper);
+                if (lower < endVal) {
+                    currStep += stepSize;
+                } else {
+                    currStep = 0
+                }
+                if (self.animate) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    $('.mtr-technique').removeClass('focused').removeClass('defocused');
+                }
+            }
+            window.requestAnimationFrame(step);
+        } 
     },
 
     // Search data params
@@ -406,6 +424,17 @@ return SplunkVisualizationBase.extend({
     // Override to respond to re-sizing events
     reflow: function() {
 
+    },
+
+    _setAnimationClass: function(lower, upper) {
+        $('.mtr-technique').each(function() {
+            let value = $(this).attr('data-value');
+            if (value && value >= lower && value <= upper) {
+                $(this).addClass('focused').removeClass('defocused');
+            } else {
+                $(this).removeClass('focused').addClass('defocused');
+            }
+        })
     },
 
     _getPercent: function(lowerBound, upperBound, value) {
@@ -466,8 +495,9 @@ return SplunkVisualizationBase.extend({
     _sortElements: function($container, key, order) {
         let flip = (order == 'asc') ? 1 : -1;
         $children = $container.children().sort(function(a, b) {
-            let $t1 = ('.mtr-technique', $(a));
-            let $t2 = ('.mtr-technique', $(b));
+            let $t1 = $('.mtr-technique', $(a));
+            let $t2 = $('.mtr-technique', $(b));
+
             if (key == 'data-id' || key == 'data-name') {
                 return flip * ($t1.attr(key) < $t2.attr(key) ? -1 : 1);
             }
