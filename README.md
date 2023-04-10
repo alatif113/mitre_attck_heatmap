@@ -2,7 +2,7 @@
 
 Custom Visualizations give you new interactive ways to visualize your data during search and investigation, and to better communicate results in dashboards and reports. After installing this app youll find a MITRE ATT&CK Heatmap diagram as an additional item in the visualization picker in Search and Dashboard.
 
-This app uses Enterprise ATT&CK v9. For more information visit https://attack.mitre.org/versions/v9/
+This app uses Enterprise ATT&CK v12. For more information visit https://attack.mitre.org/versions/v12/
 
 ![screenshot.png](https://github.com/alatif113/mitre_attack_heatmap/blob/master/static/screenshot.gif?raw=true)
 
