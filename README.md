@@ -32,9 +32,17 @@ The visualization requires at least 2 fields to be present within the search out
 
 ### Drilldowns
 
-1. **Row Fields**: all search output fields are drilldownable via `$row.<<FIELD>>$`
-2. **Technique Name**: the name of a selected technique is drilldownable via `$row.mtr_technique$`
-3. **Tactic Name**: the name of a selected tactic (either by clicking an underlying technique or clicking the tactic name itself) is drilldownable via `$row.mtr_tactic$`
+1. **Sub-Technique ID**: the ID of a selected sub-technique is drilldownable via `$row.mtr_sub-technique_id$`
+2. **Technique ID**: the ID of a selected technique (either by clicking an underlying sub-technique or the technique itself) is drilldownable via `$row.mtr_technique_id$`
+3. **Tactic ID**: the ID of a selected tactic (either by clicking an underlying technique or the tactic itself) is drilldownable via `$row.mtr_tactic_id$`
+4. **Sub-Technique Name**: the name of a selected sub-technique is drilldownable via `$row.mtr_sub-technique_name$`
+5. **Technique Name**: the name of a selected technique is drilldownable via `$row.mtr_technique_name$`
+6. **Tactic Name**: the name of a selected tactic is drilldownable (either by clicking an underlying technique or the tactic itself) via `$row.mtr_tactic_name$`
+7. **Sub-Technique Value**: the value of a selected sub-technique is drilldownable via `$row.mtr_sub-technique_value$`
+8. **Technique Value**: the value of a selected technique is drilldownable (either by clicking an underlying sub-technique or the technique itself) via `$row.mtr_technique_value$`
+9. **Tactic Value**: the value of a selected tactic is drilldownable (either by clicking an underlying technique or the tactic itself) via `$row.mtr_tactic_value$`
+
+If any of the above values are not defined, the associated token is unset. 
 
 ## Support
 

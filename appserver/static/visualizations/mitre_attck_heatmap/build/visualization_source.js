@@ -63,9 +63,9 @@ return SplunkVisualizationBase.extend({
 
         let self = this;
         let colorMap = this.colorMap;
-        let animate = config[this.getPropertyNamespaceInfo().propertyNamespace + 'animate'] || 'no';
+        let animate = vizUtils.normalizeBoolean(config[this.getPropertyNamespaceInfo().propertyNamespace + 'animate'] || 'no');
         let duration = config[this.getPropertyNamespaceInfo().propertyNamespace + 'duration'] || 300;
-        let theme = config[this.getPropertyNamespaceInfo().propertyNamespace + 'theme'] || 'light';
+        let theme = vizUtils.getCurrentTheme();
         let startColor = config[this.getPropertyNamespaceInfo().propertyNamespace + 'startColor'] || '#53a051';
         let midColor = config[this.getPropertyNamespaceInfo().propertyNamespace + 'midColor'] || '#f8be34';
         let endColor = config[this.getPropertyNamespaceInfo().propertyNamespace + 'endColor'] || '#dc4e41';
@@ -75,14 +75,14 @@ return SplunkVisualizationBase.extend({
         let legendTitle = vizUtils.escapeHtml(config[this.getPropertyNamespaceInfo().propertyNamespace + 'legendTitle']) || data.fields[1].name;
         let sortKey = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortKey'] || 'data-id'; 
         let sortOrder = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortOrder'] || 'asc';
-        let hideNull = config[this.getPropertyNamespaceInfo().propertyNamespace + 'hideNull'] || 'no';
-        let showSubTechniques = config[this.getPropertyNamespaceInfo().propertyNamespace + 'showSubTechniques'] || 'yes';
+        let hideNull = vizUtils.normalizeBoolean(config[this.getPropertyNamespaceInfo().propertyNamespace + 'hideNull'] || 'no');
+        let showSubTechniques = vizUtils.normalizeBoolean(config[this.getPropertyNamespaceInfo().propertyNamespace + 'showSubTechniques'] || 'yes');
         let matrixPlatform = (config[this.getPropertyNamespaceInfo().propertyNamespace + 'matrix'] || 'enterprise::').split('::');
         let matrix = matrixPlatform[0];
         let platform = matrixPlatform[1].split(',');
         let matrixJSON = {};
 
-        self.animate = (animate == 'yes') ? true : false;
+        self.animate = animate;
         
         if (matrix == 'ics') {
             matrixJSON = icsAttack;
@@ -202,7 +202,7 @@ return SplunkVisualizationBase.extend({
             });
         })
 
-        if (showSubTechniques == 'yes') {
+        if (showSubTechniques) {
             matrixJSON.sub_techniques.forEach(function(sub_technique) {
                 if (platform != '' && 'platform' in sub_technique && !platform.some(p=> sub_technique.platform.indexOf(p) >= 0)) return;
 
@@ -227,14 +227,6 @@ return SplunkVisualizationBase.extend({
             let id = vizUtils.escapeHtml(r[0]);
             let count = vizUtils.escapeHtml(r[1]);
             let $technique = $(`.mtr-technique[data-id="${id}"], .mtr-sub-technique[data-id="${id}"]`, $content)
-
-            $technique.click(function(e) {
-                drilldown_data = {}
-                r.forEach((d, i) => { drilldown_data[data.fields[i].name] = d })
-                drilldown_data['mtr_technique'] = $(this).closest('.mtr-technique-container').attr('data-id');
-                drilldown_data['mtr_tactic'] = $(this).closest('.mtr-tactic-col').attr('data-id');
-                self._drilldown(drilldown_data, e);
-            });
 
             if (!$technique || !count || count == '' || count == null || isNaN(count)) return;
 
@@ -328,7 +320,7 @@ return SplunkVisualizationBase.extend({
 
                 let val = $(this).attr('data-value');
 
-                if (!val && hideNull == 'yes') {
+                if (!val && hideNull) {
                     $(this).parent().remove();
                     return;
                 }
@@ -340,7 +332,7 @@ return SplunkVisualizationBase.extend({
                 }
             });
 
-            if (total == 0 && hideNull == 'yes') {
+            if (total == 0 && hideNull) {
                 $(this).remove();
                 return
             }
@@ -355,6 +347,7 @@ return SplunkVisualizationBase.extend({
 
             if(percent < 2) percent = 2;
 
+            $(this).attr('data-value', sum);
             $('.mtr-tactic .mtr-meter-fill', this)
                 .css('background', color.background)
                 .css('color', color.foreground)
@@ -366,8 +359,27 @@ return SplunkVisualizationBase.extend({
             $('.mtr-tactic .mtr-total .mtr-stats-val', this).text(sum.toLocaleString());
             $('.mtr-tactic .mtr-count .mtr-stats-val', this).text(count.toLocaleString() + ` (${coverage}%)`);
             $('.mtr-tactic .mtr-mean .mtr-stats-val', this).text(mean.toLocaleString());
+        });
 
+        $(`.mtr-technique, .mtr-sub-technique, .mtr-tactic`, $content).each(function() {
+            $(this).click(function(e) {
+                let $tactic_col = $(this).closest('.mtr-tactic-col');
+                let $technique_container = $(this).closest('.mtr-technique-container');
+                let $technique = $('.mtr-technique', $technique_container);
+                let $sub_technique = $(this).closest('.mtr-sub-technique');
+                let drilldown_data = {}
 
+                drilldown_data['mtr_sub-technique_id'] = $sub_technique.attr('data-id');
+                drilldown_data['mtr_technique_id'] = $technique.attr('data-id');
+                drilldown_data['mtr_tactic_id'] = $tactic_col.attr('data-id');
+                drilldown_data['mtr_sub-technique_name'] = $sub_technique.attr('data-name');
+                drilldown_data['mtr_technique_name'] = $technique.attr('data-name');
+                drilldown_data['mtr_tactic_name'] = $tactic_col.attr('data-name');
+                drilldown_data['mtr_sub-technique_value'] = $sub_technique.attr('data-value');
+                drilldown_data['mtr_technique_value'] = $technique.attr('data-value');
+                drilldown_data['mtr_tactic_value'] = $tactic_col.attr('data-value');
+                self._drilldown(drilldown_data, e);
+            });
         });
 
         $('.mtr-technique-col', $content).each(function() {
