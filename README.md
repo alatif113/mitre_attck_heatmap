@@ -50,6 +50,9 @@ This app is currently unsupported for Internet Explorer. Please report issues to
 
 ## Change Log
 
+### v1.7.3
+- Updated to use ATT&CK v14
+
 ### v1.7.0
 - Added ability to toggle sub-techniques on/off via the visualization format menu.
 - Added ability to enable an animation on the heatmap, highlighting techniques from lowest to highest values within a given duration. 
