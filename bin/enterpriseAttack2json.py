@@ -33,9 +33,15 @@ for source in sources:
 
         for obj in attack_json['objects']:
             if obj['type'] == 'attack-pattern':
+                if 'x_mitre_deprecated' in obj:
+                    if obj['x_mitre_deprecated']: continue
+                if 'revoked' in obj:
+                    if obj['revoked']: continue 
+            
                 for ref in obj['external_references']:
                     if ref['source_name'] == 'mitre-attack':
-                        if obj['x_mitre_is_subtechnique'] == False:
+                        # Techniques
+                        if not obj['x_mitre_is_subtechnique']:
                             output_json['techniques'].append({
                                 'id': ref['external_id'], 
                                 'name': obj['name'], 
@@ -43,6 +49,7 @@ for source in sources:
                                 'url': ref['url'],
                                 'platform': obj['x_mitre_platforms']
                             })
+                        # Sub-techniques
                         else:
                             technique = re.search(r"T\d{4}", ref['external_id'])
                             sub_id = re.search(r"\.\d+", ref['external_id'])
@@ -53,8 +60,7 @@ for source in sources:
                                 'technique': None if technique is None else technique.group(),
                                 'url': ref['url'],
                                 'platform': obj['x_mitre_platforms']
-                            })
-                            print(obj['x_mitre_platforms'])
+                            })     
             elif obj['type'] == 'x-mitre-tactic':
                 output_json['tactics'].append({
                     'id': obj['external_references'][0]['external_id'],
