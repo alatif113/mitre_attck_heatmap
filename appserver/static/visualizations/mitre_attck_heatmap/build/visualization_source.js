@@ -8,7 +8,8 @@ define([
     'api/SplunkVisualizationUtils',
     'enterpriseAttack',
     'icsAttack',
-    'mobileAttack'
+    'mobileAttack',
+    'd3fend'
     // Add required assets to this list
 ],
 function(
@@ -19,6 +20,7 @@ function(
     enterpriseAttack,
     icsAttack,
     mobileAttack,
+    d3fend
 ) {
 
 // Extend from SplunkVisualizationBase
@@ -88,6 +90,8 @@ return SplunkVisualizationBase.extend({
             matrixJSON = icsAttack;
         } else if (matrix == 'mobile') {
             matrixJSON = mobileAttack;
+        } else if (matrix == 'd3fend') {
+            matrixJSON = d3fend
         } else {
             matrixJSON = enterpriseAttack;
         }
