@@ -50,6 +50,10 @@ This app is currently unsupported for Internet Explorer. Please report issues to
 
 ## Change Log
 
+### v1.8.0
+- Added MITRE D3FEND Matrix
+- Updated Enterprise, Mobile, and ICS matrices
+
 ### v1.7.3
 - Updated to use ATT&CK v14
 
