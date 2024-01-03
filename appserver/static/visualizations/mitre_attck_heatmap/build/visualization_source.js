@@ -197,7 +197,7 @@ return SplunkVisualizationBase.extend({
                     <div class="mtr-technique" data-id="${technique.id}" data-name="${technique.name}" data-url="${technique.url}">
                         <span>${title}</span>
                     </div>
-                    <div class="mtr-sub-technique-container mtr-display-${display}""></div>
+                    <div class="mtr-sub-technique-container mtr-display-${display}"></div>
                 </div>
             `);
 
@@ -221,11 +221,11 @@ return SplunkVisualizationBase.extend({
             })
         }
 
-        $('.mtr-tactic-col', $content).each(function() {
-            if (!$('.mtr-technique-container[data-id]', this).length) {
-                this.remove();
-            }
-        })
+        //$('.mtr-tactic-col', $content).each(function() {
+        //    if (!$('.mtr-technique-container[data-id]', this).length) {
+        //        this.remove();
+        //    }
+        //})
 
         data.rows.forEach(function(r) {
             let id = vizUtils.escapeHtml(r[0]);
