@@ -2,19 +2,21 @@ import requests
 import json
 import re
 
+path_prefix = '../appserver/static/visualizations/mitre_attck_heatmap/build/'
+
 sources = [
     {
-        'name': 'enterprise',
+        'name': 'enterpriseAttack',
         'url': 'https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack.json',
         'sort_order': ['Reconnaissance', 'Resource Development', 'Initial Access', 'Execution', 'Persistence', 'Privilege Escalation', 'Defense Evasion', 'Credential Access', 'Discovery', 'Lateral Movement', 'Collection', 'Command and Control', 'Exfiltration', 'Impact']
     },
     {
-        'name': 'ics',
+        'name': 'icsAttack',
         'url': 'https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/ics-attack/ics-attack.json',
         'sort_order': ['Initial Access', 'Execution', 'Persistence', 'Privilege Escalation', 'Evasion', 'Discovery', 'Lateral Movement', 'Collection', 'Command and Control', 'Inhibit Response Function', 'Impair Process Control', 'Impact']
     },
     {
-        'name': 'mobile',
+        'name': 'mobileAttack',
         'url': 'https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/mobile-attack/mobile-attack.json',
         'sort_order': ['Initial Access', 'Execution', 'Persistence', 'Privilege Escalation', 'Defense Evasion', 'Credential Access', 'Discovery', 'Lateral Movement', 'Collection', 'Command and Control', 'Exfiltration', 'Impact']
     }
@@ -74,8 +76,8 @@ for source in sources:
     output_json['tactics'] = sorted(output_json['tactics'], key=lambda tactic: tactic['sort_order']) 
     output_json['sub_techniques'] = sorted(output_json['sub_techniques'], key=lambda sub_techniques: sub_techniques['id']) 
 
-    with open(name + '.json', 'w') as fp:
-        fp.write(json.dumps(output_json))
+    with open(path_prefix + name + '.js', 'w') as fp:
+        fp.write('define(function() { return ' + json.dumps(output_json) + ' })')
 
 # MITRE D3FEND
 
@@ -123,7 +125,7 @@ for obj in attack_json['@graph']:
 for obj in attack_json['@graph']:
     if '@type' not in obj:
         continue
-        
+
     if 'd3f:d3fend-id' in obj and any(t in techniques for t in obj['@type']):
         output_json['sub_techniques'].append({
             'id': obj['d3f:d3fend-id'],
@@ -136,8 +138,8 @@ for obj in attack_json['@graph']:
 output_json['tactics'] = sorted(output_json['tactics'], key=lambda tactic: tactic['sort_order']) 
 output_json['sub_techniques'] = sorted(output_json['sub_techniques'], key=lambda sub_techniques: sub_techniques['id']) 
 
-with open(name + '.json', 'w') as fp:
-    fp.write(json.dumps(output_json))
+with open(path_prefix + name + '.js', 'w') as fp:
+    fp.write('define(function() { return ' + json.dumps(output_json) + ' })')
 
 
 
