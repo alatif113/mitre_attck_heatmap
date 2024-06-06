@@ -43,15 +43,15 @@ for source in sources:
                 if obj['revoked']: continue 
         
             for ref in obj['external_references']:
-                if ref['source_name'] == 'mitre-attack':
+                if ref['source_name'] == 'mitre-attack' and 'external_id' in ref:
                     # Techniques
                     if not obj['x_mitre_is_subtechnique']:
                         output_json['techniques'].append({
                             'id': ref['external_id'], 
-                            'name': obj['name'], 
+                            'name': obj.get('name', ""), 
                             'tactics': [phase['phase_name'] for phase in obj['kill_chain_phases']],
-                            'url': ref['url'],
-                            'platform': obj['x_mitre_platforms']
+                            'url': ref.get('url', ""),
+                            'platform': obj.get('x_mitre_platforms', "")
                         })
                     # Sub-techniques
                     else:
@@ -60,12 +60,12 @@ for source in sources:
                         output_json['sub_techniques'].append({
                             'id': ref['external_id'],
                             'short_id': None if sub_id is None else sub_id.group(), 
-                            'name': obj['name'], 
+                            'name': obj.get('name', ""), 
                             'technique': None if technique is None else technique.group(),
-                            'url': ref['url'],
-                            'platform': obj['x_mitre_platforms']
+                            'url': ref.get('url', ""),
+                            'platform': obj.get('x_mitre_platforms', "")
                         })     
-        elif obj['type'] == 'x-mitre-tactic':
+        elif obj['type'] == 'x-mitre-tactic' and 'external_references' in obj and 'external_id' in obj['external_references'][0]:
             output_json['tactics'].append({
                 'id': obj['external_references'][0]['external_id'],
                 'name': obj['name'],
@@ -100,7 +100,11 @@ for obj in attack_json['@graph']:
     if '@type' not in obj:
         continue
 
-    if 'd3f:DefensiveTechnique' in obj['@type']:
+    if 'rdfs:subClassOf' in obj:
+        if isinstance(obj['rdfs:subClassOf'], list) and not any(o['@id'] == 'd3f:DefensiveTechnique' for o in obj['rdfs:subClassOf']):
+            continue
+        if '@id' in obj['rdfs:subClassOf'] and not obj['rdfs:subClassOf']['@id'] == 'd3f:DefensiveTechnique':
+            continue
         tactics.append(obj['@id'])
         output_json['tactics'].append({
             'id': obj['d3f:d3fend-id'],

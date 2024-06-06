@@ -161,20 +161,21 @@ return SplunkVisualizationBase.extend({
                     <div class="mtr-tactic">
                         <div class="mtr-tactic-title">${tactic.name}</div>
                         <div class="mtr-meter-container">
-                            <div class="mtr-meter-fill">
-                                <div class="mtr-stats-container">
-                                    <div class="mtr-total mtr-stat">
-                                        <div class="mtr-stats-label">Total</div>
-                                        <div class="mtr-stats-val"></div>
-                                    </div>
-                                    <div class="mtr-count mtr-stat">
-                                        <div class="mtr-stats-label">Unique Techniques</div>
-                                        <div class="mtr-stats-val"></div>
-                                    </div>
-                                    <div class="mtr-mean mtr-stat">
-                                        <div class="mtr-stats-label">Average per Technique</div>
-                                        <div class="mtr-stats-val"></div>
-                                    </div>
+                            <div class="mtr-meter-fill"></div>
+                        </div>
+                        <div class="grid-wrapper">
+                            <div class="mtr-stats-container">
+                                <div class="mtr-total mtr-stat">
+                                    <div class="mtr-stats-label">Total</div>
+                                    <div class="mtr-stats-val"></div>
+                                </div>
+                                <div class="mtr-count mtr-stat">
+                                    <div class="mtr-stats-label">Unique Techniques</div>
+                                    <div class="mtr-stats-val"></div>
+                                </div>
+                                <div class="mtr-mean mtr-stat">
+                                    <div class="mtr-stats-label">Average per Technique</div>
+                                    <div class="mtr-stats-val"></div>
                                 </div>
                             </div>
                         </div>
