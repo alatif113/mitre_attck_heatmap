@@ -56,6 +56,12 @@
         <splunk-text-input name="{{VIZ_NAMESPACE}}.legendTitle" value="">
         </splunk-text-input>
     </splunk-control-group>
+    <splunk-control-group label="Search Bar" help="">    
+        <splunk-radio-input name="{{VIZ_NAMESPACE}}.showSearchBar" value="yes">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </splunk-radio-input>
+    </splunk-control-group>
 </form>
 <form class="splunk-formatter-section" section-label="Color">
     <splunk-control-group label="Theme" help="">

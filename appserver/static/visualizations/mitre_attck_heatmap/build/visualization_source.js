@@ -79,6 +79,7 @@ return SplunkVisualizationBase.extend({
         let sortOrder = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortOrder'] || 'asc';
         let hideNull = vizUtils.normalizeBoolean(config[this.getPropertyNamespaceInfo().propertyNamespace + 'hideNull'] || 'no');
         let showSubTechniques = vizUtils.normalizeBoolean(config[this.getPropertyNamespaceInfo().propertyNamespace + 'showSubTechniques'] || 'yes');
+        let showSearchBar = vizUtils.normalizeBoolean(config[this.getPropertyNamespaceInfo().propertyNamespace + 'showSearchBar'] || 'yes');
         let matrixPlatform = (config[this.getPropertyNamespaceInfo().propertyNamespace + 'matrix'] || 'enterprise::').split('::');
         let matrix = matrixPlatform[0];
         let platform = matrixPlatform[1].split(',');
@@ -101,6 +102,15 @@ return SplunkVisualizationBase.extend({
         colorMap[0].color = this._hexToRgb(startColor);
         colorMap[1].color = this._hexToRgb(midColor);
         colorMap[2].color = this._hexToRgb(endColor);
+
+        let $searchbar = $(`
+            <div class="mtr-search-container">
+                <div class="splunk-textinput">
+                    <label for="mtrSearchInput">Technique ID/Name</label>
+                    <input id="mtrSearchInput" class="mtr-search-input" type="text"/>
+                </div>
+            </div>
+        `);
         
         let $content = $(`<div class="mtr-viz-container"></div>`);
 
@@ -221,12 +231,6 @@ return SplunkVisualizationBase.extend({
                 });
             })
         }
-
-        //$('.mtr-tactic-col', $content).each(function() {
-        //    if (!$('.mtr-technique-container[data-id]', this).length) {
-        //        this.remove();
-        //    }
-        //})
 
         data.rows.forEach(function(r) {
             let id = vizUtils.escapeHtml(r[0]);
@@ -403,6 +407,24 @@ return SplunkVisualizationBase.extend({
             `);
         });
 
+        if (showSearchBar) {
+            $('input', $searchbar).on('change', function() {
+                value = vizUtils.escapeHtml(this.value).toLowerCase();
+                if(value == '' || value == null) {
+                    $('.mtr-technique', $content).removeClass('focused').removeClass('defocused');
+                } else {
+                    $('.mtr-technique', $content).removeClass('focused').addClass('defocused');
+                    let $matched = $('.mtr-technique', $content).filter(function() {
+                        let id = $(this).attr('data-id')?.toLowerCase();
+                        let name = $(this).attr('data-name')?.toLowerCase();
+                        return (id?.indexOf(value) > -1 || name?.indexOf(value) > -1);
+                    });
+                    $matched.removeClass('defocused').addClass('focused');
+                }
+            });
+
+            $searchbar.appendTo(this.$el);
+        }
         $content.appendTo(this.$el);
         $legend.appendTo(this.$el);
 

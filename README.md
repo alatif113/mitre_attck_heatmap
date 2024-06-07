@@ -50,6 +50,10 @@ This app is currently unsupported for Internet Explorer. Please report issues to
 
 ## Change Log
 
+### v1.9.0
+- Added an optional search bar, enabled through the format menu, to quickly highlight techniques based on their ID or name
+- Updated to use ATT&CK v15.1 and D3FEND v0.15.0
+
 ### v1.8.0
 - Added MITRE D3FEND Matrix
 - Updated Enterprise, Mobile, and ICS matrices

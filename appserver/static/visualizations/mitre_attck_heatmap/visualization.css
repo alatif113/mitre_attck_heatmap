@@ -16,6 +16,11 @@
 	--font-xxsmall: .7rem;
 }
 
+.mtr-search-container {
+	margin-top: 1rem;
+	text-align: center;
+}
+
 .mtr-viz-container {
 	display: -webkit-box;
 	display: -ms-flexbox;
@@ -184,7 +189,9 @@
 	opacity: .25;
 }
 
-.mtr-tactic-col:hover .mtr-technique-container:hover {
+.mtr-tactic-col:hover .mtr-technique-container:hover, 
+.mtr-tactic-col:hover .mtr-technique-container:has(.defocused),
+.mtr-tactic-col:hover .mtr-technique-container:has(.focused) {
 	opacity: 1;
 }
 
@@ -193,6 +200,7 @@
 	-webkit-box-flex: 1;
 	-ms-flex-positive: 1;
 	flex-grow: 1;
+	z-index: 1;
 	-webkit-transition: var(--transition-short);
 	transition: var(--transition-short);
 }
@@ -277,6 +285,10 @@
 	opacity: 0.15;
 }
 
+.mtr-technique-container:has(.defocused) {
+	pointer-events: none;
+}
+
 .mtr-sub-technique-container {
 	position: absolute;
 	z-index: 1;
@@ -291,7 +303,7 @@
 
 .mtr-technique-tooltip {
 	position: absolute;
-	z-index: 1;
+	z-index: 100;
 	background: var(--bg-black);
 	padding: 1em;
 	width: 300px;
