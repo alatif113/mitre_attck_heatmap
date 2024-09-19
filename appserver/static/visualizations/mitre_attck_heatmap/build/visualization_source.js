@@ -370,6 +370,13 @@ return SplunkVisualizationBase.extend({
             $('.mtr-tactic .mtr-mean .mtr-stats-val', this).text(mean.toLocaleString());
         });
 
+        $('.mtr-sub-technique', $content).each(function() {
+            let val = $(this).attr('data-value');
+            if (hideNull && isNaN(val)) {
+                $(this).remove();
+            }
+        });
+
         $(`.mtr-technique, .mtr-sub-technique, .mtr-tactic`, $content).each(function() {
             $(this).click(function(e) {
                 let $tactic_col = $(this).closest('.mtr-tactic-col');
