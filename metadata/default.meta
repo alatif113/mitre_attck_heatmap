@@ -1,8 +1,7 @@
 
 []
-access = read : [ * ], write : [ admin ]
-export = system
+access = read : [ * ], write : [ admin, sc_admin ]
 
 [vizualizations/mitre_attack_heatmap]
-access = read : [ * ], write : [ admin ]
+access = read : [ * ], write : [ admin, sc_admin ]
 export = none

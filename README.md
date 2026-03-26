@@ -4,9 +4,9 @@ Custom Visualizations give you new interactive ways to visualize your data durin
 
 This app uses ATT&CK v15.1 and D3FEND v0.15.0. For more information visit https://attack.mitre.org/resources/versions/ and https://d3fend.mitre.org/resources/
 
-![screenshot.png](https://github.com/alatif113/mitre_attack_heatmap/blob/master/static/screenshot.gif?raw=true)
+![screenshot.png](https://github.com/alatif113/mitre_attack_heatmap/blob/master/appserver/static/screenshot.gif?raw=true)
 
-![screenshot.png](https://github.com/alatif113/mitre_attack_heatmap/blob/master/static/focus.gif?raw=true)
+![screenshot.png](https://github.com/alatif113/mitre_attack_heatmap/blob/master/appserver/static/focus.gif?raw=true)
 
 ## Usage
 

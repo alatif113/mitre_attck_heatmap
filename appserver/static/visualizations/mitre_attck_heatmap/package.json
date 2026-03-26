@@ -4,7 +4,7 @@
   "description": "Visualization app template. Put a description here.",
   "main": "visualization.js",
   "scripts": {
-    "build": "babel build --out-dir src; terser src/visualization_source.js --compress --mangle --output src/visualization_source.js; /Applications/Splunk/bin/splunk cmd node ./node_modules/webpack/bin/webpack.js",
+    "build": "babel build --out-dir src && npx terser src/visualization_source.js --compress --mangle --output src/visualization_source.js && /Applications/Splunk/bin/splunk cmd node ./node_modules/webpack/bin/webpack.js",
     "devbuild": "$SPLUNK_HOME/bin/splunk cmd node ./node_modules/webpack/bin/webpack.js --progress",
     "watch": "$SPLUNK_HOME/bin/splunk cmd node ./node_modules/webpack/bin/webpack.js -d --watch --progress"
   },
@@ -19,6 +19,7 @@
     "webpack": "^1.12.6"
   },
   "dependencies": {
+    "babel": "^5.8.38",
     "jquery": ">=3.5.0",
     "underscore": ">=1.12.1"
   }
