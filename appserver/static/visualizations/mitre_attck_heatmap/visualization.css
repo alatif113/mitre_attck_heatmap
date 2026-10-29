@@ -413,3 +413,40 @@
 .mtr-technique-tooltip .mtr-rollup-note {
 	opacity: 0.8;
 }
+
+.mtr-status-legend {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.3rem 1rem;
+}
+
+.mtr-status-item {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	font-size: var(--mtr-font-xsmall);
+	color: var(--mtr-text-black);
+}
+
+.dark .mtr-status-item {
+	color: var(--mtr-text-white);
+}
+
+.mtr-status-swatch {
+	display: inline-block;
+	width: 0.9rem;
+	height: 0.9rem;
+	border-radius: 3px;
+	border: 1px solid rgba(128, 128, 128, 0.5);
+}
+
+.mtr-status-count {
+	opacity: 0.7;
+}
+
+.mtr-technique-tooltip .mtr-status {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	margin: 0.25rem 0;
+}

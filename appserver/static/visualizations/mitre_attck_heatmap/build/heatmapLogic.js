@@ -106,6 +106,7 @@ define(function() {
         };
         let matrixPlatform = (get('matrix') || 'enterprise::').split('::');
         let columns = resolveFields(fields, mappingNames(config, namespace));
+        let statusColors = parseStatusColors(get('statusColors'));
 
         return {
             columns: columns,
@@ -117,12 +118,18 @@ define(function() {
             startVal: toNumber(get('startVal'), 0),
             endVal: toNumber(get('endVal'), 100),
             display: get('display') || 'id',
-            legendTitle: vizUtils.escapeHtml(get('legendTitle')) || vizUtils.escapeHtml(fields[columns.value].name),
+            legendTitle: vizUtils.escapeHtml(get('legendTitle')) ||
+                vizUtils.escapeHtml(fields[columns.status >= 0 ? columns.status : columns.value].name),
             sortKey: get('sortKey') || 'data-id',
             sortOrder: get('sortOrder') || 'asc',
             hideNull: vizUtils.normalizeBoolean(get('hideNull') || 'no'),
             showSubTechniques: vizUtils.normalizeBoolean(get('showSubTechniques') || 'yes'),
             showSearchBar: vizUtils.normalizeBoolean(get('showSearchBar') || 'yes'),
+            statusMode: columns.status >= 0,
+            statusColors: statusColors,
+            statusPriority: statusColors.map(entry => entry.key),
+            statusDefaultColor: HEX_COLOR.test(String(get('statusDefaultColor') || '').trim())
+                ? String(get('statusDefaultColor')).trim() : DEFAULT_STATUS_COLOR,
             scaleMode: get('scaleMode') == 'auto' ? 'auto' : 'manual',
             autoLowerBound: get('autoLowerBound') == 'min' ? 'min' : 'zero',
             rollup: ROLLUPS.indexOf(get('rollup')) >= 0 ? get('rollup') : 'none',
@@ -231,6 +238,91 @@ define(function() {
             }
         });
         return result;
+    }
+
+    const MAX_STATUSES = 24;
+    const HEX_COLOR = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
+    const DEFAULT_STATUS_COLOR = '#8c8c8c';
+
+    // "covered=#53a051, partial=#f1813f" -> [{name, key, color}] in the order
+    // written. Entries without a valid #rgb/#rrggbb color or with a repeated
+    // name (ignoring case) are skipped; at most 24 are kept.
+    function parseStatusColors(text) {
+        let list = [];
+        let seen = Object.create(null);
+        String(text || '').split(',').forEach(function(part) {
+            let at = part.lastIndexOf('=');
+            if (at < 0) return;
+            let name = part.slice(0, at).trim();
+            let color = part.slice(at + 1).trim();
+            let key = name.toLowerCase();
+            if (!name || !HEX_COLOR.test(color) || seen[key] || list.length >= MAX_STATUSES) return;
+            seen[key] = true;
+            list.push({ name: name, key: key, color: color });
+        });
+        return list;
+    }
+
+    // Matching ignores case and surrounding spaces.
+    function statusColor(status, list, defaultColor) {
+        let key = String(status || '').trim().toLowerCase();
+        let found = list.find(entry => entry.key == key);
+        return found ? found.color : defaultColor;
+    }
+
+    // Position of a status in the configured order; unlisted statuses rank last.
+    function statusRank(status, priority) {
+        let index = priority.indexOf(String(status || '').trim().toLowerCase());
+        return index < 0 ? priority.length : index;
+    }
+
+    // Black or white text, whichever reads better on a #rgb/#rrggbb background.
+    function readableTextColor(hex) {
+        let color = hexToRgb(hex);
+        let luminance = (0.299 * color.r + 0.587 * color.g + 0.114 * color.b) / 255;
+        return luminance > 0.65 ? 'rgb(0,0,0)' : 'rgb(255,255,255)';
+    }
+
+    // The statuses to show in the legend, with how many cells have each: the
+    // configured ones first (even with no cells), then any others in the order
+    // they appear. `isShown(id)` says whether an id has a cell on the page.
+    function statusSummary(entries, isShown, list) {
+        let items = new Map();
+        list.forEach(entry => items.set(entry.key, { name: entry.name, key: entry.key, count: 0 }));
+        entries.forEach(function(entry, id) {
+            if (!entry.status || !isShown(id)) return;
+            let key = entry.status.toLowerCase();
+            let item = items.get(key);
+            if (!item) {
+                if (items.size >= MAX_STATUSES) return;
+                item = { name: entry.status, key: key, count: 0 };
+                items.set(key, item);
+            }
+            item.count += 1;
+        });
+        return Array.from(items.values());
+    }
+
+    // A bar split in proportion to each status's share of `total` cells, in the
+    // order given; the remainder is transparent. Two stops per color keep the
+    // edges hard in every browser.
+    function statusBarGradient(items, counts, total) {
+        let stops = [];
+        let position = 0;
+        items.forEach(function(item) {
+            let count = counts[item.key] || 0;
+            if (!count || !total) return;
+            let end = position + count / total * 100;
+            stops.push(item.color + ' ' + position + '%', item.color + ' ' + end + '%');
+            position = end;
+        });
+        if (position < 100) stops.push('transparent ' + position + '%', 'transparent 100%');
+        return 'linear-gradient(to right, ' + stops.join(', ') + ')';
+    }
+
+    // A row counts when it has a number, or (with a status field) a status.
+    function isValidEntry(entry, statusMode) {
+        return isValidCount(entry.count) || (!!statusMode && entry.status !== '');
     }
 
     // Color bounds taken from the data: the highest value is the upper bound, and
@@ -396,6 +488,15 @@ define(function() {
             return flip * (a < b ? -1 : 1);
         }
 
+        if (key == 'data-status') {
+            // a and b are the cells' data-status-rank attributes; cells without a status sort last.
+            let aRank = parseInt(a);
+            let bRank = parseInt(b);
+            if (isNaN(aRank)) aRank = Infinity;
+            if (isNaN(bRank)) bRank = Infinity;
+            return flip * (aRank < bRank ? -1 : (aRank > bRank ? 1 : 0));
+        }
+
         if (key == 'data-value') {
             let aVal = parseFloat(a);
             let bVal = parseFloat(b);
@@ -453,6 +554,15 @@ define(function() {
         parseRow: parseRow,
         isValidCount: isValidCount,
         computeBounds: computeBounds,
+        MAX_STATUSES: MAX_STATUSES,
+        DEFAULT_STATUS_COLOR: DEFAULT_STATUS_COLOR,
+        parseStatusColors: parseStatusColors,
+        statusColor: statusColor,
+        statusRank: statusRank,
+        readableTextColor: readableTextColor,
+        statusSummary: statusSummary,
+        statusBarGradient: statusBarGradient,
+        isValidEntry: isValidEntry,
         ROLLUPS: ROLLUPS,
         subTechniqueParents: subTechniqueParents,
         rollUp: rollUp,

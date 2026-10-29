@@ -34,6 +34,10 @@ describe('parseConfig', () => {
             hideNull: false,
             showSubTechniques: true,
             showSearchBar: true,
+            statusMode: false,
+            statusColors: [],
+            statusPriority: [],
+            statusDefaultColor: '#8c8c8c',
             scaleMode: 'manual',
             autoLowerBound: 'zero',
             rollup: 'none',
@@ -241,6 +245,101 @@ describe('parseRow / isValidCount', () => {
         const rows = loadFixture('wide.json').rows.map(r => logic.parseRow(r, escape));
         expect(rows.map(r => r.id)).toEqual(['T1059.001', 'T1003.001', 'T1021.002', 'T1071', 'T1048']);
         expect(rows.every(r => logic.isValidCount(r.count))).toBe(true);
+    });
+});
+
+describe('status colors (feature 5)', () => {
+    const list = logic.parseStatusColors('covered=#53a051, Partial = #f1813f ,gap=#d93f3c');
+
+    test('parses name=color pairs in the order written', () => {
+        expect(list).toEqual([
+            { name: 'covered', key: 'covered', color: '#53a051' },
+            { name: 'Partial', key: 'partial', color: '#f1813f' },
+            { name: 'gap', key: 'gap', color: '#d93f3c' }
+        ]);
+    });
+
+    test.each([
+        ['', 0], [undefined, 0], ['nocolor', 0], ['a=red', 0], ['a=#12', 0], ['a=#12345g', 0], ['=#fff', 0],
+        ['a=#fff,A=#000', 1], ['a=#abc,b=#aabbcc', 2], ['a=b=#fff', 1], ['constructor=#fff,__proto__=#000', 2]
+    ])('%p keeps %p entries', (text, count) => {
+        expect(logic.parseStatusColors(text)).toHaveLength(count);
+    });
+
+    test('keeps at most 24 entries', () => {
+        const text = Array.from({ length: 40 }, (_, i) => 's' + i + '=#fff').join(',');
+        expect(logic.parseStatusColors(text)).toHaveLength(logic.MAX_STATUSES);
+    });
+
+    test('colors match ignoring case and spaces; other statuses get the default', () => {
+        expect(logic.statusColor(' COVERED ', list, '#000')).toBe('#53a051');
+        expect(logic.statusColor('partial', list, '#000')).toBe('#f1813f');
+        expect(logic.statusColor('unknown', list, '#000')).toBe('#000');
+        expect(logic.statusColor(undefined, list, '#000')).toBe('#000');
+    });
+
+    test('rank is the position in the list; unlisted statuses come last', () => {
+        const priority = ['gap', 'partial'];
+        expect([logic.statusRank('GAP', priority), logic.statusRank('partial', priority), logic.statusRank('x', priority)]).toEqual([0, 1, 2]);
+    });
+
+    test('text color is chosen for contrast', () => {
+        expect(logic.readableTextColor('#000000')).toBe('rgb(255,255,255)');
+        expect(logic.readableTextColor('#ffffff')).toBe('rgb(0,0,0)');
+        expect(logic.readableTextColor('#fc0')).toBe('rgb(0,0,0)');
+        expect(logic.readableTextColor('#d93f3c')).toBe('rgb(255,255,255)');
+    });
+
+    describe('statusSummary', () => {
+        const entries = new Map([
+            ['T1', { status: 'Covered' }], ['T2', { status: 'covered' }], ['T3', { status: 'Mystery' }],
+            ['T4', { status: '' }], ['T5', { status: 'gap' }], ['T6', { status: 'mystery' }]
+        ]);
+
+        test('lists the configured statuses first, then others as they appear, with cell counts', () => {
+            const items = logic.statusSummary(entries, () => true, list);
+            expect(items.map(i => [i.name, i.count])).toEqual([['covered', 2], ['Partial', 0], ['gap', 1], ['Mystery', 2]]);
+        });
+
+        test('only counts ids that have a cell', () => {
+            const items = logic.statusSummary(entries, id => id != 'T1' && id != 'T3', list);
+            expect(items.map(i => i.count)).toEqual([1, 0, 1, 1]);
+        });
+    });
+
+    test('the tactic bar splits in proportion to the statuses, with a transparent remainder', () => {
+        const items = [{ key: 'gap', color: '#d93f3c' }, { key: 'covered', color: '#53a051' }, { key: 'none', color: '#000' }];
+        expect(logic.statusBarGradient(items, { gap: 1, covered: 1 }, 4))
+            .toBe('linear-gradient(to right, #d93f3c 0%, #d93f3c 25%, #53a051 25%, #53a051 50%, transparent 50%, transparent 100%)');
+        expect(logic.statusBarGradient(items, { gap: 2 }, 2)).toBe('linear-gradient(to right, #d93f3c 0%, #d93f3c 100%)');
+        expect(logic.statusBarGradient(items, {}, 3)).toBe('linear-gradient(to right, transparent 0%, transparent 100%)');
+    });
+
+    test('a row is valid with a number, or with a status when a status field is set', () => {
+        expect(logic.isValidEntry({ count: '5', status: '' }, false)).toBe(true);
+        expect(logic.isValidEntry({ count: '', status: 'gap' }, false)).toBe(false);
+        expect(logic.isValidEntry({ count: '', status: 'gap' }, true)).toBe(true);
+        expect(logic.isValidEntry({ count: 'n/a', status: '' }, true)).toBe(false);
+    });
+
+    test('sorting by status uses the stored rank; cells without one go last', () => {
+        const cmp = (a, b, order) => logic.compareByKey('data-status', order || 'asc', a, b);
+        expect(cmp('0', '2')).toBe(-1);
+        expect(cmp('2', '0')).toBe(1);
+        expect(cmp('1', '1')).toBe(0);
+        expect(cmp(undefined, '5')).toBe(1);
+        expect(cmp(undefined, undefined)).toBe(0);
+        expect(cmp('0', '2', 'desc')).toBe(1);
+    });
+
+    test('config: status mode needs a status field; the legend title follows it; bad colors are ignored', () => {
+        const parse = (options, fields) => logic.parseConfig(
+            Object.keys(options).reduce((c, k) => { c['ns.' + k] = options[k]; return c; }, {}), 'ns.', vizUtils,
+            fields || [{ name: 'id' }, { name: 'count' }, { name: 'description' }, { name: 'state' }]);
+        expect(parse({}).statusMode).toBe(false);
+        const on = parse({ statusField: 'state', statusColors: 'gap=#d93f3c,bad=red', statusDefaultColor: '#123456' });
+        expect(on).toMatchObject({ statusMode: true, statusPriority: ['gap'], statusDefaultColor: '#123456', legendTitle: 'state' });
+        expect(parse({ statusDefaultColor: 'blue' }).statusDefaultColor).toBe('#8c8c8c');
     });
 });
 

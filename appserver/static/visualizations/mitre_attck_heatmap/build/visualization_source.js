@@ -84,7 +84,8 @@ return SplunkVisualizationBase.extend({
         }
         let {
             animate, duration, startColor, midColor, endColor, startVal, endVal, display, legendTitle,
-            sortKey, sortOrder, hideNull, showSubTechniques, showSearchBar, matrix, platform
+            sortKey, sortOrder, hideNull, showSubTechniques, showSearchBar, matrix, platform,
+            statusMode, statusColors, statusDefaultColor
         } = options;
         let matrixJSON = logic.selectMatrix(matrix, {
             enterprise: enterpriseAttack,
@@ -93,7 +94,8 @@ return SplunkVisualizationBase.extend({
             d3fend: d3fend
         });
 
-        self.animate = animate;
+        // The numeric sweep means nothing when cells are colored by status.
+        self.animate = animate && !statusMode;
 
         this.$el.attr('class', '').addClass(theme);
 
@@ -192,16 +194,24 @@ return SplunkVisualizationBase.extend({
         let entries = new Map();
         data.rows.forEach(function(r) {
             let entry = logic.parseRow(r, vizUtils.escapeHtml, options.columns);
-            if (!logic.isValidCount(entry.count)) return;
+            if (!logic.isValidEntry(entry, statusMode)) return;
             entries.set(entry.id, entry);
         });
 
         entries = logic.rollUp(
-            entries, logic.subTechniqueParents(matrixJSON, platform), options.rollup, options.rollupParent, []
+            entries, logic.subTechniqueParents(matrixJSON, platform), options.rollup, options.rollupParent, options.statusPriority
         );
 
+        // Legend entries for status mode: each status with its color and cell count.
+        let statusItems = statusMode
+            ? logic.statusSummary(entries, id => cellsById.has(id), statusColors).map(function(item) {
+                item.color = logic.statusColor(item.name, statusColors, statusDefaultColor);
+                return item;
+            })
+            : [];
+
         // Automatic color bounds come from the values that will be colored.
-        if (options.scaleMode == 'auto') {
+        if (options.scaleMode == 'auto' && !statusMode) {
             let values = [];
             entries.forEach(function(entry, id) {
                 if (cellsById.has(id)) values.push(Number(entry.count));
@@ -209,8 +219,13 @@ return SplunkVisualizationBase.extend({
             ({ startVal, endVal } = logic.computeBounds(values, options.autoLowerBound, { startVal, endVal }));
         }
 
+        let $legend;
+        if (statusMode) {
+            $legend = self._statusLegend(legendTitle, statusItems);
+        } else {
+        // (the gradient legend keeps its original indentation so its markup is unchanged)
         let legendLabels = logic.legendLabels(startVal, endVal);
-        let $legend = $(`
+        $legend = $(`
             <div class="mtr-legend">
                 <div class="mtr-legend-title">` + legendTitle + `</div>
                 <div class="mtr-legend-meter-container">    
@@ -256,22 +271,38 @@ return SplunkVisualizationBase.extend({
                 };
             }
         })
+        }
 
         entries.forEach(function(entry, id) {
             let { count, description } = entry;
             let $technique = $(cellsById.get(id) || []);
 
-            let percent = self._getPercent(startVal, endVal, count);
-            let color = self._getColor(percent);
+            if (logic.isValidCount(count)) {
+                let percent = self._getPercent(startVal, endVal, count);
+                let color = self._getColor(percent);
 
-            percent = logic.visiblePercent(percent);
+                percent = logic.visiblePercent(percent);
 
-            $technique.attr('data-value', count);
-            $technique.attr('data-percent', percent);
-            $technique.attr('data-desc', description);
-            $technique
-                .css('background', color.background)
-                .css('color', color.foreground);
+                $technique.attr('data-value', count);
+                $technique.attr('data-percent', percent);
+                $technique.attr('data-desc', description);
+                if (!statusMode) {
+                    $technique
+                        .css('background', color.background)
+                        .css('color', color.foreground);
+                }
+            } else {
+                $technique.attr('data-desc', description);
+            }
+            if (statusMode && entry.status) {
+                let background = logic.statusColor(entry.status, statusColors, statusDefaultColor);
+                $technique
+                    .attr('data-status', entry.status)
+                    .attr('data-status-key', entry.status.toLowerCase())
+                    .attr('data-status-rank', logic.statusRank(entry.status, options.statusPriority))
+                    .css('background', background)
+                    .css('color', logic.readableTextColor(background));
+            }
             if (entry.rolledFrom) {
                 $technique.attr('data-rollup', entry.rolledFrom).addClass('mtr-rolled-up');
             }
@@ -322,15 +353,28 @@ return SplunkVisualizationBase.extend({
                 return false;
             });
 
+            let status = $(this).attr('data-status');
+            if (status) {
+                let $badge = $('<div class="mtr-status"><span class="mtr-status-swatch"></span><span class="mtr-status-text"></span></div>');
+                $('.mtr-status-swatch', $badge).css('background', this.style.background);
+                $('.mtr-status-text', $badge).text(status);
+                $('.mtr-name', $tooltip).after($badge);
+            }
+            if (statusMode) {
+                $('.mtr-meter-container', $tooltip).hide();
+            }
+
             $tooltip.appendTo($(this));
 
             if (value !== '') {
                 $('.mtr-label', $tooltip).text(data.fields[options.columns.value].name);
-                $('.mtr-meter-fill', $tooltip)
-                    .css('background', color.background)
-                    .animate({width: $(this).attr('data-percent') + '%'}, 50, 'linear');
-                if (color.luminance < 0.1) {
-                    $('.mtr-meter-container', $tooltip).addClass('dark');
+                if (!statusMode) {
+                    $('.mtr-meter-fill', $tooltip)
+                        .css('background', color.background)
+                        .animate({width: $(this).attr('data-percent') + '%'}, 50, 'linear');
+                    if (color.luminance < 0.1) {
+                        $('.mtr-meter-container', $tooltip).addClass('dark');
+                    }
                 }
             }
         }, function() {
@@ -343,9 +387,9 @@ return SplunkVisualizationBase.extend({
 
                 let val = $(this).attr('data-value');
 
-                if (!val && hideNull) {
-                    // Keep a technique without a value while a sub-technique under it has one.
-                    if ($('.mtr-sub-technique[data-value]', $(this).parent()).length == 0) {
+                if (!val && $(this).attr('data-status') === undefined && hideNull) {
+                    // Keep a technique without a value or status while a sub-technique under it has one.
+                    if ($('.mtr-sub-technique[data-value], .mtr-sub-technique[data-status]', $(this).parent()).length == 0) {
                         $(this).parent().remove();
                         return;
                     }
@@ -359,6 +403,12 @@ return SplunkVisualizationBase.extend({
             if (total == 0 && hideNull) {
                 $(this).remove();
                 return
+            }
+
+            if (statusMode) {
+                $(this).attr('data-value', sum);
+                self._statusTactic($(this), statusItems, total);
+                return;
             }
 
             let percent = self._getPercent(startVal, endVal, mean);
@@ -382,7 +432,7 @@ return SplunkVisualizationBase.extend({
 
         $('.mtr-sub-technique', $content).each(function() {
             let val = $(this).attr('data-value');
-            if (hideNull && isNaN(val)) {
+            if (hideNull && isNaN(val) && $(this).attr('data-status') === undefined) {
                 $(this).remove();
             }
         });
@@ -404,6 +454,8 @@ return SplunkVisualizationBase.extend({
                 drilldown_data['mtr_sub-technique_value'] = $sub_technique.attr('data-value');
                 drilldown_data['mtr_technique_value'] = $technique.attr('data-value');
                 drilldown_data['mtr_tactic_value'] = $tactic_col.attr('data-value');
+                drilldown_data['mtr_sub-technique_status'] = $sub_technique.attr('data-status');
+                drilldown_data['mtr_technique_status'] = $technique.attr('data-status');
                 // Clicking a tactic has always also supplied the tactic name as mtr_tactic.
                 if ($(this).hasClass('mtr-tactic')) {
                     drilldown_data['mtr_tactic'] = $tactic_col.attr('data-name');
@@ -489,6 +541,60 @@ return SplunkVisualizationBase.extend({
         })
     },
 
+    // The legend in status mode: one swatch per status with its cell count.
+    // Hovering a swatch highlights the cells that have that status.
+    _statusLegend: function(legendTitle, items) {
+        let self = this;
+        let $legend = $('<div class="mtr-legend mtr-legend-status"><div class="mtr-legend-title"></div><div class="mtr-status-legend"></div></div>');
+        $('.mtr-legend-title', $legend).html(legendTitle);
+
+        items.forEach(function(item) {
+            let $item = $('<div class="mtr-status-item"><span class="mtr-status-swatch"></span><span class="mtr-status-label"></span><span class="mtr-status-count"></span></div>');
+            $('.mtr-status-swatch', $item).css('background', item.color);
+            $('.mtr-status-label', $item).text(item.name);
+            $('.mtr-status-count', $item).text(item.count.toLocaleString());
+            $item.attr('data-status-key', item.key).hover(function() {
+                $('.mtr-technique', self.$el).each(function() {
+                    if ($(this).attr('data-status-key') == item.key) {
+                        $(this).addClass('focused').removeClass('defocused');
+                    } else {
+                        $(this).removeClass('focused').addClass('defocused');
+                    }
+                });
+            }, function() {
+                $('.mtr-technique', self.$el).removeClass('focused').removeClass('defocused');
+            });
+            $('.mtr-status-legend', $legend).append($item);
+        });
+        return $legend;
+    },
+
+    // A tactic's header in status mode: a count per status, and a bar split in
+    // proportion to the statuses of its techniques.
+    _statusTactic: function($column, items, total) {
+        let counts = {};
+        $('.mtr-technique[data-status-key]', $column).each(function() {
+            let key = $(this).attr('data-status-key');
+            counts[key] = (counts[key] || 0) + 1;
+        });
+
+        let $stats = $('.mtr-tactic .mtr-stats-container', $column).empty();
+        items.forEach(function(item) {
+            let count = counts[item.key] || 0;
+            if (!count) return;
+
+            let $stat = $('<div class="mtr-stat"><div class="mtr-stats-label"></div><div class="mtr-stats-val"></div></div>');
+            $stat.css({ background: item.color, color: logic.readableTextColor(item.color) });
+            $('.mtr-stats-label', $stat).text(item.name);
+            $('.mtr-stats-val', $stat).text(count.toLocaleString());
+            $stats.append($stat);
+        });
+
+        $('.mtr-tactic .mtr-meter-fill', $column)
+            .css('background', logic.statusBarGradient(items, counts, total))
+            .css('width', '100%');
+    },
+
     // Field-mapping problems are shown to the user as a visualization error.
     _visualizationError: function(error) {
         return (error instanceof logic.FieldError)
@@ -505,10 +611,12 @@ return SplunkVisualizationBase.extend({
     },
 
     _sortElements: function($container, key, order) {
+        // Status sorts by the rank stored on each cell (position in the status list).
+        let attribute = (key == 'data-status') ? 'data-status-rank' : key;
         let $children = $container.children().sort(function(a, b) {
             let $t1 = $('.mtr-technique', $(a));
             let $t2 = $('.mtr-technique', $(b));
-            return logic.compareByKey(key, order, $t1.attr(key), $t2.attr(key));
+            return logic.compareByKey(key, order, $t1.attr(attribute), $t2.attr(attribute));
         });
         $container.append($children);
     },

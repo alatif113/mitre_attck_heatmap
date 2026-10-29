@@ -62,6 +62,7 @@
             <option value="data-name">Name</option>
             <option value="data-id">ID</option>
             <option value="data-value">Value</option>
+            <option value="data-status">Status</option>
         </splunk-radio-input>
     </splunk-control-group>
     <splunk-control-group label="Sort Order" help="">    
@@ -160,6 +161,22 @@
     <splunk-control-group label="Upper Bound" help="Used when Color bounds is Manual.">
         <splunk-text-input name="{{VIZ_NAMESPACE}}.endVal" value="100">
         </splunk-text-input>
+    </splunk-control-group>
+</form>
+<form class="splunk-formatter-section" section-label="Status">
+    <splunk-control-group label="Status colors" help="Used when a Status field is set. Format: name=#color, name=#color (for example covered=#53a051, gap=#d93f3c). The order sets the legend and sort order.">
+        <splunk-text-input name="{{VIZ_NAMESPACE}}.statusColors" value="">
+        </splunk-text-input>
+    </splunk-control-group>
+    <splunk-control-group label="Other status color" help="Used for statuses that are not listed above.">
+        <splunk-color-picker type="custom" name="{{VIZ_NAMESPACE}}.statusDefaultColor" value="#8c8c8c">
+            <splunk-color>#8c8c8c</splunk-color>
+            <splunk-color>#53a051</splunk-color>
+            <splunk-color>#f1813f</splunk-color>
+            <splunk-color>#d93f3c</splunk-color>
+            <splunk-color>#0C1587</splunk-color>
+            <splunk-color>#000000</splunk-color>
+        </splunk-color-picker>
     </splunk-control-group>
 </form>
 <form class="splunk-formatter-section" section-label="Animation">

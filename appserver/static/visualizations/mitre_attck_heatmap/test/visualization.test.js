@@ -127,6 +127,156 @@ describe('render time (audit P2-9)', () => {
     }, 60000);
 });
 
+describe('status-based coloring (feature 5)', () => {
+    const fields = ['id', 'Detection Count', 'description', 'state'].map(name => ({ name }));
+    const data = {
+        fields,
+        rows: [
+            ['T1059', '42', 'covered here', 'Covered'],
+            ['T1059.001', '5', 'sub', 'gap'],
+            ['T1566', '10', '', 'partial'],
+            ['T1003', '', 'status only', 'gap'],
+            ['T1078', '7', 'value only', ''],
+            ['T1110', '3', '', 'Mystery']
+        ]
+    };
+    const options = { statusField: 'state', statusColors: 'gap=#d93f3c, covered=#53a051, partial=#f1813f', statusDefaultColor: '#808080' };
+    const cell = (viz, id) => viz.el.querySelector('.mtr-technique[data-id="' + id + '"], .mtr-sub-technique[data-id="' + id + '"]');
+    const color = (viz, id) => cell(viz, id).style.background;
+
+    test('cells take the color of their status, ignoring case', () => {
+        const viz = render(Viz, data, options);
+        expect(color(viz, 'T1059')).toBe('rgb(83, 160, 81)');
+        expect(color(viz, 'T1566')).toBe('rgb(241, 129, 63)');
+        expect(color(viz, 'T1059.001')).toBe('rgb(217, 63, 60)');
+        expect(cell(viz, 'T1059').getAttribute('data-status')).toBe('Covered');
+        expect(cell(viz, 'T1059').style.color).toBe('rgb(255, 255, 255)');
+    });
+
+    test('unlisted statuses use the default color', () => {
+        expect(color(render(Viz, data, options), 'T1110')).toBe('rgb(128, 128, 128)');
+    });
+
+    test('the number does not change the color', () => {
+        const other = { fields, rows: [['T1059', '1', '', 'covered']] };
+        expect(color(render(Viz, other, options), 'T1059')).toBe(color(render(Viz, data, options), 'T1059'));
+    });
+
+    test('a row with a status but no number is colored and has no value', () => {
+        const viz = render(Viz, data, options);
+        expect(color(viz, 'T1003')).toBe('rgb(217, 63, 60)');
+        expect(cell(viz, 'T1003').hasAttribute('data-value')).toBe(false);
+        expect(cell(viz, 'T1003').getAttribute('data-desc')).toBe('status only');
+    });
+
+    test('a number without a status is left uncolored but keeps its value', () => {
+        const viz = render(Viz, data, options);
+        expect(cell(viz, 'T1078').style.background).toBe('');
+        expect(cell(viz, 'T1078').getAttribute('data-value')).toBe('7');
+    });
+
+    test('with no status field nothing changes: the status column is just ignored', () => {
+        const viz = render(Viz, data, {});
+        expect(viz.el.querySelectorAll('[data-status]').length).toBe(0);
+        expect(viz.el.querySelector('.mtr-legend-status')).toBeNull();
+        expect(viz.el.querySelectorAll('.mtr-legend-meter').length).toBe(1);
+    });
+
+    test('with a status field but no color list every status uses the default color', () => {
+        const viz = render(Viz, data, { statusField: 'state', statusDefaultColor: '#808080' });
+        expect([color(viz, 'T1059'), color(viz, 'T1566')]).toEqual(['rgb(128, 128, 128)', 'rgb(128, 128, 128)']);
+    });
+
+    describe('legend', () => {
+        const items = viz => Array.from(viz.el.querySelectorAll('.mtr-status-item')).map(i => [
+            i.querySelector('.mtr-status-label').textContent, i.querySelector('.mtr-status-count').textContent
+        ]);
+
+        test('replaces the gradient with one swatch per status, in list order, with counts', () => {
+            const viz = render(Viz, data, options);
+            expect(viz.el.querySelector('.mtr-legend-meter')).toBeNull();
+            expect(items(viz)).toEqual([['gap', '2'], ['covered', '1'], ['partial', '1'], ['Mystery', '1']]);
+            expect(viz.el.querySelector('.mtr-legend-title').textContent).toBe('state');
+        });
+
+        test('hovering a swatch highlights the cells with that status', () => {
+            const viz = render(Viz, data, options);
+            const gap = viz.el.querySelector('.mtr-status-item[data-status-key="gap"]');
+            $(gap).trigger('mouseenter');
+            const focused = Array.from(viz.el.querySelectorAll('.mtr-technique.focused')).map(c => c.getAttribute('data-id'));
+            expect(new Set(focused)).toEqual(new Set(['T1003']));
+            $(gap).trigger('mouseleave');
+            expect(viz.el.querySelectorAll('.focused, .defocused').length).toBe(0);
+        });
+
+        test('status names are text, not markup', () => {
+            const viz = render(Viz, { fields, rows: [['T1059', '1', '', '<img src=x onerror=alert(1)>']] }, options);
+            expect(viz.el.querySelector('.mtr-legend img')).toBeNull();
+            expect(viz.el.querySelector('.mtr-status-item:last-child .mtr-status-label').textContent).toBe('<img src=x onerror=alert(1)>');
+        });
+    });
+
+    test('a tactic header shows a count and a bar segment per status', () => {
+        const viz = render(Viz, data, options);
+        const column = viz.el.querySelector('.mtr-tactic-col[data-name="Credential Access"]');
+        const stats = Array.from(column.querySelectorAll('.mtr-stat')).map(s => [s.querySelector('.mtr-stats-label').textContent, s.querySelector('.mtr-stats-val').textContent]);
+        expect(stats).toEqual([['gap', '1'], ['Mystery', '1']]);
+        expect(column.querySelector('.mtr-meter-fill').style.width).toBe('100%');
+    });
+
+    test('the tooltip shows a status badge and no meter', () => {
+        const viz = render(Viz, data, options);
+        $(cell(viz, 'T1059')).trigger('mouseenter');
+        const tooltip = viz.el.querySelector('.mtr-technique-tooltip');
+        expect(tooltip.querySelector('.mtr-status-text').textContent).toBe('Covered');
+        expect(tooltip.querySelector('.mtr-val').textContent).toBe('42');
+        expect(tooltip.querySelector('.mtr-label').textContent).toBe('Detection Count');
+        expect(tooltip.querySelector('.mtr-meter-container').style.display).toBe('none');
+    });
+
+    test('the drilldown adds status tokens', () => {
+        const viz = render(Viz, data, options);
+        $(cell(viz, 'T1059')).trigger('click');
+        expect(viz.drilldowns[0].data).toMatchObject({ mtr_technique_status: 'Covered', 'mtr_sub-technique_status': undefined });
+        $(cell(viz, 'T1059.001')).trigger('click');
+        expect(viz.drilldowns[1].data).toMatchObject({ 'mtr_sub-technique_status': 'gap', mtr_technique_status: 'Covered' });
+    });
+
+    test('sorting by status follows the list order and puts cells without a status last', () => {
+        const order = sortOrder => {
+            const viz = render(Viz, data, Object.assign({ sortKey: 'data-status', sortOrder }, options));
+            const column = viz.el.querySelector('.mtr-tactic-col[data-name="Initial Access"]');
+            return Array.from(column.querySelectorAll('.mtr-technique-container:not(.mtr-placeholder) > .mtr-technique'))
+                .map(c => c.getAttribute('data-id')).filter(id => ['T1566', 'T1078'].includes(id));
+        };
+        expect(order('asc')).toEqual(['T1566', 'T1078']);
+        expect(order('desc')).toEqual(['T1078', 'T1566']);
+    });
+
+    test('hide null keeps cells that have a status but no number', () => {
+        const viz = render(Viz, data, Object.assign({ hideNull: 'yes' }, options));
+        expect(cell(viz, 'T1003')).not.toBeNull();
+        expect(cell(viz, 'T1190')).toBeNull();
+    });
+
+    test('roll-up gives a parent the highest-priority status among its sub-techniques', () => {
+        const sub = { fields, rows: [['T1059.001', '5', '', 'covered'], ['T1059.003', '8', '', 'gap']] };
+        const viz = render(Viz, sub, Object.assign({ rollup: 'sum' }, options));
+        expect(cell(viz, 'T1059').getAttribute('data-status')).toBe('gap');
+        expect(cell(viz, 'T1059').getAttribute('data-value')).toBe('13');
+        expect(color(viz, 'T1059')).toBe('rgb(217, 63, 60)');
+    });
+
+    test('automatic bounds and the animation do nothing in status mode', () => {
+        const spy = jest.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 1);
+        const viz = render(Viz, data, Object.assign({ scaleMode: 'auto', animate: 'yes' }, options));
+        expect(spy).not.toHaveBeenCalled();
+        expect(viz.animate).toBe(false);
+        expect(viz.el.querySelector('.mtr-legend-status')).not.toBeNull();
+        spy.mockRestore();
+    });
+});
+
 describe('automatic color bounds (feature 3)', () => {
     const fields = [{ name: 'id' }, { name: 'count' }, { name: 'description' }];
     const rows = [['T1059', '10', ''], ['T1566', '50', ''], ['T1003', '90', ''], ['T9999', '5000', 'unknown id']];
