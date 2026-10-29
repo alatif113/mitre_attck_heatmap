@@ -56,9 +56,20 @@ describe('parseConfig', () => {
     });
 
     test('splits matrix and comma-separated platforms', () => {
-        const options = parse(withOptions({ matrix: 'enterprise::Azure AD,Google Workspace,IaaS' }));
+        const options = parse(withOptions({ matrix: 'enterprise::Windows,Linux,IaaS' }));
         expect(options.matrix).toBe('enterprise');
-        expect(options.platform).toEqual(['Azure AD', 'Google Workspace', 'IaaS']);
+        expect(options.platform).toEqual(['Windows', 'Linux', 'IaaS']);
+    });
+
+    test('maps retired platform names saved in older dashboards to current ones', () => {
+        const options = parse(withOptions({ matrix: 'enterprise::Azure AD,Google Workspace,IaaS,Office 365,SaaS' }));
+        expect(options.platform).toEqual(['Identity Provider', 'Office Suite', 'IaaS', 'Office Suite', 'SaaS']);
+        expect(parse(withOptions({ matrix: 'enterprise::Network' })).platform).toEqual(['Network Devices']);
+    });
+
+    test('leaves current and unknown platform names alone', () => {
+        const options = parse(withOptions({ matrix: 'mobile::Android,constructor' }));
+        expect(options.platform).toEqual(['Android', 'constructor']);
     });
 
     test('throws on a matrix value without "::"', () => {

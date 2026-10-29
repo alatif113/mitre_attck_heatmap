@@ -13,6 +13,20 @@ define(function() {
     const DESCRIPTION_PREVIEW_CHARS = 256;
     const TOOLTIP_FLIP_MARGIN = 400;
 
+    // Platform names that ATT&CK has since renamed or folded together. Saved
+    // dashboards may still hold the old values, so map them to the current
+    // names rather than silently matching nothing.
+    const PLATFORM_ALIASES = {
+        'Azure AD': 'Identity Provider',
+        'Google Workspace': 'Office Suite',
+        'Office 365': 'Office Suite',
+        'Network': 'Network Devices'
+    };
+
+    function normalizePlatform(name) {
+        return PLATFORM_ALIASES.hasOwnProperty(name) ? PLATFORM_ALIASES[name] : name;
+    }
+
     // Reads the format options, applying the same defaults as before.
     function parseConfig(config, namespace, vizUtils, fields) {
         let get = function(key) {
@@ -36,7 +50,7 @@ define(function() {
             showSubTechniques: vizUtils.normalizeBoolean(get('showSubTechniques') || 'yes'),
             showSearchBar: vizUtils.normalizeBoolean(get('showSearchBar') || 'yes'),
             matrix: matrixPlatform[0],
-            platform: matrixPlatform[1].split(',')
+            platform: matrixPlatform[1].split(',').map(normalizePlatform)
         };
     }
 
@@ -250,6 +264,7 @@ define(function() {
 
     return {
         MIN_PERCENT: MIN_PERCENT,
+        PLATFORM_ALIASES: PLATFORM_ALIASES,
         parseConfig: parseConfig,
         selectMatrix: selectMatrix,
         isOnPlatform: isOnPlatform,
