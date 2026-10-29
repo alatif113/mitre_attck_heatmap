@@ -345,6 +345,14 @@ describe('tooltip', () => {
         expect(tooltip.querySelector('a').getAttribute('href')).toBe('https://attack.mitre.org/techniques/T1486');
     });
 
+    test('the reference link opens in a new tab without access to this page (audit P3-7)', () => {
+        const viz = render(Viz, loadFixture('typical.json'));
+        hover(viz, '.mtr-technique[data-id="T1486"]');
+        const link = viz.el.querySelector('.mtr-technique-tooltip a');
+        expect(link.getAttribute('target')).toBe('_blank');
+        expect(link.getAttribute('rel')).toBe('noopener noreferrer');
+    });
+
     test('truncates long descriptions behind "Show more"', () => {
         const viz = render(Viz, loadFixture('typical.json'));
         hover(viz, '.mtr-technique[data-id="T1105"]');

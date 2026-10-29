@@ -264,7 +264,7 @@ return SplunkVisualizationBase.extend({
                     <div class="mtr-label"></div>
                     <div class="mtr-val">${value}</div>
                     <div class="mtr-desc"></div>
-                    <div class="mtr-ref"><a target="_blank" href="${url}">${url} <i class="icon-external"></i></a></div>
+                    <div class="mtr-ref"><a target="_blank" rel="noopener noreferrer" href="${url}">${url} <i class="icon-external"></i></a></div>
                 </div>
             `);
 
