@@ -19,6 +19,7 @@ describe('parseConfig', () => {
 
     test('applies code defaults when no options are set', () => {
         expect(parse({})).toEqual({
+            columns: { id: 0, value: 1, description: -1, status: -1 },
             animate: false,
             duration: 300,
             startColor: '#53a051',
@@ -99,12 +100,64 @@ describe('parseConfig', () => {
         expect(parse(withOptions({ startVal: '-50', endVal: '50' }))).toMatchObject({ startVal: -50, endVal: 50 });
     });
 
+    test('the legend title follows the mapped value field', () => {
+        const fields = [{ name: 'id' }, { name: 'count' }, { name: 'Risk score' }];
+        expect(parse(withOptions({ valueField: 'Risk score' }), fields).legendTitle).toBe('Risk score');
+        expect(parse(withOptions({ valueField: 'Risk score' }), fields).columns).toMatchObject({ id: 0, value: 2 });
+    });
+
     test('escapes a configured legend title', () => {
         expect(parse(withOptions({ legendTitle: '<b>Hits</b>' })).legendTitle).toBe('&lt;b&gt;Hits&lt;/b&gt;');
     });
 
     test('escapes the value field name used as the legend title fallback (audit P2-1)', () => {
         expect(parse({}, [{ name: 'id' }, { name: '<img src=x onerror=1>' }]).legendTitle).toBe('&lt;img src=x onerror=1&gt;');
+    });
+});
+
+describe('resolveFields (field mapping)', () => {
+    const f = (...names) => names.map(name => ({ name }));
+    const resolve = (fields, names) => logic.resolveFields(fields, names);
+
+    test('unnamed fields keep their positions', () => {
+        expect(resolve(f('id', 'count', 'description'))).toEqual({ id: 0, value: 1, description: 2, status: -1 });
+        expect(resolve(f('id', 'count'))).toEqual({ id: 0, value: 1, description: -1, status: -1 });
+        expect(resolve(f('a', 'b', 'c', 'd', 'e'), {})).toEqual({ id: 0, value: 1, description: 2, status: -1 });
+    });
+
+    test('names pick columns in any order', () => {
+        expect(resolve(f('note', 'risk', 'technique', 'state'), {
+            idField: 'technique', valueField: 'risk', descriptionField: 'note', statusField: 'state'
+        })).toEqual({ id: 2, value: 1, description: 0, status: 3 });
+    });
+
+    test('matching ignores case and surrounding spaces, exact names win', () => {
+        expect(resolve(f('ID', 'id', 'n'), { idField: ' id ', valueField: 'N' })).toEqual({ id: 1, value: 2, description: -1, status: -1 });
+        expect(resolve(f('Technique ID', 'Score'), { idField: 'technique id' }).id).toBe(0);
+    });
+
+    test('a positional description is dropped when another field uses that column', () => {
+        expect(resolve(f('id', 'count', 'state'), { statusField: 'state' })).toEqual({ id: 0, value: 1, description: -1, status: 2 });
+    });
+
+    test('a named field that is missing lists the available fields', () => {
+        expect(() => resolve(f('id', 'count'), { valueField: 'risk' }))
+            .toThrow('The value field "risk" is not in the results. Available fields: id, count.');
+        expect(() => resolve(f('id', 'count'), { statusField: 'state' })).toThrow(logic.FieldError);
+    });
+
+    test('the id and value fields must differ', () => {
+        expect(() => resolve(f('id', 'count'), { idField: 'count' })).toThrow('same column ("count")');
+    });
+
+    test('fewer than 2 fields is an error', () => {
+        expect(() => resolve(f('id'))).toThrow('at least 2 fields');
+    });
+});
+
+describe('mappingNames', () => {
+    test('trims and defaults to empty strings', () => {
+        expect(logic.mappingNames({ 'ns.idField': '  tid ' }, 'ns.')).toEqual({ idField: 'tid', valueField: '', descriptionField: '', statusField: '' });
     });
 });
 
@@ -142,7 +195,14 @@ describe('parseRow / isValidCount', () => {
     const escape = vizUtils.escapeHtml;
 
     test('escapes id, count and description', () => {
-        expect(logic.parseRow(['T1<1>', '5', 'a & b'], escape)).toEqual({ id: 'T1&lt;1&gt;', count: '5', description: 'a &amp; b' });
+        expect(logic.parseRow(['T1<1>', '5', 'a & b'], escape)).toEqual({ id: 'T1&lt;1&gt;', count: '5', description: 'a &amp; b', status: '' });
+    });
+
+    test('reads the mapped columns, and the status as plain trimmed text', () => {
+        const columns = { id: 2, value: 0, description: 3, status: 1 };
+        expect(logic.parseRow(['7', '  Covered ', 'T1059', 'a & b'], escape, columns))
+            .toEqual({ id: 'T1059', count: '7', description: 'a &amp; b', status: 'Covered' });
+        expect(logic.parseRow(['7', null, 'T1059'], escape, { id: 2, value: 0, description: -1, status: 1 }).status).toBe('');
     });
 
     test('missing description becomes an empty string', () => {

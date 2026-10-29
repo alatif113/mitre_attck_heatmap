@@ -39,7 +39,7 @@ return SplunkVisualizationBase.extend({
 
     // Optionally implement to format data returned from search. 
     // The returned object will be passed to updateView as 'data'
-    formatData: function(data) {
+    formatData: function(data, config) {
         if(data.rows.length < 1) {
             return false;
         }
@@ -48,6 +48,15 @@ return SplunkVisualizationBase.extend({
             throw new SplunkVisualizationBase.VisualizationError(
                 'Search results must have at least 2 fields: id, count'
             );
+        }
+
+        // Fail early, with a message, when a configured field name is not in the results.
+        if (config) {
+            try {
+                logic.resolveFields(data.fields, logic.mappingNames(config, this.getPropertyNamespaceInfo().propertyNamespace));
+            } catch (error) {
+                throw this._visualizationError(error);
+            }
         }
 
         return data;
@@ -67,7 +76,12 @@ return SplunkVisualizationBase.extend({
 
         let self = this;
         let theme = vizUtils.getCurrentTheme();
-        let options = logic.parseConfig(config, this.getPropertyNamespaceInfo().propertyNamespace, vizUtils, data.fields);
+        let options;
+        try {
+            options = logic.parseConfig(config, this.getPropertyNamespaceInfo().propertyNamespace, vizUtils, data.fields);
+        } catch (error) {
+            throw this._visualizationError(error);
+        }
         let {
             animate, duration, startColor, midColor, endColor, startVal, endVal, display, legendTitle,
             sortKey, sortOrder, hideNull, showSubTechniques, showSearchBar, matrix, platform
@@ -223,7 +237,7 @@ return SplunkVisualizationBase.extend({
         let cellsById = indexById('.mtr-technique, .mtr-sub-technique');
 
         data.rows.forEach(function(r) {
-            let { id, count, description } = logic.parseRow(r, vizUtils.escapeHtml);
+            let { id, count, description } = logic.parseRow(r, vizUtils.escapeHtml, options.columns);
 
             if (!logic.isValidCount(count)) return;
 
@@ -444,6 +458,13 @@ return SplunkVisualizationBase.extend({
                 $(this).removeClass('focused').addClass('defocused');
             }
         })
+    },
+
+    // Field-mapping problems are shown to the user as a visualization error.
+    _visualizationError: function(error) {
+        return (error instanceof logic.FieldError)
+            ? new SplunkVisualizationBase.VisualizationError(error.message)
+            : error;
     },
 
     _getPercent: function(lowerBound, upperBound, value) {

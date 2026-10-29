@@ -40,7 +40,8 @@ function createViz(Viz) {
 // Runs the same formatData -> updateView sequence Splunk does.
 function render(Viz, data, options) {
     const viz = createViz(Viz);
-    viz.updateView(viz.formatData(data), buildConfig(options));
+    const config = buildConfig(options);
+    viz.updateView(viz.formatData(data, config), config);
     return viz;
 }
 

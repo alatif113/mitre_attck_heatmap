@@ -3,9 +3,8 @@
  * Nothing here touches the DOM or Splunk APIs (vizUtils is passed in), so it
  * can be unit tested directly.
  *
- * Behavior intentionally matches the original inline code, quirks included
- * (numeric options stay strings, legend midpoint is (end - start) / 2, etc.).
- * See docs/audit.md before "fixing" any of them.
+ * Defaults reproduce the original behavior; see docs/audit.md for the quirks
+ * that were deliberately left alone (for example the sort tie handling).
  */
 define(function() {
 
@@ -33,14 +32,83 @@ define(function() {
         return isNaN(number) ? fallback : number;
     }
 
+    // Raised for field-mapping problems the user can fix in the format menu.
+    function FieldError(message) {
+        this.name = 'FieldError';
+        this.message = message;
+    }
+    FieldError.prototype = Object.create(Error.prototype);
+    FieldError.prototype.constructor = FieldError;
+
+    // The four field-name options, trimmed. '' means not set.
+    function mappingNames(config, namespace) {
+        let names = {};
+        ['idField', 'valueField', 'descriptionField', 'statusField'].forEach(function(key) {
+            names[key] = String(config[namespace + key] || '').trim();
+        });
+        return names;
+    }
+
+    // Exact name first, then ignoring case. -1 when absent.
+    function findField(fields, wanted) {
+        let index = fields.findIndex(f => f.name === wanted);
+        if (index < 0) {
+            index = fields.findIndex(f => String(f.name).toLowerCase() === wanted.toLowerCase());
+        }
+        return index;
+    }
+
+    // Column indexes for the id, value, description and status fields; -1 means
+    // the field is not used. Unnamed fields keep their positions: id is the 1st
+    // column, value the 2nd, description the 3rd (when no other field uses it).
+    function resolveFields(fields, names) {
+        let named = function(key) {
+            return String((names || {})[key] || '').trim();
+        };
+        let byName = function(key, label) {
+            let index = findField(fields, named(key));
+            if (index < 0) {
+                throw new FieldError(
+                    'The ' + label + ' field "' + named(key) + '" is not in the results. Available fields: ' +
+                    fields.map(f => f.name).join(', ') + '.'
+                );
+            }
+            return index;
+        };
+
+        let id = named('idField') ? byName('idField', 'ID') : 0;
+        let value = named('valueField') ? byName('valueField', 'value') : 1;
+        let status = named('statusField') ? byName('statusField', 'status') : -1;
+
+        if (id >= fields.length || value >= fields.length) {
+            throw new FieldError('Search results must have at least 2 fields: id, count');
+        }
+        if (id === value) {
+            throw new FieldError(
+                'The ID field and the value field are the same column ("' + fields[id].name + '"). Choose different fields.'
+            );
+        }
+
+        let description = -1;
+        if (named('descriptionField')) {
+            description = byName('descriptionField', 'description');
+        } else if (fields.length > 2 && [id, value, status].indexOf(2) < 0) {
+            description = 2;
+        }
+
+        return { id: id, value: value, description: description, status: status };
+    }
+
     // Reads the format options, applying the same defaults as before.
     function parseConfig(config, namespace, vizUtils, fields) {
         let get = function(key) {
             return config[namespace + key];
         };
         let matrixPlatform = (get('matrix') || 'enterprise::').split('::');
+        let columns = resolveFields(fields, mappingNames(config, namespace));
 
         return {
+            columns: columns,
             animate: vizUtils.normalizeBoolean(get('animate') || 'no'),
             duration: Math.max(toNumber(get('duration'), 300), 0) || 300,
             startColor: get('startColor') || '#53a051',
@@ -49,7 +117,7 @@ define(function() {
             startVal: toNumber(get('startVal'), 0),
             endVal: toNumber(get('endVal'), 100),
             display: get('display') || 'id',
-            legendTitle: vizUtils.escapeHtml(get('legendTitle')) || vizUtils.escapeHtml(fields[1].name),
+            legendTitle: vizUtils.escapeHtml(get('legendTitle')) || vizUtils.escapeHtml(fields[columns.value].name),
             sortKey: get('sortKey') || 'data-id',
             sortOrder: get('sortOrder') || 'asc',
             hideNull: vizUtils.normalizeBoolean(get('hideNull') || 'no'),
@@ -76,11 +144,14 @@ define(function() {
         return true;
     }
 
-    function parseRow(row, escapeHtml) {
+    // `columns` comes from resolveFields; without it the first three columns are used.
+    function parseRow(row, escapeHtml, columns) {
+        columns = columns || { id: 0, value: 1, description: 2, status: -1 };
         return {
-            id: escapeHtml(row[0]),
-            count: escapeHtml(row[1]),
-            description: escapeHtml(row[2]) || ""
+            id: escapeHtml(row[columns.id]),
+            count: escapeHtml(row[columns.value]),
+            description: columns.description >= 0 ? (escapeHtml(row[columns.description]) || "") : "",
+            status: columns.status >= 0 ? String(row[columns.status] == null ? '' : row[columns.status]).trim() : ''
         };
     }
 
@@ -279,6 +350,9 @@ define(function() {
         MIN_PERCENT: MIN_PERCENT,
         PLATFORM_ALIASES: PLATFORM_ALIASES,
         parseConfig: parseConfig,
+        FieldError: FieldError,
+        mappingNames: mappingNames,
+        resolveFields: resolveFields,
         selectMatrix: selectMatrix,
         isOnPlatform: isOnPlatform,
         parseRow: parseRow,

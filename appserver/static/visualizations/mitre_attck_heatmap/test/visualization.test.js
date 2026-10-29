@@ -127,6 +127,54 @@ describe('render time (audit P2-9)', () => {
     }, 60000);
 });
 
+describe('field mapping (feature 2)', () => {
+    const fields = names => names.map(name => ({ name }));
+    // The same results as the typical fixture's first rows, with the columns shuffled.
+    const positional = {
+        fields: fields(['id', 'Detection Count', 'description']),
+        rows: [['T1059', '42', 'first'], ['T1566', '100', 'second'], ['T1003', '7', 'third']]
+    };
+    const shuffled = {
+        fields: fields(['description', 'owner', 'Detection Count', 'id', 'extra']),
+        rows: positional.rows.map(([id, count, description]) => [description, 'someone', count, id, 'x'])
+    };
+    const mapping = { idField: 'id', valueField: 'Detection Count', descriptionField: 'description' };
+
+    test('named fields render exactly what the positional columns render', () => {
+        const expected = render(Viz, positional).el.innerHTML;
+        document.body.innerHTML = '';
+        expect(render(Viz, shuffled, mapping).el.innerHTML).toBe(expected);
+    });
+
+    test('unnamed fields still use the first three columns', () => {
+        const viz = render(Viz, loadFixture('wide.json'));
+        expect(viz.el.querySelector('.mtr-sub-technique[data-id="T1059.001"]').getAttribute('data-value')).toBe('30');
+    });
+
+    test('the legend title and tooltip label follow the mapped value field', () => {
+        const viz = render(Viz, shuffled, Object.assign({}, mapping, { legendTitle: '' }));
+        expect(viz.el.querySelector('.mtr-legend-title').textContent).toBe('Detection Count');
+    });
+
+    test('a field name that is not in the results is reported with the available fields', () => {
+        const viz = createViz(Viz);
+        const config = buildConfig({ valueField: 'risk' });
+        expect(() => viz.formatData(positional, config)).toThrow(SplunkVisualizationBase.VisualizationError);
+        expect(() => viz.formatData(positional, config)).toThrow('Available fields: id, Detection Count, description.');
+        expect(() => viz.updateView(positional, config)).toThrow(SplunkVisualizationBase.VisualizationError);
+    });
+
+    test('using one column as both id and value is reported', () => {
+        const viz = createViz(Viz);
+        expect(() => viz.formatData(positional, buildConfig({ idField: 'id', valueField: 'id' }))).toThrow('same column');
+    });
+
+    test('without a config, formatData behaves as before', () => {
+        const viz = createViz(Viz);
+        expect(viz.formatData(positional)).toBe(positional);
+    });
+});
+
 describe('globals', () => {
     test('rendering and interacting does not create global variables (audit P2-8)', () => {
         const before = new Set(Object.getOwnPropertyNames(window));
