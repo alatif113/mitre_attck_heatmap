@@ -43,7 +43,7 @@ define(function() {
             startVal: get('startVal') || 0,
             endVal: get('endVal') || 100,
             display: get('display') || 'id',
-            legendTitle: vizUtils.escapeHtml(get('legendTitle')) || fields[1].name,
+            legendTitle: vizUtils.escapeHtml(get('legendTitle')) || vizUtils.escapeHtml(fields[1].name),
             sortKey: get('sortKey') || 'data-id',
             sortOrder: get('sortOrder') || 'asc',
             hideNull: vizUtils.normalizeBoolean(get('hideNull') || 'no'),

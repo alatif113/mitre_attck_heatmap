@@ -107,6 +107,19 @@ describe('updateView', () => {
         expect(viz.el.querySelector('.mtr-legend-title').textContent).toBe('Alert Count');
     });
 
+    test('escapes the field name used as the legend title (audit P2-1)', () => {
+        const data = { fields: [{ name: 'id' }, { name: '<img src=x onerror=alert(1)>' }], rows: [['T1059', '5']] };
+        const viz = render(Viz, data, { legendTitle: '' });
+        expect(viz.el.querySelector('.mtr-legend img')).toBeNull();
+        expect(viz.el.querySelector('.mtr-legend-title').textContent).toBe('<img src=x onerror=alert(1)>');
+    });
+
+    test('escapes the configured legend bounds (audit P2-1)', () => {
+        const viz = render(Viz, loadFixture('single-row.json'), { startVal: '<b>1</b>', endVal: '<i>2</i>' });
+        expect(viz.el.querySelector('.mtr-legend b, .mtr-legend i')).toBeNull();
+        expect(viz.el.querySelectorAll('.mtr-legend-val span')[0].textContent).toBe('<b>1</b>');
+    });
+
     test('ignores columns beyond the third', () => {
         const viz = render(Viz, loadFixture('wide.json'));
         expect(viz.el.innerHTML).not.toContain('10.0.0.1');

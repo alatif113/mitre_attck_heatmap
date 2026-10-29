@@ -107,9 +107,9 @@ return SplunkVisualizationBase.extend({
                     <div class="mtr-legend-meter"></div>
                 </div>
                 <div class="mtr-legend-val">
-                    <span>` + legendLabels[0] + `</span>
-                    <span>` + legendLabels[1] + `</span>
-                    <span>` + legendLabels[2] + `</span>
+                    <span>` + vizUtils.escapeHtml(String(legendLabels[0])) + `</span>
+                    <span>` + vizUtils.escapeHtml(String(legendLabels[1])) + `</span>
+                    <span>` + vizUtils.escapeHtml(String(legendLabels[2])) + `</span>
                 </div>
             </div>
         `);

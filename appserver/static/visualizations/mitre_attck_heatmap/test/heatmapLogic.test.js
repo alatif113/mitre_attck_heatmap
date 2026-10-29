@@ -90,8 +90,8 @@ describe('parseConfig', () => {
         expect(parse(withOptions({ legendTitle: '<b>Hits</b>' })).legendTitle).toBe('&lt;b&gt;Hits&lt;/b&gt;');
     });
 
-    test('falls back to the raw, unescaped value field name (audit P2-1)', () => {
-        expect(parse({}, [{ name: 'id' }, { name: '<img>' }]).legendTitle).toBe('<img>');
+    test('escapes the value field name used as the legend title fallback (audit P2-1)', () => {
+        expect(parse({}, [{ name: 'id' }, { name: '<img src=x onerror=1>' }]).legendTitle).toBe('&lt;img src=x onerror=1&gt;');
     });
 });
 
