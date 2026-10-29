@@ -2,6 +2,6 @@
 []
 access = read : [ * ], write : [ admin, sc_admin ]
 
-[vizualizations/mitre_attack_heatmap]
+[visualizations/mitre_attck_heatmap]
 access = read : [ * ], write : [ admin, sc_admin ]
-export = none
+export = system
