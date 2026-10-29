@@ -63,6 +63,9 @@ return SplunkVisualizationBase.extend({
 
         if (!data) return;
 
+        // Each render starts its own animation loop; stop the previous one.
+        window.cancelAnimationFrame(this._animationFrame);
+
         this.$el.empty();
 
         let self = this;
@@ -395,13 +398,13 @@ return SplunkVisualizationBase.extend({
                 self._setAnimationClass(frame.lower, frame.upper);
                 currStep = frame.next;
                 if (self.animate) {
-                    window.requestAnimationFrame(step);
+                    self._animationFrame = window.requestAnimationFrame(step);
                 } else {
                     $('.mtr-technique').removeClass('focused').removeClass('defocused');
                 }
             }
-            window.requestAnimationFrame(step);
-        } 
+            self._animationFrame = window.requestAnimationFrame(step);
+        }
     },
 
     // Search data params

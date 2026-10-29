@@ -255,6 +255,29 @@ describe('animation', () => {
         expect(frames).toHaveLength(1);
     });
 
+    test('re-rendering does not stack animation loops (audit P1-4)', () => {
+        // Track which scheduled frames are still pending, honoring cancelAnimationFrame.
+        const pending = new Map();
+        let nextId = 1;
+        window.requestAnimationFrame.mockImplementation(cb => { pending.set(nextId, cb); return nextId++; });
+        jest.spyOn(window, 'cancelAnimationFrame').mockImplementation(id => pending.delete(id));
+
+        const viz = render(Viz, loadFixture('typical.json'), { animate: 'yes' });
+        for (let i = 0; i < 3; i++) {
+            viz.updateView(viz.formatData(loadFixture('typical.json')), buildConfig({ animate: 'yes' }));
+        }
+        expect(pending.size).toBe(1);
+
+        // Each frame schedules exactly one successor, so the loop count stays at 1.
+        for (let i = 0; i < 5; i++) {
+            const callbacks = Array.from(pending.entries());
+            pending.clear();
+            callbacks.forEach(([, cb]) => cb());
+            expect(pending.size).toBe(1);
+        }
+        window.cancelAnimationFrame.mockRestore();
+    });
+
     test('stops scheduling frames once animate is cleared', () => {
         const viz = render(Viz, loadFixture('typical.json'), { animate: 'yes' });
         viz.animate = false;
