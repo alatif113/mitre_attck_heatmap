@@ -16,3 +16,4 @@ node_modules/
 .slimignore
 test/
 coverage/
+.env

@@ -1,0 +1,125 @@
+#!/usr/bin/env bash
+#
+# Build the visualization and package the app as <app_id>.tgz.
+#
+#   scripts/package.sh
+#
+# Steps: npm ci -> npm run build -> verify visualization.js is fresh -> tar.
+# The archive is written to the app root and contains a single top-level
+# <app_id>/ directory, as Splunk expects. node_modules, tests and local/ are
+# left out, along with this scripts/ directory and hidden files (.git,
+# .gitignore, .slimignore, .env, .DS_Store), which AppInspect rejects.
+# iCloud conflict copies such as "visualization 2.js" are skipped too.
+#
+# APP_ENV selects what goes into the package:
+#   production (default)  app hidden (is_visible = 0); test-only files left out
+#   test                  app visible (is_visible = 1) with a nav that opens the
+#                         test bench dashboard, so it can be reached in Splunk
+# The flag is rewritten in the staged copy only; default/app.conf in the repo
+# is not touched.
+#
+# BUILD_CMD overrides the build step (default: "npm run build", which runs
+# webpack with system Node; "npm run build:splunk" uses Splunk's bundled Node).
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+APP_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+VIZ_DIR="$APP_ROOT/appserver/static/visualizations/mitre_attck_heatmap"
+BUILD_CMD="${BUILD_CMD:-npm run build}"
+
+die() {
+    echo "error: $*" >&2
+    exit 1
+}
+
+# App id from [package] id in default/app.conf.
+APP_ID="$(awk -F'[[:space:]]*=[[:space:]]*' '
+    /^\[/ { in_package = ($0 == "[package]") }
+    in_package && $1 == "id" { print $2; exit }
+' "$APP_ROOT/default/app.conf" | tr -d '[:space:]')"
+[ -n "$APP_ID" ] || die "no [package] id found in default/app.conf"
+
+ARCHIVE="$APP_ROOT/$APP_ID.tgz"
+
+APP_ENV="${APP_ENV:-production}"
+case "$APP_ENV" in
+    test) IS_VISIBLE=1; ENV_EXCLUDES=() ;;
+    production)
+        IS_VISIBLE=0
+        # Test-only files: the test bench dashboard, its lookup, and the nav that opens it.
+        ENV_EXCLUDES=(
+            --exclude='/default/data/ui/views/mitre_heatmap_testbench.xml'
+            --exclude='/default/data/ui/nav/default.xml'
+            --exclude='/lookups/mitre_heatmap_test.csv'
+        )
+        ;;
+    *) die "APP_ENV must be 'test' or 'production' (got '$APP_ENV')" ;;
+esac
+
+echo "==> Installing dependencies (npm ci)"
+(cd "$VIZ_DIR" && npm ci)
+
+echo "==> Building ($BUILD_CMD)"
+(cd "$VIZ_DIR" && bash -c "$BUILD_CMD")
+
+echo "==> Verifying build output"
+BUNDLE="$VIZ_DIR/visualization.js"
+[ -f "$BUNDLE" ] || die "$BUNDLE was not produced"
+[ -s "$BUNDLE" ] || die "$BUNDLE is empty"
+[ -d "$VIZ_DIR/src" ] || die "$VIZ_DIR/src does not exist"
+# visualization.js is built from src/, so no file in src/ may be newer.
+STALE="$(find "$VIZ_DIR/src" -type f -newer "$BUNDLE" | head -n 5)"
+if [ -n "$STALE" ]; then
+    echo "$STALE" >&2
+    die "visualization.js is older than the files in src/ listed above; the build did not regenerate it"
+fi
+
+echo "==> Creating $ARCHIVE (APP_ENV=$APP_ENV)"
+rm -f "$ARCHIVE"
+STAGE="$(mktemp -d)"
+trap 'rm -rf "$STAGE"' EXIT
+mkdir "$STAGE/$APP_ID"
+rsync -am \
+    ${ENV_EXCLUDES[@]+"${ENV_EXCLUDES[@]}"} \
+    --exclude='node_modules' \
+    --exclude='test' \
+    --exclude='tests' \
+    --exclude='/local/' \
+    --exclude='/scripts/' \
+    --exclude='/*.tgz' \
+    --exclude='.git' \
+    --exclude='.env' \
+    --exclude='.gitignore' \
+    --exclude='.slimignore' \
+    --exclude='.DS_Store' \
+    --exclude='* [0-9]' \
+    --exclude='* [0-9].*' \
+    "$APP_ROOT/" "$STAGE/$APP_ID/"
+
+# Set the app's visibility in the staged app.conf.
+STAGED_CONF="$STAGE/$APP_ID/default/app.conf"
+[ "$(grep -cE '^is_visible[[:space:]]*=' "$STAGED_CONF")" = 1 ] || die "expected exactly one is_visible line in default/app.conf"
+sed -E "s/^is_visible[[:space:]]*=.*$/is_visible = $IS_VISIBLE/" "$STAGED_CONF" > "$STAGED_CONF.tmp"
+mv "$STAGED_CONF.tmp" "$STAGED_CONF"
+
+tar -czf "$ARCHIVE" -C "$STAGE" "$APP_ID"
+
+echo "==> Checking archive"
+LISTING="$(tar -tzf "$ARCHIVE")"
+if echo "$LISTING" | grep -Eq '(^|/)(node_modules|test|tests)(/|$)|^[^/]+/local(/|$)|(^|/)\.env$'; then
+    die "archive contains excluded paths"
+fi
+ARCHIVED_VISIBLE="$(tar -xzOf "$ARCHIVE" "$APP_ID/default/app.conf" | sed -nE 's/^is_visible[[:space:]]*=[[:space:]]*([01]).*/\1/p')"
+[ "$ARCHIVED_VISIBLE" = "$IS_VISIBLE" ] || die "archived app.conf has is_visible=$ARCHIVED_VISIBLE, expected $IS_VISIBLE"
+if [ "$APP_ENV" = production ] && echo "$LISTING" | grep -Eq 'mitre_heatmap_test|/nav/'; then
+    die "production archive contains test-only files"
+fi
+if [ "$APP_ENV" = test ]; then
+    echo "$LISTING" | grep -qx "$APP_ID/default/data/ui/nav/default.xml" || die "test archive is missing the nav"
+fi
+for required in "$APP_ID/default/app.conf" "$APP_ID/appserver/static/visualizations/mitre_attck_heatmap/visualization.js"; do
+    echo "$LISTING" | grep -qx "$required" || die "archive is missing $required"
+done
+
+echo "OK ($APP_ENV, is_visible=$IS_VISIBLE): $ARCHIVE ($(echo "$LISTING" | grep -vc '/$') files, $(du -h "$ARCHIVE" | cut -f1))"

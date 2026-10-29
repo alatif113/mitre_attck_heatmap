@@ -3,3 +3,5 @@
 *.old
 .DS_STORE
 coverage/
+*.tgz
+.env
