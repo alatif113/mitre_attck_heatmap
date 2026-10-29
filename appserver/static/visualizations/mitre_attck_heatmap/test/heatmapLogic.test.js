@@ -34,6 +34,8 @@ describe('parseConfig', () => {
             hideNull: false,
             showSubTechniques: true,
             showSearchBar: true,
+            scaleMode: 'manual',
+            autoLowerBound: 'zero',
             rollup: 'none',
             rollupParent: 'fill',
             matrix: 'enterprise',
@@ -112,6 +114,12 @@ describe('parseConfig', () => {
         ['sum', 'sum'], ['max', 'max'], ['avg', 'avg'], ['count', 'count'], ['none', 'none'], ['', 'none'], ['median', 'none']
     ])('rollup %p -> %p', (raw, expected) => {
         expect(parse(withOptions({ rollup: raw })).rollup).toBe(expected);
+    });
+
+    test('scaleMode is manual unless auto is set; autoLowerBound is zero unless min is set', () => {
+        expect(parse({})).toMatchObject({ scaleMode: 'manual', autoLowerBound: 'zero' });
+        expect(parse(withOptions({ scaleMode: 'auto', autoLowerBound: 'min' }))).toMatchObject({ scaleMode: 'auto', autoLowerBound: 'min' });
+        expect(parse(withOptions({ scaleMode: 'x', autoLowerBound: 'x' }))).toMatchObject({ scaleMode: 'manual', autoLowerBound: 'zero' });
     });
 
     test('rollupParent is fill unless include is set', () => {
@@ -233,6 +241,45 @@ describe('parseRow / isValidCount', () => {
         const rows = loadFixture('wide.json').rows.map(r => logic.parseRow(r, escape));
         expect(rows.map(r => r.id)).toEqual(['T1059.001', 'T1003.001', 'T1021.002', 'T1071', 'T1048']);
         expect(rows.every(r => logic.isValidCount(r.count))).toBe(true);
+    });
+});
+
+describe('computeBounds (feature 3)', () => {
+    const fallback = { startVal: 20, endVal: 40 };
+
+    test.each([
+        [[10, 50, 90], 'zero', 0, 90],
+        [[10, 50, 90], 'min', 10, 90],
+        [[42], 'zero', 0, 42],
+        [[42], 'min', 42, 43],
+        [[0, 0], 'zero', 0, 1],
+        [[5, 5], 'min', 5, 6],
+        [[-5, 10], 'zero', -5, 10],
+        [[-5, -1], 'zero', -5, -1],
+        [[0.123, 0.456], 'min', 0.12, 0.46],
+        [[3.001, 7.994], 'zero', 0, 8],
+        [[1e6, 2.5e6], 'zero', 0, 2500000]
+    ])('%p with %s -> [%p, %p]', (values, mode, lower, upper) => {
+        expect(logic.computeBounds(values, mode, fallback)).toEqual({ startVal: lower, endVal: upper });
+    });
+
+    test('with nothing usable the fallback is returned', () => {
+        expect(logic.computeBounds([], 'zero', fallback)).toEqual(fallback);
+        expect(logic.computeBounds([NaN, Infinity], 'min', fallback)).toEqual(fallback);
+    });
+
+    test('handles a very large number of values', () => {
+        const values = Array.from({ length: 300000 }, (_, i) => i % 1000);
+        expect(logic.computeBounds(values, 'zero', fallback)).toEqual({ startVal: 0, endVal: 999 });
+    });
+
+    test('the upper bound is always above the lower bound', () => {
+        [[1], [0], [-3], [2, 2], [0.001]].forEach(values => {
+            ['zero', 'min'].forEach(mode => {
+                const bounds = logic.computeBounds(values, mode, fallback);
+                expect(bounds.endVal).toBeGreaterThan(bounds.startVal);
+            });
+        });
     });
 });
 

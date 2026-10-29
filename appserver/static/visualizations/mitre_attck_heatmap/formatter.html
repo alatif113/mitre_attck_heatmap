@@ -141,11 +141,23 @@
             <splunk-color>#000000</splunk-color>
         </splunk-color-picker>
     </splunk-control-group>
-    <splunk-control-group label="Lower Bound" help="">
+    <splunk-control-group label="Color bounds" help="Manual uses the two bounds below. From data uses the lowest and highest value in the results.">
+        <splunk-radio-input name="{{VIZ_NAMESPACE}}.scaleMode" value="manual">
+            <option value="manual">Manual</option>
+            <option value="auto">From data</option>
+        </splunk-radio-input>
+    </splunk-control-group>
+    <splunk-control-group label="Lower bound from data" help="Only used when Color bounds is From data. Zero starts at 0 unless a value is negative.">
+        <splunk-radio-input name="{{VIZ_NAMESPACE}}.autoLowerBound" value="zero">
+            <option value="zero">Zero</option>
+            <option value="min">Lowest value</option>
+        </splunk-radio-input>
+    </splunk-control-group>
+    <splunk-control-group label="Lower Bound" help="Used when Color bounds is Manual.">
         <splunk-text-input name="{{VIZ_NAMESPACE}}.startVal" value="0">
         </splunk-text-input>
     </splunk-control-group>
-    <splunk-control-group label="Upper Bound" help="">
+    <splunk-control-group label="Upper Bound" help="Used when Color bounds is Manual.">
         <splunk-text-input name="{{VIZ_NAMESPACE}}.endVal" value="100">
         </splunk-text-input>
     </splunk-control-group>

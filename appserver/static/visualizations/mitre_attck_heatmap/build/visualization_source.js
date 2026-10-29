@@ -110,54 +110,6 @@ return SplunkVisualizationBase.extend({
         
         let $content = $(`<div class="mtr-viz-container"></div>`);
 
-        let legendLabels = logic.legendLabels(startVal, endVal);
-        let $legend = $(`
-            <div class="mtr-legend">
-                <div class="mtr-legend-title">` + legendTitle + `</div>
-                <div class="mtr-legend-meter-container">    
-                    <div class="mtr-legend-meter"></div>
-                </div>
-                <div class="mtr-legend-val">
-                    <span>` + vizUtils.escapeHtml(String(legendLabels[0])) + `</span>
-                    <span>` + vizUtils.escapeHtml(String(legendLabels[1])) + `</span>
-                    <span>` + vizUtils.escapeHtml(String(legendLabels[2])) + `</span>
-                </div>
-            </div>
-        `);
-
-        let gradient = logic.legendGradient(startColor, midColor, endColor);
-
-        $('.mtr-legend-meter', $legend)
-            .css('background', '-moz-linear-gradient' + gradient)
-            .css('background', '-webkit-linear-gradient' + gradient)
-            .css('background', 'linear-gradient' + gradient);
-        
-        $legend.hover(function() {
-            $('.mtr-legend-meter-container', this).append($(`<div class="mtr-legend-cursor"></div>`))
-        }, function() {
-            $('.mtr-legend-cursor', $legend).remove();
-            $('.mtr-technique', self.$el).removeClass('focused').removeClass('defocused');
-        })
-
-        let lastMove = 0;
-        let eventThrottle = 100;
-        
-        $legend.mousemove(function(e) {
-            e.preventDefault();
-            let now = Date.now();
-            if (now > lastMove + eventThrottle) {
-                let $cursor = $('.mtr-legend-cursor', this);
-                let cursor_width = $cursor.width();
-                let legend_width = $(this).width();
-                let x = e.pageX - $(this).offset().left;
-                let range = logic.legendCursorRange(x, cursor_width, legend_width, startVal, endVal);
-                if (range) {
-                    $cursor.css('left', range.left + 'px');
-                    self._setAnimationClass(range.lower, range.upper);
-                };
-            }
-        })
-
         matrixJSON.tactics.forEach(function(tactic) {
             let $tactic_col = $(`<div class="mtr-tactic-col" data-id="${tactic.id}" data-name="${tactic.name}" data-tactic="${tactic.short_name}">`);
             $tactic_col.appendTo($content).append(`
@@ -247,6 +199,63 @@ return SplunkVisualizationBase.extend({
         entries = logic.rollUp(
             entries, logic.subTechniqueParents(matrixJSON, platform), options.rollup, options.rollupParent, []
         );
+
+        // Automatic color bounds come from the values that will be colored.
+        if (options.scaleMode == 'auto') {
+            let values = [];
+            entries.forEach(function(entry, id) {
+                if (cellsById.has(id)) values.push(Number(entry.count));
+            });
+            ({ startVal, endVal } = logic.computeBounds(values, options.autoLowerBound, { startVal, endVal }));
+        }
+
+        let legendLabels = logic.legendLabels(startVal, endVal);
+        let $legend = $(`
+            <div class="mtr-legend">
+                <div class="mtr-legend-title">` + legendTitle + `</div>
+                <div class="mtr-legend-meter-container">    
+                    <div class="mtr-legend-meter"></div>
+                </div>
+                <div class="mtr-legend-val">
+                    <span>` + vizUtils.escapeHtml(String(legendLabels[0])) + `</span>
+                    <span>` + vizUtils.escapeHtml(String(legendLabels[1])) + `</span>
+                    <span>` + vizUtils.escapeHtml(String(legendLabels[2])) + `</span>
+                </div>
+            </div>
+        `);
+
+        let gradient = logic.legendGradient(startColor, midColor, endColor);
+
+        $('.mtr-legend-meter', $legend)
+            .css('background', '-moz-linear-gradient' + gradient)
+            .css('background', '-webkit-linear-gradient' + gradient)
+            .css('background', 'linear-gradient' + gradient);
+        
+        $legend.hover(function() {
+            $('.mtr-legend-meter-container', this).append($(`<div class="mtr-legend-cursor"></div>`))
+        }, function() {
+            $('.mtr-legend-cursor', $legend).remove();
+            $('.mtr-technique', self.$el).removeClass('focused').removeClass('defocused');
+        })
+
+        let lastMove = 0;
+        let eventThrottle = 100;
+        
+        $legend.mousemove(function(e) {
+            e.preventDefault();
+            let now = Date.now();
+            if (now > lastMove + eventThrottle) {
+                let $cursor = $('.mtr-legend-cursor', this);
+                let cursor_width = $cursor.width();
+                let legend_width = $(this).width();
+                let x = e.pageX - $(this).offset().left;
+                let range = logic.legendCursorRange(x, cursor_width, legend_width, startVal, endVal);
+                if (range) {
+                    $cursor.css('left', range.left + 'px');
+                    self._setAnimationClass(range.lower, range.upper);
+                };
+            }
+        })
 
         entries.forEach(function(entry, id) {
             let { count, description } = entry;

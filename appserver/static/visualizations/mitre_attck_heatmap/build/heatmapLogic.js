@@ -123,6 +123,8 @@ define(function() {
             hideNull: vizUtils.normalizeBoolean(get('hideNull') || 'no'),
             showSubTechniques: vizUtils.normalizeBoolean(get('showSubTechniques') || 'yes'),
             showSearchBar: vizUtils.normalizeBoolean(get('showSearchBar') || 'yes'),
+            scaleMode: get('scaleMode') == 'auto' ? 'auto' : 'manual',
+            autoLowerBound: get('autoLowerBound') == 'min' ? 'min' : 'zero',
             rollup: ROLLUPS.indexOf(get('rollup')) >= 0 ? get('rollup') : 'none',
             rollupParent: get('rollupParent') == 'include' ? 'include' : 'fill',
             matrix: matrixPlatform[0],
@@ -229,6 +231,23 @@ define(function() {
             }
         });
         return result;
+    }
+
+    // Color bounds taken from the data: the highest value is the upper bound, and
+    // the lower bound is 0 (when no value is negative and "zero" is chosen) or
+    // the lowest value. Rounded outward to 2 decimals. With no usable values the
+    // fallback bounds are returned unchanged.
+    function computeBounds(values, autoLowerBound, fallback) {
+        let numbers = values.filter(Number.isFinite);
+        if (numbers.length == 0) return { startVal: fallback.startVal, endVal: fallback.endVal };
+
+        let min = numbers.reduce((a, b) => Math.min(a, b));
+        let max = numbers.reduce((a, b) => Math.max(a, b));
+        let lower = (autoLowerBound != 'min' && min >= 0) ? 0 : min;
+        let upper = max;
+        if (upper <= lower) upper = lower + 1;
+
+        return { startVal: Math.floor(lower * 100) / 100, endVal: Math.ceil(upper * 100) / 100 };
     }
 
     function isValidCount(count) {
@@ -433,6 +452,7 @@ define(function() {
         isOnPlatform: isOnPlatform,
         parseRow: parseRow,
         isValidCount: isValidCount,
+        computeBounds: computeBounds,
         ROLLUPS: ROLLUPS,
         subTechniqueParents: subTechniqueParents,
         rollUp: rollUp,

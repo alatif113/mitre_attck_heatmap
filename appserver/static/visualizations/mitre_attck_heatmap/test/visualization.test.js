@@ -127,6 +127,55 @@ describe('render time (audit P2-9)', () => {
     }, 60000);
 });
 
+describe('automatic color bounds (feature 3)', () => {
+    const fields = [{ name: 'id' }, { name: 'count' }, { name: 'description' }];
+    const rows = [['T1059', '10', ''], ['T1566', '50', ''], ['T1003', '90', ''], ['T9999', '5000', 'unknown id']];
+    const data = { fields, rows };
+    const labels = viz => Array.from(viz.el.querySelectorAll('.mtr-legend-val span')).map(s => s.textContent);
+    const background = (viz, id) => viz.el.querySelector('.mtr-technique[data-id="' + id + '"]').style.background;
+    const colors = { startColor: '#000000', midColor: '#808080', endColor: '#ffffff' };
+
+    test('the legend runs from zero to the highest value, ignoring ids that are not in the matrix', () => {
+        expect(labels(render(Viz, data, { scaleMode: 'auto' }))).toEqual(['0', '45', '90']);
+    });
+
+    test('the lowest value can be the lower bound', () => {
+        expect(labels(render(Viz, data, { scaleMode: 'auto', autoLowerBound: 'min' }))).toEqual(['10', '50', '90']);
+    });
+
+    test('cells are colored against the computed bounds', () => {
+        const viz = render(Viz, data, Object.assign({ scaleMode: 'auto' }, colors));
+        expect(background(viz, 'T1003')).toBe('rgb(255, 255, 255)');
+        expect(background(viz, 'T1059')).toBe(render(Viz, { fields, rows: [['T1059', '10', '']] }, Object.assign({ startVal: '0', endVal: '90' }, colors)).el.querySelector('.mtr-technique[data-id="T1059"]').style.background);
+    });
+
+    test('a single value uses the full range, so it is not stuck at the start color', () => {
+        const viz = render(Viz, loadFixture('single-row.json'), Object.assign({ scaleMode: 'auto' }, colors));
+        expect(labels(viz)).toEqual(['0', '21', '42']);
+        expect(background(viz, 'T1059')).toBe('rgb(255, 255, 255)');
+    });
+
+    test('without usable values the manual bounds are used', () => {
+        const none = { fields, rows: [['T1059', 'n/a', ''], ['T9999', '7', '']] };
+        expect(labels(render(Viz, none, { scaleMode: 'auto', startVal: '20', endVal: '40' }))).toEqual(['20', '30', '40']);
+    });
+
+    test('the tactic header meters use the computed bounds', () => {
+        const viz = render(Viz, { fields, rows: [['T1059', '10', ''], ['T1203', '10', '']] }, { scaleMode: 'auto' });
+        // The Execution mean is 10 against bounds [0, 10], so the meter is full.
+        expect(viz.el.querySelector('.mtr-tactic-col[data-name="Execution"] .mtr-meter-fill').style.width).toBe('100%');
+    });
+
+    test('values from roll-up count toward the bounds', () => {
+        const viz = render(Viz, { fields, rows: [['T1059.001', '30', ''], ['T1059.003', '30', ''], ['T1566', '40', '']] }, { scaleMode: 'auto', rollup: 'sum' });
+        expect(labels(viz)).toEqual(['0', '30', '60']);
+    });
+
+    test('manual mode ignores the data', () => {
+        expect(labels(render(Viz, data, { scaleMode: 'manual', startVal: '0', endVal: '100' }))).toEqual(['0', '50', '100']);
+    });
+});
+
 describe('sub-technique roll-up (feature 4)', () => {
     const data = {
         fields: [{ name: 'id' }, { name: 'count' }, { name: 'description' }],
