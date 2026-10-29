@@ -231,14 +231,21 @@ define(function() {
         }
 
         if (key == 'data-value') {
-            let aVal = parseInt(a);
-            let bVal = parseInt(b);
-            if (!Number.isInteger(aVal)) aVal = -1;
-            if (!Number.isInteger(bVal)) bVal = -1;
+            let aVal = parseFloat(a);
+            let bVal = parseFloat(b);
+            if (!Number.isFinite(aVal)) aVal = -1;
+            if (!Number.isFinite(bVal)) bVal = -1;
             return flip * (aVal < bVal ? -1 : 1);
         }
 
         return 0;
+    }
+
+    // The value shown in a tooltip: the number in a data-value attribute, or
+    // '' when the technique has none. 0 is a value.
+    function parseValue(attr) {
+        let value = parseFloat(attr);
+        return isNaN(value) ? '' : value;
     }
 
     // `query` is expected lower-cased already.
@@ -288,6 +295,7 @@ define(function() {
         formatDescription: formatDescription,
         tooltipSide: tooltipSide,
         compareByKey: compareByKey,
+        parseValue: parseValue,
         matchesSearch: matchesSearch,
         animationSteps: animationSteps,
         animationFrame: animationFrame,

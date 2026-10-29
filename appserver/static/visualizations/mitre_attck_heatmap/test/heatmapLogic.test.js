@@ -339,13 +339,29 @@ describe('compareByKey', () => {
         expect(sortBy('data-value', 'desc', ['10', undefined, '9', '100'])).toEqual(['100', '10', '9', undefined]);
     });
 
-    test('values truncate decimals (audit P2-6)', () => {
+    test('values keep their decimals (audit P2-6)', () => {
         expect(logic.compareByKey('data-value', 'asc', '1.9', '1.2')).toBe(1);
-        expect(logic.compareByKey('data-value', 'asc', '1.2', '1.9')).toBe(1);
+        expect(logic.compareByKey('data-value', 'asc', '1.2', '1.9')).toBe(-1);
+        expect(sortBy('data-value', 'asc', ['1.9', '1.2', '1.5'])).toEqual(['1.2', '1.5', '1.9']);
+    });
+
+    test('equal and missing values still compare as greater (existing default ordering)', () => {
+        expect(logic.compareByKey('data-value', 'asc', '5', '5')).toBe(1);
+        expect(logic.compareByKey('data-value', 'asc', undefined, undefined)).toBe(1);
     });
 
     test('unknown keys keep order', () => {
         expect(logic.compareByKey('data-other', 'asc', 'a', 'b')).toBe(0);
+    });
+});
+
+describe('parseValue', () => {
+    test.each([['42', 42], ['0', 0], ['12.5', 12.5], ['-5', -5], ['1e3', 1000]])('%p -> %p', (attr, expected) => {
+        expect(logic.parseValue(attr)).toBe(expected);
+    });
+
+    test.each([[undefined], [''], ['n/a']])('%p -> blank', attr => {
+        expect(logic.parseValue(attr)).toBe('');
     });
 });
 

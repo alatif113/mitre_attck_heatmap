@@ -233,7 +233,7 @@ return SplunkVisualizationBase.extend({
             let name = $(this).attr('data-name');
             let percent = parseInt($(this).attr('data-percent')) || '';
             let description = $(this).attr('data-desc') || '';
-            let value = parseInt($(this).attr('data-value')) || '';
+            let value = logic.parseValue($(this).attr('data-value'));
             let url = $(this).attr('data-url') || '';
             let color = self._getColor(percent);
 
@@ -266,7 +266,7 @@ return SplunkVisualizationBase.extend({
 
             $tooltip.appendTo($(this));
 
-            if (value) {
+            if (value !== '') {
                 $('.mtr-label', $tooltip).text(data.fields[1].name);
                 $('.mtr-meter-fill', $tooltip)
                     .css('background', color.background)

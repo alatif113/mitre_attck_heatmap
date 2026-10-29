@@ -340,10 +340,26 @@ describe('tooltip', () => {
         expect(tooltip.querySelector('.more-link').style.display).toBe('none');
     });
 
-    test('shows a zero value as blank (audit P2-6)', () => {
+    test('shows a zero value, with its label (audit P2-6)', () => {
         const viz = render(Viz, loadFixture('typical.json'));
         hover(viz, '.mtr-technique[data-id="T1003"]');
-        expect(viz.el.querySelector('.mtr-technique-tooltip .mtr-val').textContent).toBe('');
+        const tooltip = viz.el.querySelector('.mtr-technique-tooltip');
+        expect(tooltip.querySelector('.mtr-val').textContent).toBe('0');
+        expect(tooltip.querySelector('.mtr-label').textContent).toBe('Detection Count');
+    });
+
+    test('shows decimals without truncating them (audit P2-6)', () => {
+        const viz = render(Viz, loadFixture('typical.json'));
+        hover(viz, '.mtr-technique[data-id="T1110"]');
+        expect(viz.el.querySelector('.mtr-technique-tooltip .mtr-val').textContent).toBe('12.5');
+    });
+
+    test('shows nothing for a technique without a value', () => {
+        const viz = render(Viz, loadFixture('typical.json'));
+        hover(viz, '.mtr-technique[data-id="T1190"]');
+        const tooltip = viz.el.querySelector('.mtr-technique-tooltip');
+        expect(tooltip.querySelector('.mtr-val').textContent).toBe('');
+        expect(tooltip.querySelector('.mtr-label').textContent).toBe('');
     });
 
     test('is removed on mouse leave', () => {
