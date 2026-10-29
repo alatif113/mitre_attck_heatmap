@@ -7,8 +7,9 @@
 # Steps: npm ci -> npm run build -> verify visualization.js is fresh -> tar.
 # The archive is written to the app root and contains a single top-level
 # <app_id>/ directory, as Splunk expects. node_modules, tests and local/ are
-# left out, along with bin/ (the data converter is a development tool that
-# downloads files and writes into the app, which Splunk Cloud vetting flags),
+# left out, along with bin/enterpriseAttack2json.py (the offline converter is a
+# development tool that writes into the app, which Splunk Cloud vetting flags;
+# the scripted input bin/import_matrices.py and its package ship),
 # this scripts/ directory and hidden files (.git,
 # .gitignore, .slimignore, .env, .DS_Store), which AppInspect rejects.
 # iCloud conflict copies such as "visualization 2.js" are skipped too.
@@ -88,7 +89,9 @@ rsync -am \
     --exclude='test' \
     --exclude='tests' \
     --exclude='/local/' \
-    --exclude='/bin/' \
+    --exclude='/bin/enterpriseAttack2json.py' \
+    --exclude='__pycache__' \
+    --exclude='*.pyc' \
     --exclude='/scripts/' \
     --exclude='/*.tgz' \
     --exclude='.git' \
@@ -110,7 +113,7 @@ tar -czf "$ARCHIVE" -C "$STAGE" "$APP_ID"
 
 echo "==> Checking archive"
 LISTING="$(tar -tzf "$ARCHIVE")"
-if echo "$LISTING" | grep -Eq '(^|/)(node_modules|test|tests)(/|$)|^[^/]+/(local|bin)(/|$)|(^|/)\.env$'; then
+if echo "$LISTING" | grep -Eq '(^|/)(node_modules|test|tests)(/|$)|^[^/]+/local(/|$)|enterpriseAttack2json|__pycache__|\.pyc$|(^|/)\.env$'; then
     die "archive contains excluded paths"
 fi
 ARCHIVED_VISIBLE="$(tar -xzOf "$ARCHIVE" "$APP_ID/default/app.conf" | sed -nE 's/^is_visible[[:space:]]*=[[:space:]]*([01]).*/\1/p')"
@@ -121,7 +124,7 @@ fi
 if [ "$APP_ENV" = test ]; then
     echo "$LISTING" | grep -qx "$APP_ID/default/data/ui/nav/default.xml" || die "test archive is missing the nav"
 fi
-for required in "$APP_ID/default/app.conf" "$APP_ID/appserver/static/visualizations/mitre_attck_heatmap/visualization.js"; do
+for required in "$APP_ID/bin/import_matrices.py" "$APP_ID/bin/mitre_attck/__init__.py" "$APP_ID/default/inputs.conf" "$APP_ID/default/app.conf" "$APP_ID/appserver/static/visualizations/mitre_attck_heatmap/visualization.js"; do
     echo "$LISTING" | grep -qx "$required" || die "archive is missing $required"
 done
 

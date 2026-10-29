@@ -5,3 +5,11 @@ access = read : [ * ], write : [ admin, sc_admin ]
 [visualizations/mitre_attck_heatmap]
 access = read : [ * ], write : [ admin, sc_admin ]
 export = system
+
+[collections/mitre_matrix]
+access = read : [ * ], write : [ admin, sc_admin ]
+export = none
+
+[lookups/mitre_matrix]
+access = read : [ * ], write : [ admin, sc_admin ]
+export = none
