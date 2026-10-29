@@ -285,6 +285,12 @@ describe('field mapping (feature 2)', () => {
         expect(viz.el.querySelector('.mtr-legend-title').textContent).toBe('Detection Count');
     });
 
+    test('the tooltip label follows the mapped value field', () => {
+        const viz = render(Viz, shuffled, mapping);
+        $(viz.el.querySelector('.mtr-technique[data-id="T1059"]')).trigger('mouseenter');
+        expect(viz.el.querySelector('.mtr-technique-tooltip .mtr-label').textContent).toBe('Detection Count');
+    });
+
     test('a field name that is not in the results is reported with the available fields', () => {
         const viz = createViz(Viz);
         const config = buildConfig({ valueField: 'risk' });

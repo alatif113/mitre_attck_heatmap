@@ -325,7 +325,7 @@ return SplunkVisualizationBase.extend({
             $tooltip.appendTo($(this));
 
             if (value !== '') {
-                $('.mtr-label', $tooltip).text(data.fields[1].name);
+                $('.mtr-label', $tooltip).text(data.fields[options.columns.value].name);
                 $('.mtr-meter-fill', $tooltip)
                     .css('background', color.background)
                     .animate({width: $(this).attr('data-percent') + '%'}, 50, 'linear');
