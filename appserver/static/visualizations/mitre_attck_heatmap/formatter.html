@@ -179,6 +179,22 @@
         </splunk-color-picker>
     </splunk-control-group>
 </form>
+<form class="splunk-formatter-section" section-label="Export">
+    <splunk-control-group label="Export button" help="Adds a button that downloads the current data as an ATT&CK Navigator layer file. Not available for D3FEND.">
+        <splunk-radio-input name="{{VIZ_NAMESPACE}}.showExportButton" value="no">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </splunk-radio-input>
+    </splunk-control-group>
+    <splunk-control-group label="Layer name" help="Blank uses the legend title.">
+        <splunk-text-input name="{{VIZ_NAMESPACE}}.navigatorLayerName" value="">
+        </splunk-text-input>
+    </splunk-control-group>
+    <splunk-control-group label="ATT&amp;CK version in layer" help="For example 20. Blank uses the version of the matrix data, or leaves it for Navigator to assume.">
+        <splunk-text-input name="{{VIZ_NAMESPACE}}.navigatorAttackVersion" value="">
+        </splunk-text-input>
+    </splunk-control-group>
+</form>
 <form class="splunk-formatter-section" section-label="Animation">
     <splunk-control-group label="Animate" help="">
         <splunk-radio-input name="{{VIZ_NAMESPACE}}.animate" value="no">

@@ -125,6 +125,9 @@ define(function() {
             hideNull: vizUtils.normalizeBoolean(get('hideNull') || 'no'),
             showSubTechniques: vizUtils.normalizeBoolean(get('showSubTechniques') || 'yes'),
             showSearchBar: vizUtils.normalizeBoolean(get('showSearchBar') || 'yes'),
+            showExportButton: vizUtils.normalizeBoolean(get('showExportButton') || 'no'),
+            navigatorLayerName: String(get('navigatorLayerName') || '').trim(),
+            navigatorAttackVersion: String(get('navigatorAttackVersion') || '').trim(),
             statusMode: columns.status >= 0,
             statusColors: statusColors,
             statusPriority: statusColors.map(entry => entry.key),
@@ -318,6 +321,103 @@ define(function() {
         });
         if (position < 100) stops.push('transparent ' + position + '%', 'transparent 100%');
         return 'linear-gradient(to right, ' + stops.join(', ') + ')';
+    }
+
+    const NAVIGATOR_DOMAINS = { enterprise: 'enterprise-attack', mobile: 'mobile-attack', ics: 'ics-attack' };
+    const NAVIGATOR_VERSION = '4.9.0';
+    const NAVIGATOR_LAYER_VERSION = '4.5';
+    const NAVIGATOR_COMMENT_CHARS = 2000;
+
+    // The ATT&CK Navigator domain for a matrix; null for matrices it does not know (D3FEND).
+    function navigatorDomain(matrix) {
+        return NAVIGATOR_DOMAINS.hasOwnProperty(matrix) ? NAVIGATOR_DOMAINS[matrix] : null;
+    }
+
+    // "20.1" -> "20"; '' when there is no usable version.
+    function attackMajor(version) {
+        let match = String(version || '').trim().match(/^(\d+)/);
+        return match ? match[1] : '';
+    }
+
+    // #rgb -> #rrggbb; anything else is returned unchanged.
+    function normalizeHex(color) {
+        let match = String(color).trim().match(/^#([0-9a-f])([0-9a-f])([0-9a-f])$/i);
+        return match ? '#' + match[1] + match[1] + match[2] + match[2] + match[3] + match[3] : String(color).trim();
+    }
+
+    // Reverses the HTML escaping applied to values read from the results.
+    function unescapeHtml(text) {
+        const named = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };
+        return String(text == null ? '' : text).replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, function(match, code) {
+            if (code[0] == '#') {
+                let number = code[1].toLowerCase() == 'x' ? parseInt(code.slice(2), 16) : parseInt(code.slice(1), 10);
+                return isNaN(number) ? match : String.fromCodePoint(number);
+            }
+            return named.hasOwnProperty(code.toLowerCase()) ? named[code.toLowerCase()] : match;
+        });
+    }
+
+    // "Detection coverage" -> "Detection-coverage.json"
+    function navigatorFileName(name) {
+        let slug = String(name || '').trim().replace(/[^A-Za-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '');
+        return (slug || 'mitre-attack-heatmap') + '.json';
+    }
+
+    // The technique entries of a Navigator layer: every id that has a cell and a
+    // value or status. A technique that has scored sub-techniques gets
+    // showSubtechniques so Navigator expands it, and is added if it has no entry
+    // of its own. `isShown(id)` says whether an id exists in the matrix on screen.
+    function navigatorTechniques(entries, isShown, subToParent, statusColorOf) {
+        let items = new Map();
+        let expanded = new Set();
+
+        entries.forEach(function(entry, rawId) {
+            let id = unescapeHtml(rawId);
+            if (!isShown(rawId)) return;
+            let hasValue = isValidCount(entry.count);
+            if (!hasValue && !entry.status) return;
+
+            let item = { techniqueID: id };
+            if (hasValue) item.score = Number(entry.count);
+            if (entry.status) item.color = normalizeHex(statusColorOf(entry.status));
+            let comment = unescapeHtml(entry.description);
+            if (entry.rolledFrom) {
+                comment = (comment ? comment + ' ' : '') + '(rolled up from ' + entry.rolledFrom + ' sub-technique' + (entry.rolledFrom == 1 ? '' : 's') + ')';
+            }
+            if (comment) item.comment = comment.slice(0, NAVIGATOR_COMMENT_CHARS);
+            item.enabled = true;
+            items.set(id, item);
+
+            if (subToParent.has(rawId)) expanded.add(subToParent.get(rawId));
+        });
+
+        expanded.forEach(function(parent) {
+            if (!items.has(parent) && isShown(parent)) items.set(parent, { techniqueID: parent, enabled: true });
+            if (items.has(parent)) items.get(parent).showSubtechniques = true;
+        });
+
+        return Array.from(items.values()).sort((a, b) => a.techniqueID < b.techniqueID ? -1 : (a.techniqueID > b.techniqueID ? 1 : 0));
+    }
+
+    // An ATT&CK Navigator layer (format 4.5). `gradient` is {colors, minValue,
+    // maxValue} or null; the layer needs minValue < maxValue.
+    function buildNavigatorLayer(model) {
+        let versions = {};
+        if (model.attackVersion) versions.attack = String(model.attackVersion);
+        versions.navigator = NAVIGATOR_VERSION;
+        versions.layer = NAVIGATOR_LAYER_VERSION;
+
+        let layer = { name: model.name, versions: versions, domain: model.domain };
+        if (model.platforms && model.platforms.length) layer.filters = { platforms: model.platforms };
+        layer.techniques = model.techniques;
+        if (model.gradient) {
+            let max = model.gradient.maxValue > model.gradient.minValue ? model.gradient.maxValue : model.gradient.minValue + 1;
+            layer.gradient = { colors: model.gradient.colors.map(normalizeHex), minValue: model.gradient.minValue, maxValue: max };
+        }
+        if (model.legendItems && model.legendItems.length) {
+            layer.legendItems = model.legendItems.map(item => ({ label: item.label, color: normalizeHex(item.color) }));
+        }
+        return layer;
     }
 
     // A row counts when it has a number, or (with a status field) a status.
@@ -563,6 +663,13 @@ define(function() {
         statusSummary: statusSummary,
         statusBarGradient: statusBarGradient,
         isValidEntry: isValidEntry,
+        navigatorDomain: navigatorDomain,
+        attackMajor: attackMajor,
+        normalizeHex: normalizeHex,
+        unescapeHtml: unescapeHtml,
+        navigatorFileName: navigatorFileName,
+        navigatorTechniques: navigatorTechniques,
+        buildNavigatorLayer: buildNavigatorLayer,
         ROLLUPS: ROLLUPS,
         subTechniqueParents: subTechniqueParents,
         rollUp: rollUp,

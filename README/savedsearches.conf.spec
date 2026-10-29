@@ -17,6 +17,9 @@ display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.descriptio
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.statusField = <string>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.statusColors = <string>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.statusDefaultColor = <string>
+display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.showExportButton = <string>
+display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.navigatorLayerName = <string>
+display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.navigatorAttackVersion = <string>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.scaleMode = <string>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.autoLowerBound = <string>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.rollup = <string>

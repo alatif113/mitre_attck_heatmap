@@ -198,9 +198,8 @@ return SplunkVisualizationBase.extend({
             entries.set(entry.id, entry);
         });
 
-        entries = logic.rollUp(
-            entries, logic.subTechniqueParents(matrixJSON, platform), options.rollup, options.rollupParent, options.statusPriority
-        );
+        let subParents = logic.subTechniqueParents(matrixJSON, platform);
+        entries = logic.rollUp(entries, subParents, options.rollup, options.rollupParent, options.statusPriority);
 
         // Legend entries for status mode: each status with its color and cell count.
         let statusItems = statusMode
@@ -497,6 +496,28 @@ return SplunkVisualizationBase.extend({
 
             $searchbar.appendTo(this.$el);
         }
+
+        let navigatorDomain = logic.navigatorDomain(matrix);
+        if (options.showExportButton && navigatorDomain) {
+            let $toolbar = $('<div class="mtr-toolbar"><button type="button" class="mtr-export-button">Export to ATT&amp;CK Navigator</button></div>');
+            $('.mtr-export-button', $toolbar).on('click', function() {
+                let layer = logic.buildNavigatorLayer({
+                    name: options.navigatorLayerName || logic.unescapeHtml(legendTitle) || 'MITRE ATT&CK Heatmap',
+                    domain: navigatorDomain,
+                    attackVersion: options.navigatorAttackVersion || logic.attackMajor(matrixJSON.version),
+                    platforms: platform.filter(Boolean),
+                    techniques: logic.navigatorTechniques(
+                        entries, id => cellsById.has(id), subParents,
+                        status => logic.statusColor(status, statusColors, statusDefaultColor)
+                    ),
+                    gradient: statusMode ? null : { colors: [options.startColor, options.midColor, options.endColor], minValue: startVal, maxValue: endVal },
+                    legendItems: statusItems.filter(item => item.count > 0).map(item => ({ label: item.name, color: item.color }))
+                });
+                self._download(logic.navigatorFileName(layer.name), JSON.stringify(layer, null, 2));
+            });
+            $toolbar.appendTo(this.$el);
+        }
+
         $content.appendTo(this.$el);
         $legend.appendTo(this.$el);
 
@@ -539,6 +560,18 @@ return SplunkVisualizationBase.extend({
                 $(this).removeClass('focused').addClass('defocused');
             }
         })
+    },
+
+    // Saves text as a file through the browser; no request is made.
+    _download: function(filename, text) {
+        let url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
+        let link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(function() { URL.revokeObjectURL(url); }, 0);
     },
 
     // The legend in status mode: one swatch per status with its cell count.
