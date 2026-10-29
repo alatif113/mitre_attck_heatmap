@@ -1,7 +1,7 @@
 {
   "name": "mitre_attck_heatmap",
   "version": "1.0.0",
-  "description": "Visualization app template. Put a description here.",
+  "description": "MITRE ATT&CK Heatmap custom visualization for Splunk",
   "main": "visualization.js",
   "scripts": {
     "build": "babel build --out-dir src && npx terser src/visualization_source.js --compress --mangle --output src/visualization_source.js && node ./node_modules/webpack/bin/webpack.js",
@@ -10,8 +10,8 @@
     "watch": "$SPLUNK_HOME/bin/splunk cmd node ./node_modules/webpack/bin/webpack.js -d --watch --progress",
     "test": "cd test && npm test"
   },
-  "author": "Splunk",
-  "license": "MIT",
+  "author": "Mohammed Latif",
+  "license": "GPL-3.0",
   "devDependencies": {
     "@babel/cli": "^7.15.4",
     "@babel/core": "^7.15.5",
