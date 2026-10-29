@@ -2,7 +2,7 @@
 
 Custom Visualizations give you new interactive ways to visualize your data during search and investigation, and to better communicate results in dashboards and reports. After installing this app youll find a MITRE ATT&CK Heatmap diagram as an additional item in the visualization picker in Search and Dashboard.
 
-This app uses ATT&CK v15.1 and D3FEND v0.15.0. For more information visit https://attack.mitre.org/resources/versions/ and https://d3fend.mitre.org/resources/
+This app bundles ATT&CK v20.0 and D3FEND v0.22, and can import newer ATT&CK versions (see *Imported ATT&CK data* below). For more information visit https://attack.mitre.org/resources/versions/ and https://d3fend.mitre.org/resources/
 
 ![screenshot.png](https://github.com/alatif113/mitre_attack_heatmap/blob/master/appserver/static/screenshot.gif?raw=true)
 
@@ -30,6 +30,27 @@ The visualization requires at least 2 fields to be present within the search out
 | table id "Detection Count" description
 ```
 
+### More than the first three columns
+
+By default the first three columns are the technique ID, the value and the description. These options (format menu) change that:
+
+- **Fields**: name the columns instead of relying on their order. *ID field*, *Value field*, *Description field* and *Status field* take field names (matched exactly, then ignoring case). A name that is not in the results is shown as an error listing the available fields.
+- **Roll up sub-techniques** (*Aggregation*): when the search returns sub-technique IDs such as `T1059.001`, show the sum, max, average or count on the parent technique. *Technique's own value* chooses between keeping a parent's own value or including it in the aggregate. Rolled-up cells have a dotted underline.
+- **Color bounds**: *From data* sets the gradient from the lowest/highest value in the results (starting at 0 unless a value is negative, or at the lowest value if chosen) instead of the two bounds typed below it.
+- **Status colors**: set *Status field* to a text column and list colors as `gap=#d93f3c, partial=#f1813f, covered=#53a051`. Cells then take the color of their status (matched ignoring case; other statuses use *Other status color*), the legend lists each status with a count, and the number only appears in the tooltip. A parent technique without a status takes the first listed status among its sub-techniques when roll-up is on, so list the most important status first. *Sort Key* gains *Status*, in the order listed.
+- **Export button** (*Export*): adds a button that downloads the current data as an [ATT&CK Navigator](https://mitre-attack.github.io/attack-navigator/) layer (format 4.5): values become scores, descriptions become comments, status colors and the legend are kept. Not available for D3FEND.
+
+### Imported ATT&CK data
+
+MITRE publishes new ATT&CK versions more often than this app is released. The app can download them itself:
+
+1. Enable the scripted input `bin/import_matrices.py` (Settings > Data inputs > Scripts) and the saved search *MITRE ATT&CK - update matrix collection*. Both are disabled by default. The Splunk host needs HTTPS access to `raw.githubusercontent.com`; settings (proxy, mirrors, limits) are in `mitre_attck_import.conf`.
+2. Set *Matrix data* to *Imported* in the format menu. *ATT&CK version* optionally pins a version such as `19.1`, or `19` for the newest 19.x.
+
+If no usable imported data exists, the bundled data is drawn with a note saying so. D3FEND is always bundled. Newer ATT&CK versions can rename tactics (v20 replaced *Defense Evasion* with *Stealth* and *Defense Impairment* for Enterprise), which affects drilldown tokens that match on tactic names.
+
+`bin/enterpriseAttack2json.py` regenerates the bundled data offline.
+
 ### Drilldowns
 
 1. **Sub-Technique ID**: the ID of a selected sub-technique is drilldownable via `$row.mtr_sub-technique_id$`
@@ -42,6 +63,9 @@ The visualization requires at least 2 fields to be present within the search out
 8. **Technique Value**: the value of a selected technique is drilldownable (either by clicking an underlying sub-technique or the technique itself) via `$row.mtr_technique_value$`
 9. **Tactic Value**: the value of a selected tactic is drilldownable (either by clicking an underlying technique or the tactic itself) via `$row.mtr_tactic_value$`
 
+10. **Sub-Technique Status**: the status of a selected sub-technique, when a Status field is set, via `$row.mtr_sub-technique_status$`
+11. **Technique Status**: the status of a selected technique (either by clicking an underlying sub-technique or the technique itself) via `$row.mtr_technique_status$`
+
 If any of the above values are not defined, the associated token is unset. 
 
 ## Support
@@ -49,6 +73,14 @@ If any of the above values are not defined, the associated token is unset.
 This app is currently unsupported for Internet Explorer. Please report issues to https://github.com/alatif113/mitre_attck_heatmap/issues
 
 ## Change Log
+
+### Unreleased
+- Updated the bundled data to ATT&CK v20.0
+- Added an optional scripted input and saved search that import newer ATT&CK versions, with *Matrix data* and *ATT&CK version* options
+- Added the Fields options to map result columns by name
+- Added *Roll up sub-techniques*, *Color bounds: From data*, status-based coloring and an ATT&CK Navigator export button
+- Fixed: Enterprise tactic order for ATT&CK v20, several dashboards on one page affecting each other, "Hide null" removing sub-techniques that have values, the legend for non-zero lower bounds, zero and decimal values in tooltips, searching for names with `&`, the animation loop multiplying on refresh, one click firing many drilldowns, and several Platform options that showed an empty matrix
+- Fixed: legend text built from field names is now escaped
 
 ### v1.9.0
 - Added an optional search bar, enabled through the format menu, to quickly highlight techniques based on their ID or name
