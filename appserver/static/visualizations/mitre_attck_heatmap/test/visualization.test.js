@@ -31,6 +31,43 @@ describe('render snapshots', () => {
     });
 });
 
+describe('several instances on one page (audit P2-2)', () => {
+    const states = viz => ({
+        focused: viz.el.querySelectorAll('.focused').length,
+        defocused: viz.el.querySelectorAll('.defocused').length,
+        tooltips: viz.el.querySelectorAll('.mtr-technique-tooltip').length
+    });
+
+    test('focus changes in one visualization do not touch another', () => {
+        const a = render(Viz, loadFixture('typical.json'));
+        const b = render(Viz, loadFixture('typical.json'));
+        a._setAnimationClass(0, 10);
+        expect(states(a).defocused).toBeGreaterThan(0);
+        expect(states(b)).toEqual({ focused: 0, defocused: 0, tooltips: 0 });
+    });
+
+    test('leaving the legend clears focus only in its own visualization', () => {
+        const a = render(Viz, loadFixture('typical.json'));
+        const b = render(Viz, loadFixture('typical.json'));
+        a._setAnimationClass(0, 10);
+        b._setAnimationClass(0, 10);
+        $(a.el.querySelector('.mtr-legend')).trigger('mouseenter').trigger('mouseleave');
+        expect(states(a)).toMatchObject({ focused: 0, defocused: 0 });
+        expect(states(b).defocused).toBeGreaterThan(0);
+    });
+
+    test('closing a tooltip does not remove the tooltip of another visualization', () => {
+        const a = render(Viz, loadFixture('typical.json'));
+        const b = render(Viz, loadFixture('typical.json'));
+        const cell = viz => viz.el.querySelector('.mtr-technique[data-id="T1059"]');
+        $(cell(a)).trigger('mouseenter');
+        $(cell(b)).trigger('mouseenter');
+        $(cell(a)).trigger('mouseleave');
+        expect(states(a).tooltips).toBe(0);
+        expect(states(b).tooltips).toBe(1);
+    });
+});
+
 describe('globals', () => {
     test('rendering and interacting does not create global variables (audit P2-8)', () => {
         const before = new Set(Object.getOwnPropertyNames(window));

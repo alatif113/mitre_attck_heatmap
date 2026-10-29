@@ -123,8 +123,8 @@ return SplunkVisualizationBase.extend({
         $legend.hover(function() {
             $('.mtr-legend-meter-container', this).append($(`<div class="mtr-legend-cursor"></div>`))
         }, function() {
-            $('.mtr-legend-cursor').remove();
-            $('.mtr-technique').removeClass('focused').removeClass('defocused');
+            $('.mtr-legend-cursor', $legend).remove();
+            $('.mtr-technique', self.$el).removeClass('focused').removeClass('defocused');
         })
 
         let lastMove = 0;
@@ -276,7 +276,7 @@ return SplunkVisualizationBase.extend({
                 }
             }
         }, function() {
-            $('.mtr-technique-tooltip').remove();
+            $('.mtr-technique-tooltip', $content).remove();
         });
 
         $('.mtr-tactic-col', $content).each(function() {
@@ -398,7 +398,7 @@ return SplunkVisualizationBase.extend({
                 if (self.animate) {
                     self._animationFrame = window.requestAnimationFrame(step);
                 } else {
-                    $('.mtr-technique').removeClass('focused').removeClass('defocused');
+                    $('.mtr-technique', self.$el).removeClass('focused').removeClass('defocused');
                 }
             }
             self._animationFrame = window.requestAnimationFrame(step);
@@ -418,7 +418,7 @@ return SplunkVisualizationBase.extend({
     },
 
     _setAnimationClass: function(lower, upper) {
-        $('.mtr-technique').each(function() {
+        $('.mtr-technique', this.$el).each(function() {
             if (logic.inFocusRange($(this).attr('data-value'), lower, upper)) {
                 $(this).addClass('focused').removeClass('defocused');
             } else {
