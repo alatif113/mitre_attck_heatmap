@@ -31,6 +31,23 @@ describe('render snapshots', () => {
     });
 });
 
+describe('globals', () => {
+    test('rendering and interacting does not create global variables (audit P2-8)', () => {
+        const before = new Set(Object.getOwnPropertyNames(window));
+        const viz = render(Viz, loadFixture('typical.json'), { sortKey: 'data-value' });
+        const cell = viz.el.querySelector('.mtr-technique[data-id="T1059"]');
+        $(cell).trigger('mouseenter').trigger('click').trigger('mouseleave');
+        $(viz.el.querySelector('.mtr-tactic-title')).trigger('click');
+        const input = viz.el.querySelector('.mtr-search-input');
+        input.value = 'phishing';
+        $(input).trigger('change');
+        render(Viz, loadFixture('typical.json'), { sortKey: 'data-name', sortOrder: 'desc' });
+        // jsdom (like browsers) exposes elements with an id as window properties; those are not variables.
+        const leaked = Object.getOwnPropertyNames(window).filter(name => !before.has(name) && !document.getElementById(name));
+        expect(leaked).toEqual([]);
+    });
+});
+
 describe('formatData', () => {
     test('returns false for an empty result set', () => {
         const viz = createViz(Viz);

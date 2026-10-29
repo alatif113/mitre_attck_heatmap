@@ -7,7 +7,7 @@ exports[`render snapshots empty.json with defaults 1`] = `
   "htmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "legend": null,
   "tactics": [],
-  "theme": "mitre-container",
+  "theme": "",
 }
 `;
 

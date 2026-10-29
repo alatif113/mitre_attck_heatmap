@@ -32,7 +32,6 @@ return SplunkVisualizationBase.extend({
         SplunkVisualizationBase.prototype.initialize.apply(this, arguments);
         this.$el = $(this.el);
         this.animate = false;
-        this.$el.addClass('mitre-container');
         this.colorMap = [
             { pct: 0, color: { r: 0x63, g: 0xbe, b: 0x7b } },
             { pct: 50, color: { r: 0xff, g: 0xd5, b: 0x84 } },
@@ -122,7 +121,7 @@ return SplunkVisualizationBase.extend({
             .css('background', 'linear-gradient' + gradient);
         
         $legend.hover(function() {
-            $('.mtr-legend-meter-container', this).append($(`<div class="mtr-legend-cursor"></div`))
+            $('.mtr-legend-meter-container', this).append($(`<div class="mtr-legend-cursor"></div>`))
         }, function() {
             $('.mtr-legend-cursor').remove();
             $('.mtr-technique').removeClass('focused').removeClass('defocused');
@@ -148,7 +147,7 @@ return SplunkVisualizationBase.extend({
         })
 
         matrixJSON.tactics.forEach(function(tactic) {
-            $tactic_col = $(`<div class="mtr-tactic-col" data-id="${tactic.id}" data-name="${tactic.name}" data-tactic="${tactic.short_name}">`);
+            let $tactic_col = $(`<div class="mtr-tactic-col" data-id="${tactic.id}" data-name="${tactic.name}" data-tactic="${tactic.short_name}">`);
             $tactic_col.appendTo($content).append(`
                     <div class="mtr-tactic">
                         <div class="mtr-tactic-title">${tactic.name}</div>
@@ -213,7 +212,7 @@ return SplunkVisualizationBase.extend({
             let { id, count, description } = logic.parseRow(r, vizUtils.escapeHtml);
             let $technique = $(`.mtr-technique[data-id="${id}"], .mtr-sub-technique[data-id="${id}"]`, $content)
 
-            if (!$technique || !logic.isValidCount(count)) return;
+            if (!logic.isValidCount(count)) return;
 
             let percent = self._getPercent(startVal, endVal, count);
             let color = self._getColor(percent);
@@ -370,7 +369,7 @@ return SplunkVisualizationBase.extend({
 
         if (showSearchBar) {
             $('input', $searchbar).on('change', function() {
-                value = vizUtils.escapeHtml(this.value).toLowerCase();
+                let value = vizUtils.escapeHtml(this.value).toLowerCase();
                 if(value == '' || value == null) {
                     $('.mtr-technique', $content).removeClass('focused').removeClass('defocused');
                 } else {
@@ -437,7 +436,7 @@ return SplunkVisualizationBase.extend({
     },
 
     _sortElements: function($container, key, order) {
-        $children = $container.children().sort(function(a, b) {
+        let $children = $container.children().sort(function(a, b) {
             let $t1 = $('.mtr-technique', $(a));
             let $t2 = $('.mtr-technique', $(b));
             return logic.compareByKey(key, order, $t1.attr(key), $t2.attr(key));
