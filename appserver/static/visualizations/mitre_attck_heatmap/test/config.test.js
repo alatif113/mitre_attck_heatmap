@@ -149,8 +149,10 @@ describe('test bench dashboard', () => {
 
     test('is theme-agnostic: no hardcoded colors or forced theme', () => {
         expect(doc.documentElement.getAttribute('theme')).toBeNull();
-        expect(xml).not.toMatch(/#[0-9a-fA-F]{3,8}\b/);
-        expect(xml).not.toMatch(/\b(color|background)\s*:\s*(?!inherit|currentColor|transparent)/i);
+        // Visualization option values (such as the status colors) are data, not page styling.
+        const styling = xml.replace(/<option\b[^>]*>[^<]*<\/option>/g, '').replace(/<query>[\s\S]*?<\/query>/g, '');
+        expect(styling).not.toMatch(/#[0-9a-fA-F]{3,8}\b/);
+        expect(styling).not.toMatch(/\b(color|background)\s*:\s*(?!inherit|currentColor|transparent)/i);
     });
 
     describe('lookup file', () => {

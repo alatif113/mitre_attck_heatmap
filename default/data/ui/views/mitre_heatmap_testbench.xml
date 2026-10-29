@@ -76,7 +76,7 @@
       <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
         <search>
           <query><![CDATA[| makeresults
-| eval id=split("T1592,T1594,T1583,T1584,T1133,T1091,T1047,T1129,T1037,T1543,T1006,T1666,T1557,T1003,T1033,T1613,T1080,T1113,T1071,T1219,T1567,T1029,T1561,T1489,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1037.001,T1037.002,T1037.003,T1037.004,T1037.005,T1071.001,T1071.002,T1071.003,T1071.004,T1071.005,T1219.001,T1219.002,T1219.003,T1543.001,T1543.002,T1543.003,T1059,T1566", ",")
+| eval id=split("T1589,T1590,T1583,T1584,T1078,T1091,T1047,T1053,T1037,T1006,T1014,T1112,T1207,T1003,T1040,T1007,T1010,T1021,T1072,T1005,T1025,T1001,T1008,T1011,T1020,T1485,T1486,T1001.001,T1001.002,T1001.003,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1011.001,T1020.001,T1021.001,T1021.002,T1021.003,T1021.004,T1021.005,T1021.006,T1021.007,T1021.008,T1059,T1566", ",")
 | mvexpand id
 | streamstats count AS n
 | eval "Detection Count"=(n*37+11)%101
@@ -109,7 +109,7 @@
       <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
         <search>
           <query><![CDATA[| makeresults
-| eval id=split("T1592,T1594,T1583,T1584,T1133,T1091,T1047,T1129,T1037,T1543,T1006,T1666,T1557,T1003,T1033,T1613,T1080,T1113,T1071,T1219,T1567,T1029,T1561,T1489,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1037.001,T1037.002,T1037.003,T1037.004,T1037.005,T1071.001,T1071.002,T1071.003,T1071.004,T1071.005,T1219.001,T1219.002,T1219.003,T1543.001,T1543.002,T1543.003,T1059,T1566", ",")
+| eval id=split("T1589,T1590,T1583,T1584,T1078,T1091,T1047,T1053,T1037,T1006,T1014,T1112,T1207,T1003,T1040,T1007,T1010,T1021,T1072,T1005,T1025,T1001,T1008,T1011,T1020,T1485,T1486,T1001.001,T1001.002,T1001.003,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1011.001,T1020.001,T1021.001,T1021.002,T1021.003,T1021.004,T1021.005,T1021.006,T1021.007,T1021.008,T1059,T1566", ",")
 | mvexpand id
 | streamstats count AS n
 | eval "Detection Count"=(n*37+11)%101
@@ -222,7 +222,7 @@
       <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
         <search>
           <query><![CDATA[| makeresults
-| eval id=split("T1592,T1594,T1583,T1584,T1133,T1091,T1047,T1129,T1037,T1543,T1006,T1666,T1557,T1003,T1033,T1613,T1080,T1113,T1071,T1219,T1567,T1029,T1561,T1489,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1037.001,T1037.002,T1037.003,T1037.004,T1037.005,T1071.001,T1071.002,T1071.003,T1071.004,T1071.005,T1219.001,T1219.002,T1219.003,T1543.001,T1543.002,T1543.003,T1059,T1566", ",")
+| eval id=split("T1589,T1590,T1583,T1584,T1078,T1091,T1047,T1053,T1037,T1006,T1014,T1112,T1207,T1003,T1040,T1007,T1010,T1021,T1072,T1005,T1025,T1001,T1008,T1011,T1020,T1485,T1486,T1001.001,T1001.002,T1001.003,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1011.001,T1020.001,T1021.001,T1021.002,T1021.003,T1021.004,T1021.005,T1021.006,T1021.007,T1021.008,T1059,T1566", ",")
 | mvexpand id
 | streamstats count AS n
 | eval "Detection Count"=case(n%4==0, null(), n%7==0, "", n%5==0, "N/A", true(), (n*37+11)%101)
@@ -256,7 +256,7 @@
         <search>
           <query><![CDATA[| gentimes start=01/01/2026 end=02/01/2026 increment=1d
 | streamstats count AS n
-| eval id=mvindex(split("T1592,T1594,T1583,T1584,T1133,T1091,T1047,T1129,T1037,T1543,T1006,T1666,T1557,T1003,T1033,T1613,T1080,T1113,T1071,T1219,T1567,T1029,T1561,T1489,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1037.001,T1037.002,T1037.003,T1037.004,T1037.005,T1071.001,T1071.002,T1071.003,T1071.004,T1071.005,T1219.001,T1219.002,T1219.003,T1543.001,T1543.002,T1543.003,T1059,T1566", ","), n-1)
+| eval id=mvindex(split("T1589,T1590,T1583,T1584,T1078,T1091,T1047,T1053,T1037,T1006,T1014,T1112,T1207,T1003,T1040,T1007,T1010,T1021,T1072,T1005,T1025,T1001,T1008,T1011,T1020,T1485,T1486,T1001.001,T1001.002,T1001.003,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1011.001,T1020.001,T1021.001,T1021.002,T1021.003,T1021.004,T1021.005,T1021.006,T1021.007,T1021.008,T1059,T1566", ","), n-1)
 | eval series_01=(n*7+1)%101, series_02=(n*8+2)%101, series_03=(n*9+3)%101, series_04=(n*10+4)%101, series_05=(n*11+5)%101, series_06=(n*12+6)%101, series_07=(n*13+7)%101, series_08=(n*14+8)%101, series_09=(n*15+9)%101, series_10=(n*16+10)%101, series_11=(n*17+11)%101, series_12=(n*18+12)%101, series_13=(n*19+13)%101, series_14=(n*20+14)%101, series_15=(n*21+15)%101, series_16=(n*22+16)%101, series_17=(n*23+17)%101, series_18=(n*24+18)%101, series_19=(n*25+19)%101, series_20=(n*26+20)%101, series_21=(n*27+21)%101, series_22=(n*28+22)%101, series_23=(n*29+23)%101, series_24=(n*30+24)%101, series_25=(n*31+25)%101, series_26=(n*32+26)%101, series_27=(n*33+27)%101, series_28=(n*34+28)%101, series_29=(n*35+29)%101, series_30=(n*36+30)%101
 | table id series_01 series_02 series_03 series_04 series_05 series_06 series_07 series_08 series_09 series_10 series_11 series_12 series_13 series_14 series_15 series_16 series_17 series_18 series_19 series_20 series_21 series_22 series_23 series_24 series_25 series_26 series_27 series_28 series_29 series_30]]></query>
           <earliest>-15m</earliest>
@@ -285,7 +285,7 @@
       <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
         <search>
           <query><![CDATA[| makeresults
-| eval id=split("T1592,T1594,T1583,T1584,T1133,T1091,T1047,T1129,T1037,T1543,T1006,T1666,T1557,T1003,T1033,T1613,T1080,T1113,T1071,T1219,T1567,T1029,T1561,T1489,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1037.001,T1037.002,T1037.003,T1037.004,T1037.005,T1071.001,T1071.002,T1071.003,T1071.004,T1071.005,T1219.001,T1219.002,T1219.003,T1543.001,T1543.002,T1543.003,T1059,T1566", ",")
+| eval id=split("T1589,T1590,T1583,T1584,T1078,T1091,T1047,T1053,T1037,T1006,T1014,T1112,T1207,T1003,T1040,T1007,T1010,T1021,T1072,T1005,T1025,T1001,T1008,T1011,T1020,T1485,T1486,T1001.001,T1001.002,T1001.003,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1011.001,T1020.001,T1021.001,T1021.002,T1021.003,T1021.004,T1021.005,T1021.006,T1021.007,T1021.008,T1059,T1566", ",")
 | mvexpand id
 | streamstats count AS n
 | eval "Detection count with an extraordinarily long field name that runs well past any sensible legend or tooltip width to show how the layout copes"=(n*37+11)%101
@@ -337,6 +337,141 @@
     </panel>
   </row>
   <row>
+    <panel>
+      <title>Status colors</title>
+      <html>
+        <p class="mtr-note">A text status column colors the cells (Status field = state). The legend lists each status with its count; hover a swatch to highlight. This panel also has the Navigator export button on.</p>
+      </html>
+      <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
+        <search>
+          <query><![CDATA[| makeresults
+| eval id=split("T1589,T1590,T1583,T1584,T1078,T1091,T1047,T1053,T1037,T1006,T1014,T1112,T1207,T1003,T1040,T1007,T1010,T1021,T1072,T1005,T1025,T1001,T1008,T1011,T1020,T1485,T1486,T1001.001,T1001.002,T1001.003,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1011.001,T1020.001,T1021.001,T1021.002,T1021.003,T1021.004,T1021.005,T1021.006,T1021.007,T1021.008,T1059,T1566", ",")
+| mvexpand id
+| streamstats count AS n
+| eval state=case(n%4==0, "gap", n%4==1, "covered", n%4==2, "Partial", true(), null())
+| eval "Detection Count"=(n*37+11)%101
+| eval description="Status ".coalesce(state, "none")." (row ".n.")"
+| table id "Detection Count" state description]]></query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="height">900</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.matrix">$matrix$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.display">$display$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.hideNull">$hide_null$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.animate">no</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSubTechniques">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.startVal">0</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.endVal">100</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortKey">data-id</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortOrder">asc</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.statusField">state</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.statusColors">gap=#d93f3c, Partial=#f1813f, covered=#53a051</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showExportButton">yes</option>
+      </viz>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Roll-up</title>
+      <html>
+        <p class="mtr-note">Only sub-technique rows are returned. Roll up sub-techniques = Sum fills in the parent technique (dotted underline, tooltip says where the value came from).</p>
+      </html>
+      <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
+        <search>
+          <query><![CDATA[| makeresults
+| eval id=split("T1001.001,T1001.002,T1001.003,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1011.001,T1020.001,T1021.001", ",")
+| mvexpand id
+| streamstats count AS n
+| eval "Detection Count"=(n*13+5)%40
+| eval description="Sub-technique row ".n
+| table id "Detection Count" description]]></query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="height">900</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.matrix">$matrix$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.display">$display$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.hideNull">$hide_null$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.animate">no</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSubTechniques">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.startVal">0</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.endVal">100</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortKey">data-id</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortOrder">asc</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.rollup">sum</option>
+      </viz>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Automatic bounds</title>
+      <html>
+        <p class="mtr-note">Values run up to about 2,500. Color bounds = From data scales the colors and the legend to the highest value instead of 0 to 100.</p>
+      </html>
+      <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
+        <search>
+          <query><![CDATA[| makeresults
+| eval id=split("T1589,T1590,T1583,T1584,T1078,T1091,T1047,T1053,T1037,T1006,T1014,T1112,T1207,T1003,T1040,T1007,T1010,T1021,T1072,T1005,T1025,T1001,T1008,T1011,T1020,T1485,T1486,T1001.001,T1001.002,T1001.003,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1011.001,T1020.001,T1021.001,T1021.002,T1021.003,T1021.004,T1021.005,T1021.006,T1021.007,T1021.008,T1059,T1566", ",")
+| mvexpand id
+| streamstats count AS n
+| eval "Detection Count"=(n*97)%2500
+| table id "Detection Count"]]></query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="height">900</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.matrix">$matrix$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.display">$display$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.hideNull">$hide_null$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.animate">no</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSubTechniques">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.startVal">0</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.endVal">100</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortKey">data-id</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortOrder">asc</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.scaleMode">auto</option>
+      </viz>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Field mapping</title>
+      <html>
+        <p class="mtr-note">The columns are description, owner, risk, technique. The ID field, Value field and Description field options name them, so no reordering search is needed.</p>
+      </html>
+      <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
+        <search>
+          <query><![CDATA[| makeresults
+| eval technique=split("T1589,T1590,T1583,T1584,T1078,T1091,T1047,T1053,T1037,T1006,T1014,T1112,T1207,T1003,T1040,T1007,T1010,T1021,T1072,T1005,T1025,T1001,T1008,T1011,T1020,T1485,T1486,T1001.001,T1001.002,T1001.003,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1011.001,T1020.001,T1021.001,T1021.002,T1021.003,T1021.004,T1021.005,T1021.006,T1021.007,T1021.008,T1059,T1566", ",")
+| mvexpand technique
+| streamstats count AS n
+| eval risk=(n*37+11)%101, owner="team-".(n%5), description="Columns are in a different order (row ".n.")"
+| table description owner risk technique]]></query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="height">900</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.matrix">$matrix$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.display">$display$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.hideNull">$hide_null$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.animate">no</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSubTechniques">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.startVal">0</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.endVal">100</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortKey">data-id</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortOrder">asc</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.idField">technique</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.valueField">risk</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.descriptionField">description</option>
+      </viz>
+    </panel>
+  </row>
+  <row>
     <panel depends="$run_large$">
       <title>Large result</title>
       <html>
@@ -346,7 +481,7 @@
         <search>
           <query><![CDATA[| makeresults count=50000
 | streamstats count AS n
-| eval id=mvindex(split("T1592,T1594,T1583,T1584,T1133,T1091,T1047,T1129,T1037,T1543,T1006,T1666,T1557,T1003,T1033,T1613,T1080,T1113,T1071,T1219,T1567,T1029,T1561,T1489,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1037.001,T1037.002,T1037.003,T1037.004,T1037.005,T1071.001,T1071.002,T1071.003,T1071.004,T1071.005,T1219.001,T1219.002,T1219.003,T1543.001,T1543.002,T1543.003,T1059,T1566", ","), n % 50)
+| eval id=mvindex(split("T1589,T1590,T1583,T1584,T1078,T1091,T1047,T1053,T1037,T1006,T1014,T1112,T1207,T1003,T1040,T1007,T1010,T1021,T1072,T1005,T1025,T1001,T1008,T1011,T1020,T1485,T1486,T1001.001,T1001.002,T1001.003,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1011.001,T1020.001,T1021.001,T1021.002,T1021.003,T1021.004,T1021.005,T1021.006,T1021.007,T1021.008,T1059,T1566", ","), n % 50)
 | eval "Detection Count"=(n*37+11)%101
 | eval description="Row ".n
 | table id "Detection Count" description]]></query>
@@ -376,7 +511,7 @@
       <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
         <search>
           <query><![CDATA[| makeresults
-| eval id=split("T1592,T1594,T1583,T1584,T1133,T1091,T1047,T1129,T1037,T1543,T1006,T1666,T1557,T1003,T1033,T1613,T1080,T1113,T1071,T1219,T1567,T1029,T1561,T1489,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1037.001,T1037.002,T1037.003,T1037.004,T1037.005,T1071.001,T1071.002,T1071.003,T1071.004,T1071.005,T1219.001,T1219.002,T1219.003,T1543.001,T1543.002,T1543.003,T1059,T1566", ",")
+| eval id=split("T1589,T1590,T1583,T1584,T1078,T1091,T1047,T1053,T1037,T1006,T1014,T1112,T1207,T1003,T1040,T1007,T1010,T1021,T1072,T1005,T1025,T1001,T1008,T1011,T1020,T1485,T1486,T1001.001,T1001.002,T1001.003,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1011.001,T1020.001,T1021.001,T1021.002,T1021.003,T1021.004,T1021.005,T1021.006,T1021.007,T1021.008,T1059,T1566", ",")
 | mvexpand id
 | streamstats count AS n
 | eval "Detection Count"=(n*37+11)%101
@@ -433,7 +568,7 @@
       <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
         <search>
           <query><![CDATA[| makeresults
-| eval id=split("T1592,T1594,T1583,T1584,T1133,T1091,T1047,T1129,T1037,T1543,T1006,T1666,T1557,T1003,T1033,T1613,T1080,T1113,T1071,T1219,T1567,T1029,T1561,T1489,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1037.001,T1037.002,T1037.003,T1037.004,T1037.005,T1071.001,T1071.002,T1071.003,T1071.004,T1071.005,T1219.001,T1219.002,T1219.003,T1543.001,T1543.002,T1543.003,T1059,T1566", ",")
+| eval id=split("T1589,T1590,T1583,T1584,T1078,T1091,T1047,T1053,T1037,T1006,T1014,T1112,T1207,T1003,T1040,T1007,T1010,T1021,T1072,T1005,T1025,T1001,T1008,T1011,T1020,T1485,T1486,T1001.001,T1001.002,T1001.003,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1011.001,T1020.001,T1021.001,T1021.002,T1021.003,T1021.004,T1021.005,T1021.006,T1021.007,T1021.008,T1059,T1566", ",")
 | mvexpand id
 | streamstats count AS n
 | eval "Detection Count"=case(n%4==0, null(), n%7==0, "", n%5==0, "N/A", true(), (n*37+11)%101)
