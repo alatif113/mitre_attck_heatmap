@@ -1,19 +1,19 @@
 :root {
-	--bg-black: #000000;
-	--bg-gray-dark: #31373E;
-	--bg-gray-med: #3C444D;
-	--bg-gray-light: #f1f4f5;
-	--text-white: #FFFFFF;
-	--text-black: #000000;
-	--text-gray: rgb(175, 182, 189);
-	--transition-short: all cubic-bezier(0.65, 0.05, 0.36, 1) 200ms;
-    --transition-long: all cubic-bezier(0.65, 0.05, 0.36, 1) 500ms;
-	--font-xlarge: 1.4rem;
-	--font-large: 1.2rem;
-	--font-medium: 1rem;
-	--font-small: .9rem;
-	--font-xsmall: .8rem;
-	--font-xxsmall: .7rem;
+	--mtr-bg-black: #000000;
+	--mtr-bg-gray-dark: #31373E;
+	--mtr-bg-gray-med: #3C444D;
+	--mtr-bg-gray-light: #f1f4f5;
+	--mtr-text-white: #FFFFFF;
+	--mtr-text-black: #000000;
+	--mtr-text-gray: rgb(175, 182, 189);
+	--mtr-transition-short: all cubic-bezier(0.65, 0.05, 0.36, 1) 200ms;
+    --mtr-transition-long: all cubic-bezier(0.65, 0.05, 0.36, 1) 500ms;
+	--mtr-font-xlarge: 1.4rem;
+	--mtr-font-large: 1.2rem;
+	--mtr-font-medium: 1rem;
+	--mtr-font-small: .9rem;
+	--mtr-font-xsmall: .8rem;
+	--mtr-font-xxsmall: .7rem;
 }
 
 .mtr-search-container {
@@ -56,8 +56,8 @@
 }
 
 .mtr-tactic-title {
-	font-size: var(--font-small);
-	color: var(--text-black);
+	font-size: var(--mtr-font-small);
+	color: var(--mtr-text-black);
 	height: 2.5em;
 	display: -webkit-box;
 	display: -ms-flexbox;
@@ -73,7 +73,7 @@
 }
 
 .dark .mtr-tactic-title {
-	color: var(--text-white);
+	color: var(--mtr-text-white);
 }
 
 .mtr-meter-container {
@@ -82,26 +82,26 @@
 	border-radius: 5px;
 	margin: .5em 0;
 	overflow: hidden;
-	-webkit-transition: var(--transition-short);
-	transition: var(--transition-short);
+	-webkit-transition: var(--mtr-transition-short);
+	transition: var(--mtr-transition-short);
 	z-index: 20;
 }
 
 .mtr-tactic .mtr-meter-container {
-	background: var(--bg-gray-light);
+	background: var(--mtr-bg-gray-light);
 	position: absolute;
 }
 
 .dark .mtr-tactic .mtr-meter-container {
-	background: var(--bg-gray-med);
+	background: var(--mtr-bg-gray-med);
 }
 
 .mtr-meter-container.dark {
-	border: 1px solid var(--bg-gray-med);
+	border: 1px solid var(--mtr-bg-gray-med);
 }
 
 .mtr-technique-tooltip .mtr-meter-container {
-	background: var(--bg-gray-med);
+	background: var(--mtr-bg-gray-med);
     position: relative;
 }
 
@@ -110,14 +110,14 @@
 }
 
 .mtr-tactic .mtr-meter-fill {
-    -webkit-transition: var(--transition-short);
-	transition: var(--transition-short);
+    -webkit-transition: var(--mtr-transition-short);
+	transition: var(--mtr-transition-short);
 }
 
 .mtr-technique-tooltip .mtr-meter-fill {
     width: 0%;
-	-webkit-transition: var(--transition-long);
-	transition: var(--transition-long);
+	-webkit-transition: var(--mtr-transition-long);
+	transition: var(--mtr-transition-long);
 }
 
 .mtr-tactic:hover .mtr-meter-fill {
@@ -131,7 +131,7 @@
 .grid-wrapper {
 	display: grid;
 	grid-template-rows: 0fr;
-	transition: var(--transition-short);
+	transition: var(--mtr-transition-short);
 	position: absolute;
 	z-index: 21;
 	width: 100%;
@@ -140,7 +140,7 @@
 }
 
 .mtr-stats-container {
-	color: var(--text-white);
+	color: var(--mtr-text-white);
 	width: 100%;
 	box-sizing: content-box;
 	display: -webkit-box;
@@ -164,11 +164,11 @@
 }
 
 .mtr-stats-label {
-	font-size: var(--font-small);
+	font-size: var(--mtr-font-small);
 }
 
 .mtr-stats-val {
-	font-size: var(--font-large);
+	font-size: var(--mtr-font-large);
 }
 
 .mtr-technique-col {
@@ -181,8 +181,8 @@
 	-ms-flex-pack: start;
 	justify-content: flex-start;
 	margin-top: 1.8em;
-	-webkit-transition: var(--transition-short);
-	transition: var(--transition-short)
+	-webkit-transition: var(--mtr-transition-short);
+	transition: var(--mtr-transition-short)
 }
 
 .mtr-tactic-col:hover .mtr-technique-container {
@@ -201,33 +201,33 @@
 	-ms-flex-positive: 1;
 	flex-grow: 1;
 	z-index: 1;
-	-webkit-transition: var(--transition-short);
-	transition: var(--transition-short);
+	-webkit-transition: var(--mtr-transition-short);
+	transition: var(--mtr-transition-short);
 }
 
 .mtr-technique, .mtr-sub-technique {
 	position: relative;
-	background: var(--bg-gray-light);
+	background: var(--mtr-bg-gray-light);
 	cursor: pointer;
 	font-family: "Splunk Platform Mono", Inconsolata, Consolas, "Droid Sans Mono", Monaco, "Courier New", Courier, monospace;
-	color: var(--text-black);
+	color: var(--mtr-text-black);
 	padding: 0.5em;
 }
 
 .mtr-technique {
-	font-size: var(--font-xsmall);
-	-webkit-transition: var(--transition-short);
-	transition: var(--transition-short);
+	font-size: var(--mtr-font-xsmall);
+	-webkit-transition: var(--mtr-transition-short);
+	transition: var(--mtr-transition-short);
 	z-index: 2;
 }
 
 .mtr-sub-technique {
-	font-size: var(--font-xxsmall);
+	font-size: var(--mtr-font-xxsmall);
 }
 
 .dark .mtr-technique, .dark .mtr-sub-technique {
-	background: var(--bg-gray-med);
-	color: var(--text-white);
+	background: var(--mtr-bg-gray-med);
+	color: var(--mtr-text-white);
 }
 
 .mtr-technique-container.mtr-display-id {
@@ -304,35 +304,35 @@
 .mtr-technique-tooltip {
 	position: absolute;
 	z-index: 100;
-	background: var(--bg-black);
+	background: var(--mtr-bg-black);
 	padding: 1em;
 	width: 300px;
-	color: var(--text-white);
-	font-size: var(--font-xsmall);
+	color: var(--mtr-text-white);
+	font-size: var(--mtr-font-xsmall);
 	overflow-wrap: break-word;
 	top: 0;
     margin: 0;
 }
 
 .mtr-technique-tooltip .mtr-name {
-	font-size: var(--font-small);
+	font-size: var(--mtr-font-small);
 }
 
 .mtr-technique-tooltip .mtr-val {
-	font-size: var(--font-medium);
+	font-size: var(--mtr-font-medium);
 }
 
 .mtr-technique-tooltip .mtr-desc {
-	font-size: var(--font-xsmall);
+	font-size: var(--mtr-font-xsmall);
 }
 
 .mtr-technique-tooltip .mtr-ref {
-	font-size: var(--font-xxsmall);
+	font-size: var(--mtr-font-xxsmall);
 	margin-top: .5em;
 }
 
 .mtr-technique-tooltip p {
-	color: var(--text-white);
+	color: var(--mtr-text-white);
 }
 
 .mtr-technique-tooltip-right {
@@ -363,7 +363,7 @@
 }
 
 .mtr-legend-title {
-	font-size: var(--font-small);
+	font-size: var(--mtr-font-small);
 }
 
 .mtr-legend-meter-container {
@@ -397,10 +397,10 @@
 	-webkit-box-pack: justify;
 	-ms-flex-pack: justify;
 	justify-content: space-between;
-	font-size: var(--font-xsmall);
-	color: var(--text-black);
+	font-size: var(--mtr-font-xsmall);
+	color: var(--mtr-text-black);
 }
 
 .dark .mtr-legend-val {
-	color: var(--text-white);
+	color: var(--mtr-text-white);
 }
