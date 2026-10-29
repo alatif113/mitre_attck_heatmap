@@ -81,9 +81,22 @@ describe('parseConfig', () => {
         expect(options).toMatchObject({ hideNull: true, showSubTechniques: false, showSearchBar: false, animate: true });
     });
 
-    test('keeps numeric options as strings (audit P2-5)', () => {
-        const options = parse(withOptions({ startVal: '10', endVal: '90', duration: '5' }));
-        expect(options).toMatchObject({ startVal: '10', endVal: '90', duration: '5' });
+    test('parses the numeric options as numbers (audit P2-5)', () => {
+        const options = parse(withOptions({ startVal: '10', endVal: '90.5', duration: '5' }));
+        expect(options).toMatchObject({ startVal: 10, endVal: 90.5, duration: 5 });
+    });
+
+    test.each([
+        ['', 0, 100, 300],
+        ['abc', 0, 100, 300],
+        ['0', 0, 100, 300]
+    ])('falls back to defaults for unusable numeric options (%p)', (raw, startVal, endVal, duration) => {
+        const options = parse(withOptions({ startVal: raw, endVal: raw, duration: raw }));
+        expect(options).toMatchObject({ startVal, endVal: raw === '0' ? 0 : endVal, duration });
+    });
+
+    test('accepts negative bounds', () => {
+        expect(parse(withOptions({ startVal: '-50', endVal: '50' }))).toMatchObject({ startVal: -50, endVal: 50 });
     });
 
     test('escapes a configured legend title', () => {
@@ -227,8 +240,9 @@ describe('legend', () => {
         expect(logic.legendLabels(0, 100)).toEqual([0, 50, 100]);
     });
 
-    test('middle label is half the range, not the midpoint (audit P2-5)', () => {
-        expect(logic.legendLabels('50', '150')).toEqual(['50', 50, '150']);
+    test('middle label is the midpoint when the lower bound is not 0 (audit P2-5)', () => {
+        expect(logic.legendLabels(50, 150)).toEqual([50, 100, 150]);
+        expect(logic.legendLabels(-50, 50)).toEqual([-50, 0, 50]);
     });
 
     test('cursor range maps pointer position to a value window', () => {
@@ -241,8 +255,8 @@ describe('legend', () => {
         expect(logic.legendCursorRange(500, 100, 500, 0, 100)).not.toBeNull();
     });
 
-    test('cursor range is not offset by the lower bound (audit P2-5)', () => {
-        expect(logic.legendCursorRange(250, 100, 500, 100, 200)).toEqual({ left: 200, lower: 40, upper: 60 });
+    test('cursor range is offset by the lower bound (audit P2-5)', () => {
+        expect(logic.legendCursorRange(250, 100, 500, 100, 200)).toEqual({ left: 200, lower: 140, upper: 160 });
     });
 });
 
@@ -353,14 +367,20 @@ describe('animation', () => {
         expect(logic.animationSteps('0', '120', '2')).toEqual({ stepSize: 1, stepWidth: 12 });
     });
 
-    test('frames advance then wrap to 0 past the upper bound', () => {
+    test('frames advance then wrap to the lower bound past the upper bound', () => {
         const steps = { stepSize: 40, stepWidth: 10 };
-        let frame = logic.animationFrame(0, steps, 100);
+        let frame = logic.animationFrame(0, steps, 100, 0);
         expect(frame).toEqual({ lower: 0, upper: 50, next: 40 });
-        frame = logic.animationFrame(frame.next, steps, 100);
-        frame = logic.animationFrame(frame.next, steps, 100);
+        frame = logic.animationFrame(frame.next, steps, 100, 0);
+        frame = logic.animationFrame(frame.next, steps, 100, 0);
         expect(frame).toEqual({ lower: 80, upper: 130, next: 120 });
-        expect(logic.animationFrame(frame.next, steps, 100).next).toBe(0);
+        expect(logic.animationFrame(frame.next, steps, 100, 0).next).toBe(0);
+    });
+
+    test('animation starts and restarts at a non-zero lower bound (audit P2-5)', () => {
+        const steps = { stepSize: 40, stepWidth: 10 };
+        expect(logic.animationFrame(50, steps, 150, 50)).toEqual({ lower: 50, upper: 100, next: 90 });
+        expect(logic.animationFrame(160, steps, 150, 50).next).toBe(50);
     });
 
     test('inFocusRange is inclusive and ignores missing values', () => {

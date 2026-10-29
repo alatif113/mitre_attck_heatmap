@@ -68,6 +68,18 @@ describe('several instances on one page (audit P2-2)', () => {
     });
 });
 
+describe('legend scale (audit P2-5)', () => {
+    const labels = viz => Array.from(viz.el.querySelectorAll('.mtr-legend-val span')).map(s => s.textContent);
+
+    test('labels run from the lower bound through the midpoint to the upper bound', () => {
+        expect(labels(render(Viz, loadFixture('single-row.json'), { startVal: '50', endVal: '150' }))).toEqual(['50', '100', '150']);
+    });
+
+    test('default labels are 0, 50, 100', () => {
+        expect(labels(render(Viz, loadFixture('single-row.json')))).toEqual(['0', '50', '100']);
+    });
+});
+
 describe('hide null (audit P2-3)', () => {
     const data = {
         fields: [{ name: 'id' }, { name: 'count' }],
@@ -201,10 +213,11 @@ describe('updateView', () => {
         expect(viz.el.querySelector('.mtr-legend-title').textContent).toBe('<img src=x onerror=alert(1)>');
     });
 
-    test('escapes the configured legend bounds (audit P2-1)', () => {
+    test('markup in the legend bounds cannot reach the legend (audit P2-1)', () => {
         const viz = render(Viz, loadFixture('single-row.json'), { startVal: '<b>1</b>', endVal: '<i>2</i>' });
         expect(viz.el.querySelector('.mtr-legend b, .mtr-legend i')).toBeNull();
-        expect(viz.el.querySelectorAll('.mtr-legend-val span')[0].textContent).toBe('<b>1</b>');
+        // Not numbers, so the defaults are used.
+        expect(Array.from(viz.el.querySelectorAll('.mtr-legend-val span')).map(s => s.textContent)).toEqual(['0', '50', '100']);
     });
 
     test('ignores columns beyond the third', () => {

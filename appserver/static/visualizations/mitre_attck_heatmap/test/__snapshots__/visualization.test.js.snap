@@ -1299,12 +1299,12 @@ exports[`render snapshots single-row.json with defaults 1`] = `
 exports[`render snapshots typical.json with custom scale and legend 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 313442,
-  "htmlSha256": "2710cd0046f5eb69dc4794c95fcf7e29bdb606e2e299bb45e4727bbe34f7aed4",
+  "htmlLength": 313443,
+  "htmlSha256": "a63bb917c34f0f551d239a288e5a36bfab9a59357ec7269a322092a5d7dd2ce4",
   "legend": {
     "labels": [
       "50",
-      "50",
+      "100",
       "150",
     ],
     "title": "Alerts <per> "day"",

@@ -391,10 +391,10 @@ return SplunkVisualizationBase.extend({
 
         if (self.animate) {
             let steps = logic.animationSteps(startVal, endVal, duration);
-            let currStep = 0;
+            let currStep = startVal;
 
             function step() {
-                let frame = logic.animationFrame(currStep, steps, endVal);
+                let frame = logic.animationFrame(currStep, steps, endVal, startVal);
 
                 self._setAnimationClass(frame.lower, frame.upper);
                 currStep = frame.next;

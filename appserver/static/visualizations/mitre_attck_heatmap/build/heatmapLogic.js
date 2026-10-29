@@ -27,6 +27,12 @@ define(function() {
         return PLATFORM_ALIASES.hasOwnProperty(name) ? PLATFORM_ALIASES[name] : name;
     }
 
+    // Format options arrive as strings; text that is not a number gets the default.
+    function toNumber(raw, fallback) {
+        let number = parseFloat(raw);
+        return isNaN(number) ? fallback : number;
+    }
+
     // Reads the format options, applying the same defaults as before.
     function parseConfig(config, namespace, vizUtils, fields) {
         let get = function(key) {
@@ -36,12 +42,12 @@ define(function() {
 
         return {
             animate: vizUtils.normalizeBoolean(get('animate') || 'no'),
-            duration: get('duration') || 300,
+            duration: Math.max(toNumber(get('duration'), 300), 0) || 300,
             startColor: get('startColor') || '#53a051',
             midColor: get('midColor') || '#f8be34',
             endColor: get('endColor') || '#dc4e41',
-            startVal: get('startVal') || 0,
-            endVal: get('endVal') || 100,
+            startVal: toNumber(get('startVal'), 0),
+            endVal: toNumber(get('endVal'), 100),
             display: get('display') || 'id',
             legendTitle: vizUtils.escapeHtml(get('legendTitle')) || vizUtils.escapeHtml(fields[1].name),
             sortKey: get('sortKey') || 'data-id',
@@ -159,7 +165,7 @@ define(function() {
 
     // Lower, middle and upper labels under the legend bar.
     function legendLabels(startVal, endVal) {
-        return [startVal, (endVal - startVal)/2, endVal];
+        return [startVal, (startVal + endVal)/2, endVal];
     }
 
     // Maps a pointer x-offset over the legend to the cursor position and the
@@ -170,8 +176,8 @@ define(function() {
         let left = x - cursorWidth / 2;
         return {
             left: left,
-            lower: left / legendWidth * (endVal - startVal),
-            upper: (left + cursorWidth) / legendWidth * (endVal - startVal)
+            lower: startVal + left / legendWidth * (endVal - startVal),
+            upper: startVal + (left + cursorWidth) / legendWidth * (endVal - startVal)
         };
     }
 
@@ -250,11 +256,11 @@ define(function() {
     }
 
     // The value window to highlight for this frame and where the next frame
-    // starts; wraps to 0 once the window passes the upper bound.
-    function animationFrame(currStep, steps, endVal) {
+    // starts; wraps back to the lower bound once the window passes the upper bound.
+    function animationFrame(currStep, steps, endVal, startVal) {
         let lower = currStep;
         let upper = lower + steps.stepSize + steps.stepWidth;
-        let next = (lower < endVal) ? currStep + steps.stepSize : 0;
+        let next = (lower < endVal) ? currStep + steps.stepSize : (startVal || 0);
         return { lower: lower, upper: upper, next: next };
     }
 
