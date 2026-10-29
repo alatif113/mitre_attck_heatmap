@@ -1,8 +1,28 @@
-import requests
+import argparse
 import json
+import os
 import re
+import sys
 
-path_prefix = '../appserver/static/visualizations/mitre_attck_heatmap/build/'
+import requests
+
+# Regenerates the matrix data modules in build/ from MITRE's published data.
+# Run it from anywhere; every download must succeed before any file is written.
+default_out = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'appserver', 'static', 'visualizations', 'mitre_attck_heatmap', 'build')
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--out", default=default_out, help="directory to write the .js data modules to (default: build/ in the app)")
+path_prefix = os.path.join(parser.parse_args().out, '')
+
+
+def fetch(url):
+    try:
+        response = requests.get(url, timeout=120)
+    except requests.RequestException as error:
+        sys.exit('error: could not download ' + url + ': ' + str(error))
+    if response.status_code != 200:
+        sys.exit('error: ' + url + ' returned HTTP ' + str(response.status_code))
+    return response
+
 
 sources = [
     {
@@ -22,15 +42,18 @@ sources = [
     }
 ]
 
+d3fend_url = 'https://d3fend.mitre.org/ontologies/d3fend.json'
+
+# Download everything first so a failure cannot leave a mix of new and old files.
+downloads = {source['name']: fetch(source['url']) for source in sources}
+downloads['d3fend'] = fetch(d3fend_url)
+
 for source in sources:
     url = source['url']
     name = source['name']
     sort_order = source['sort_order']
 
-    response = requests.get(url)
-
-    if response.status_code != 200:
-        continue
+    response = downloads[name]
 
     output_json = {'tactics': [], 'techniques': [], 'sub_techniques': []}
     attack_json = response.json()
@@ -81,15 +104,11 @@ for source in sources:
 
 # MITRE D3FEND
 
-url = 'https://d3fend.mitre.org/ontologies/d3fend.json'
+url = d3fend_url
 name = 'd3fend'
 sort_order = ['Asset Inventory', 'Network Mapping', 'Operational Activity Mapping', 'System Mapping', 'Application Hardening', 'Credential Hardening', 'Message Hardening', 'Platform Hardening', 'File Analysis', 'Identifier Analysis', 'Message Analysis', 'Network Traffic Analysis', 'Platform Monitoring', 'Process Analysis', 'User Behavior Analysis', 'Execution Isolation', 'Network Isolation', 'Decoy Environment', 'Decoy Object', 'Credential Eviction', 'File Eviction', 'Process Eviction', 'Restore Access', 'Restore Object']
 
-response = requests.get(url)
-
-if response.status_code != 200:
-    print(response)
-    exit
+response = downloads[name]
 
 output_json = {'tactics': [], 'techniques': [], 'sub_techniques': []}
 attack_json = response.json()
