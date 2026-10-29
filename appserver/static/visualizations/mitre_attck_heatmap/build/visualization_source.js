@@ -236,11 +236,20 @@ return SplunkVisualizationBase.extend({
 
         let cellsById = indexById('.mtr-technique, .mtr-sub-technique');
 
+        // One entry per id; a later row for the same id replaces an earlier one.
+        let entries = new Map();
         data.rows.forEach(function(r) {
-            let { id, count, description } = logic.parseRow(r, vizUtils.escapeHtml, options.columns);
+            let entry = logic.parseRow(r, vizUtils.escapeHtml, options.columns);
+            if (!logic.isValidCount(entry.count)) return;
+            entries.set(entry.id, entry);
+        });
 
-            if (!logic.isValidCount(count)) return;
+        entries = logic.rollUp(
+            entries, logic.subTechniqueParents(matrixJSON, platform), options.rollup, options.rollupParent, []
+        );
 
+        entries.forEach(function(entry, id) {
+            let { count, description } = entry;
             let $technique = $(cellsById.get(id) || []);
 
             let percent = self._getPercent(startVal, endVal, count);
@@ -254,6 +263,9 @@ return SplunkVisualizationBase.extend({
             $technique
                 .css('background', color.background)
                 .css('color', color.foreground);
+            if (entry.rolledFrom) {
+                $technique.attr('data-rollup', entry.rolledFrom).addClass('mtr-rolled-up');
+            }
         });
 
         $('.mtr-technique, .mtr-sub-technique', $content).hover(function(e) {
@@ -285,6 +297,14 @@ return SplunkVisualizationBase.extend({
             $tooltip.addClass('mtr-technique-tooltip-' + logic.tooltipSide($(this).offset().left, $(window).width()));
 
             $('.mtr-desc', $tooltip).append(logic.formatDescription(description));
+
+            let rolledFrom = parseInt($(this).attr('data-rollup'));
+            if (rolledFrom) {
+                $('.mtr-desc', $tooltip).append(
+                    '<p class="mtr-rollup-note">Rolled up from ' + rolledFrom + ' sub-technique' +
+                    (rolledFrom == 1 ? '' : 's') + ' (' + options.rollup + ')</p>'
+                );
+            }
 
             $('.more-link', $tooltip).click(function(){
                 $('.more-elipses', $tooltip).hide();

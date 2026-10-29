@@ -34,6 +34,8 @@ describe('parseConfig', () => {
             hideNull: false,
             showSubTechniques: true,
             showSearchBar: true,
+            rollup: 'none',
+            rollupParent: 'fill',
             matrix: 'enterprise',
             platform: ['']
         });
@@ -104,6 +106,18 @@ describe('parseConfig', () => {
         const fields = [{ name: 'id' }, { name: 'count' }, { name: 'Risk score' }];
         expect(parse(withOptions({ valueField: 'Risk score' }), fields).legendTitle).toBe('Risk score');
         expect(parse(withOptions({ valueField: 'Risk score' }), fields).columns).toMatchObject({ id: 0, value: 2 });
+    });
+
+    test.each([
+        ['sum', 'sum'], ['max', 'max'], ['avg', 'avg'], ['count', 'count'], ['none', 'none'], ['', 'none'], ['median', 'none']
+    ])('rollup %p -> %p', (raw, expected) => {
+        expect(parse(withOptions({ rollup: raw })).rollup).toBe(expected);
+    });
+
+    test('rollupParent is fill unless include is set', () => {
+        expect(parse({}).rollupParent).toBe('fill');
+        expect(parse(withOptions({ rollupParent: 'include' })).rollupParent).toBe('include');
+        expect(parse(withOptions({ rollupParent: 'other' })).rollupParent).toBe('fill');
     });
 
     test('escapes a configured legend title', () => {
@@ -219,6 +233,104 @@ describe('parseRow / isValidCount', () => {
         const rows = loadFixture('wide.json').rows.map(r => logic.parseRow(r, escape));
         expect(rows.map(r => r.id)).toEqual(['T1059.001', 'T1003.001', 'T1021.002', 'T1071', 'T1048']);
         expect(rows.every(r => logic.isValidCount(r.count))).toBe(true);
+    });
+});
+
+describe('rollUp (feature 4)', () => {
+    const entry = (id, count, extra) => Object.assign({ id, count: String(count), description: '', status: '' }, extra);
+    const entries = (...list) => new Map(list.map(e => [e.id, e]));
+    const parents = new Map([['T1.001', 'T1'], ['T1.002', 'T1'], ['T1.003', 'T1'], ['T2.001', 'T2']]);
+    const run = (map, rollup, rollupParent, priority) => logic.rollUp(map, parents, rollup, rollupParent || 'fill', priority);
+
+    test('does nothing when off, for an unknown mode, or without sub-techniques', () => {
+        const map = entries(entry('T1.001', 5));
+        expect(run(map, 'none')).toBe(map);
+        expect(run(map, 'median')).toBe(map);
+        expect(logic.rollUp(map, new Map(), 'sum', 'fill')).toBe(map);
+    });
+
+    test.each([
+        ['sum', '30'],
+        ['max', '20'],
+        ['avg', '10'],
+        ['count', '3']
+    ])('%s of 4, 6 and 20 on a parent without a value', (rollup, expected) => {
+        const result = run(entries(entry('T1.001', 4), entry('T1.002', 6), entry('T1.003', 20)), rollup);
+        expect(result.get('T1')).toMatchObject({ id: 'T1', count: expected, rolledFrom: 3 });
+    });
+
+    test('the input map is not modified', () => {
+        const map = entries(entry('T1.001', 4));
+        run(map, 'sum');
+        expect(map.has('T1')).toBe(false);
+    });
+
+    test('a parent that has its own value keeps it in fill mode', () => {
+        const result = run(entries(entry('T1', 99, { description: 'own' }), entry('T1.001', 4)), 'sum', 'fill');
+        expect(result.get('T1')).toMatchObject({ count: '99', description: 'own' });
+        expect(result.get('T1').rolledFrom).toBeUndefined();
+    });
+
+    test('a parent value of 0 counts as having a value', () => {
+        expect(run(entries(entry('T1', 0), entry('T1.001', 4)), 'sum', 'fill').get('T1').count).toBe('0');
+    });
+
+    test('include mode adds the parent\'s own value to the aggregate', () => {
+        const map = entries(entry('T1', 10), entry('T1.001', 4), entry('T1.002', 6));
+        expect(run(map, 'sum', 'include').get('T1')).toMatchObject({ count: '20', rolledFrom: 2 });
+        expect(run(map, 'max', 'include').get('T1').count).toBe('10');
+        expect(run(map, 'count', 'include').get('T1').count).toBe('2');
+    });
+
+    test('keeps the parent\'s description when it rolls up', () => {
+        const result = run(entries(entry('T1', '', { description: 'about T1' }), entry('T1.001', 4)), 'sum');
+        expect(result.get('T1')).toMatchObject({ count: '4', description: 'about T1' });
+    });
+
+    test('sub-techniques without a numeric value are ignored', () => {
+        const result = run(entries(entry('T1.001', 'n/a'), entry('T1.002', 6), entry('T2.001', '')), 'sum');
+        expect(result.get('T1').count).toBe('6');
+        expect(result.has('T2')).toBe(false);
+    });
+
+    test('decimals sum without floating point noise', () => {
+        expect(run(entries(entry('T1.001', 0.1), entry('T1.002', 0.2)), 'sum').get('T1').count).toBe('0.3');
+    });
+
+    test('different parents roll up independently', () => {
+        const result = run(entries(entry('T1.001', 1), entry('T2.001', 7)), 'sum');
+        expect([result.get('T1').count, result.get('T2').count]).toEqual(['1', '7']);
+    });
+
+    test('a parent without a status takes the highest-priority child status', () => {
+        const map = entries(entry('T1.001', '', { status: 'Partial' }), entry('T1.002', '', { status: 'gap' }), entry('T1.003', '', { status: 'covered' }));
+        const result = run(map, 'sum', 'fill', ['gap', 'partial', 'covered']);
+        expect(result.get('T1')).toMatchObject({ status: 'gap', count: '', rolledFrom: 3 });
+    });
+
+    test('statuses that are not in the priority list rank last; a parent\'s own status is kept', () => {
+        const unlisted = run(entries(entry('T1.001', '', { status: 'other' }), entry('T1.002', '', { status: 'Partial' })), 'sum', 'fill', ['gap', 'partial']);
+        expect(unlisted.get('T1').status).toBe('Partial');
+        const own = run(entries(entry('T1', '', { status: 'covered' }), entry('T1.001', '', { status: 'gap' })), 'sum', 'fill', ['gap', 'covered']);
+        expect(own.get('T1').status).toBe('covered');
+    });
+});
+
+describe('subTechniqueParents', () => {
+    const matrix = { sub_techniques: [
+        { id: 'T1.001', technique: 'T1', platform: ['Windows'] },
+        { id: 'T1.002', technique: 'T1', platform: ['Linux'] },
+        { id: 'D3-X', technique: ['d3f:Something'] },
+        { id: 'T9.001', technique: 'T9' }
+    ] };
+
+    test('maps each sub-technique to its parent', () => {
+        expect(Array.from(logic.subTechniqueParents(matrix, ['']).entries()))
+            .toEqual([['T1.001', 'T1'], ['T1.002', 'T1'], ['T9.001', 'T9']]);
+    });
+
+    test('respects the platform filter and ignores list-valued parents', () => {
+        expect(Array.from(logic.subTechniqueParents(matrix, ['Windows']).keys())).toEqual(['T1.001', 'T9.001']);
     });
 });
 

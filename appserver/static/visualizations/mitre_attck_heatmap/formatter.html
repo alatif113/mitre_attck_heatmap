@@ -81,6 +81,23 @@
         </splunk-radio-input>
     </splunk-control-group>
 </form>
+<form class="splunk-formatter-section" section-label="Aggregation">
+    <splunk-control-group label="Roll up sub-techniques" help="Show an aggregate of a technique's sub-technique values on the technique itself.">
+        <splunk-radio-input name="{{VIZ_NAMESPACE}}.rollup" value="none">
+            <option value="none">None</option>
+            <option value="sum">Sum</option>
+            <option value="max">Max</option>
+            <option value="avg">Average</option>
+            <option value="count">Count</option>
+        </splunk-radio-input>
+    </splunk-control-group>
+    <splunk-control-group label="Technique's own value" help="Keep it and roll up only when the technique has none, or include it in the aggregate.">
+        <splunk-radio-input name="{{VIZ_NAMESPACE}}.rollupParent" value="fill">
+            <option value="fill">Keep it</option>
+            <option value="include">Include it</option>
+        </splunk-radio-input>
+    </splunk-control-group>
+</form>
 <form class="splunk-formatter-section" section-label="Color">
     <splunk-control-group label="Theme" help="">
         <splunk-radio-input name="{{VIZ_NAMESPACE}}.theme" value="light">

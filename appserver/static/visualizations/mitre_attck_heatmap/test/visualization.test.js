@@ -127,6 +127,86 @@ describe('render time (audit P2-9)', () => {
     }, 60000);
 });
 
+describe('sub-technique roll-up (feature 4)', () => {
+    const data = {
+        fields: [{ name: 'id' }, { name: 'count' }, { name: 'description' }],
+        rows: [['T1059.001', '17', 'ps'], ['T1059.003', '8', 'cmd'], ['T1003.001', '5', 'lsass'], ['T1566', '40', 'phish']]
+    };
+    const cell = (viz, id) => viz.el.querySelector('.mtr-technique[data-id="' + id + '"]');
+
+    test('a parent without a value gets the aggregate of its sub-techniques', () => {
+        const viz = render(Viz, data, { rollup: 'sum' });
+        expect(cell(viz, 'T1059').getAttribute('data-value')).toBe('25');
+        expect(cell(viz, 'T1059').getAttribute('data-rollup')).toBe('2');
+        expect(cell(viz, 'T1059').classList.contains('mtr-rolled-up')).toBe(true);
+        expect(cell(viz, 'T1003').getAttribute('data-value')).toBe('5');
+    });
+
+    test('the other aggregations', () => {
+        const value = rollup => cell(render(Viz, data, { rollup }), 'T1059').getAttribute('data-value');
+        expect([value('max'), value('avg'), value('count')]).toEqual(['17', '13', '2']);
+    });
+
+    test('a parent with its own value keeps it unless include is chosen', () => {
+        const withOwn = { fields: data.fields, rows: data.rows.concat([['T1059', '100', 'own']]) };
+        expect(cell(render(Viz, withOwn, { rollup: 'sum' }), 'T1059').getAttribute('data-value')).toBe('100');
+        expect(cell(render(Viz, withOwn, { rollup: 'sum', rollupParent: 'include' }), 'T1059').getAttribute('data-value')).toBe('125');
+    });
+
+    test('rolled-up cells are colored like any other value', () => {
+        const rolled = cell(render(Viz, data, { rollup: 'sum', startVal: '0', endVal: '100' }), 'T1059').style.background;
+        const plain = cell(render(Viz, { fields: data.fields, rows: [['T1059', '25', '']] }, { startVal: '0', endVal: '100' }), 'T1059').style.background;
+        expect(rolled).toBe(plain);
+    });
+
+    test('it works with the sub-technique display turned off', () => {
+        const viz = render(Viz, data, { rollup: 'sum', showSubTechniques: 'no' });
+        expect(viz.el.querySelectorAll('.mtr-sub-technique').length).toBe(0);
+        expect(cell(viz, 'T1059').getAttribute('data-value')).toBe('25');
+    });
+
+    test('tactic statistics count the rolled-up technique', () => {
+        const stats = options => {
+            const viz = render(Viz, data, options);
+            return viz.el.querySelector('.mtr-tactic-col[data-name="Execution"] .mtr-count .mtr-stats-val').textContent;
+        };
+        expect(stats({})).toBe('0 (0%)');
+        expect(stats({ rollup: 'sum' })).toMatch(/^1 \(/);
+    });
+
+    test('hide null keeps the rolled-up technique and its sub-techniques', () => {
+        const viz = render(Viz, data, { rollup: 'sum', hideNull: 'yes' });
+        expect(cell(viz, 'T1059')).not.toBeNull();
+        expect(viz.el.querySelector('.mtr-sub-technique[data-id="T1059.001"]')).not.toBeNull();
+    });
+
+    test('the drilldown reports the rolled-up value', () => {
+        const viz = render(Viz, data, { rollup: 'sum' });
+        $(cell(viz, 'T1059')).trigger('click');
+        expect(viz.drilldowns[0].data.mtr_technique_value).toBe('25');
+    });
+
+    test('the tooltip says where the value came from', () => {
+        const viz = render(Viz, data, { rollup: 'sum' });
+        $(cell(viz, 'T1059')).trigger('mouseenter');
+        expect(viz.el.querySelector('.mtr-rollup-note').textContent).toBe('Rolled up from 2 sub-techniques (sum)');
+        $(cell(viz, 'T1059')).trigger('mouseleave');
+        $(cell(viz, 'T1003')).trigger('mouseenter');
+        expect(viz.el.querySelector('.mtr-rollup-note').textContent).toBe('Rolled up from 1 sub-technique (sum)');
+    });
+
+    test('with roll-up off nothing is rolled up', () => {
+        const viz = render(Viz, data);
+        expect(cell(viz, 'T1059').hasAttribute('data-value')).toBe(false);
+        expect(viz.el.querySelectorAll('[data-rollup]').length).toBe(0);
+    });
+
+    test('matrices without sub-technique parents are unaffected', () => {
+        const viz = render(Viz, { fields: data.fields, rows: [['D3-CH', '5', '']] }, { rollup: 'sum', matrix: 'd3fend::' });
+        expect(viz.el.querySelectorAll('[data-rollup]').length).toBe(0);
+    });
+});
+
 describe('field mapping (feature 2)', () => {
     const fields = names => names.map(name => ({ name }));
     // The same results as the typical fixture's first rows, with the columns shuffled.

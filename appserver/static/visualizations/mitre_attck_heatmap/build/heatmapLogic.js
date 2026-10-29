@@ -123,6 +123,8 @@ define(function() {
             hideNull: vizUtils.normalizeBoolean(get('hideNull') || 'no'),
             showSubTechniques: vizUtils.normalizeBoolean(get('showSubTechniques') || 'yes'),
             showSearchBar: vizUtils.normalizeBoolean(get('showSearchBar') || 'yes'),
+            rollup: ROLLUPS.indexOf(get('rollup')) >= 0 ? get('rollup') : 'none',
+            rollupParent: get('rollupParent') == 'include' ? 'include' : 'fill',
             matrix: matrixPlatform[0],
             platform: matrixPlatform[1].split(',').map(normalizePlatform)
         };
@@ -153,6 +155,80 @@ define(function() {
             description: columns.description >= 0 ? (escapeHtml(row[columns.description]) || "") : "",
             status: columns.status >= 0 ? String(row[columns.status] == null ? '' : row[columns.status]).trim() : ''
         };
+    }
+
+    // The parent technique of each sub-technique that is shown on this platform.
+    function subTechniqueParents(matrix, platform) {
+        let parents = new Map();
+        (matrix.sub_techniques || []).forEach(function(sub) {
+            if (isOnPlatform(sub, platform) && typeof sub.technique === 'string') {
+                parents.set(sub.id, sub.technique);
+            }
+        });
+        return parents;
+    }
+
+    const ROLLUPS = ['sum', 'max', 'avg', 'count'];
+
+    function aggregate(values, rollup) {
+        let sum = values.reduce((total, value) => total + value, 0);
+        if (rollup == 'sum') return parseFloat(sum.toFixed(6));
+        if (rollup == 'max') return Math.max.apply(null, values);
+        if (rollup == 'avg') return Math.round(sum / values.length);
+        return values.length;
+    }
+
+    // The status with the highest priority (earliest in `priority`, lower-cased);
+    // statuses not in the list come last, and the first one seen wins ties.
+    function highestPriorityStatus(statuses, priority) {
+        let rank = status => {
+            let index = priority.indexOf(status.toLowerCase());
+            return index < 0 ? priority.length : index;
+        };
+        return statuses.reduce((best, status) => rank(status) < rank(best) ? status : best);
+    }
+
+    // Gives each parent technique a value (and, if it has none, a status) taken
+    // from its sub-techniques. `entries` maps id -> {id, count, description,
+    // status}; a new Map is returned and the input is not changed. Rolled-up
+    // entries carry `rolledFrom`, the number of sub-techniques that contributed.
+    function rollUp(entries, subToParent, rollup, rollupParent, statusPriority) {
+        if (ROLLUPS.indexOf(rollup) < 0 || subToParent.size == 0) return entries;
+
+        let groups = new Map();
+        entries.forEach(function(entry, id) {
+            let parent = subToParent.get(id);
+            if (parent === undefined) return;
+            let group = groups.get(parent) || { values: [], statuses: [], children: 0 };
+            group.children += 1;
+            if (isValidCount(entry.count)) group.values.push(Number(entry.count));
+            if (entry.status) group.statuses.push(entry.status);
+            groups.set(parent, group);
+        });
+
+        let result = new Map(entries);
+        groups.forEach(function(group, parent) {
+            let own = entries.get(parent);
+            let merged = Object.assign({ id: parent, count: '', description: '', status: '' }, own);
+            let ownHasValue = !!own && isValidCount(own.count);
+            let changed = false;
+
+            if (group.values.length && (!ownHasValue || rollupParent == 'include')) {
+                let values = group.values;
+                if (ownHasValue && rollup != 'count') values = values.concat(Number(own.count));
+                merged.count = String(aggregate(values, rollup));
+                changed = true;
+            }
+            if (group.statuses.length && !merged.status) {
+                merged.status = highestPriorityStatus(group.statuses, statusPriority || []);
+                changed = true;
+            }
+            if (changed) {
+                merged.rolledFrom = group.children;
+                result.set(parent, merged);
+            }
+        });
+        return result;
     }
 
     function isValidCount(count) {
@@ -357,6 +433,9 @@ define(function() {
         isOnPlatform: isOnPlatform,
         parseRow: parseRow,
         isValidCount: isValidCount,
+        ROLLUPS: ROLLUPS,
+        subTechniqueParents: subTechniqueParents,
+        rollUp: rollUp,
         getPercent: getPercent,
         visiblePercent: visiblePercent,
         hexToRgb: hexToRgb,

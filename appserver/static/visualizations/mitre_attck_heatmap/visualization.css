@@ -404,3 +404,12 @@
 .dark .mtr-legend-val {
 	color: var(--mtr-text-white);
 }
+
+.mtr-technique.mtr-rolled-up > span {
+	text-decoration: underline dotted;
+	text-underline-offset: 2px;
+}
+
+.mtr-technique-tooltip .mtr-rollup-note {
+	opacity: 0.8;
+}
