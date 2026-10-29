@@ -174,11 +174,6 @@ return SplunkVisualizationBase.extend({
                     </div>
                     <div class="mtr-technique-col"></div>
             `);
-
-            $('.mtr-tactic-title', $content).click(function(e) {
-                drilldown_data = {mtr_tactic: $(this).parents('.mtr-tactic-col').attr('data-name')};
-                self._drilldown(drilldown_data, e);    
-            })
         })
 
         matrixJSON.techniques.forEach(function(technique) {
@@ -349,6 +344,10 @@ return SplunkVisualizationBase.extend({
                 drilldown_data['mtr_sub-technique_value'] = $sub_technique.attr('data-value');
                 drilldown_data['mtr_technique_value'] = $technique.attr('data-value');
                 drilldown_data['mtr_tactic_value'] = $tactic_col.attr('data-value');
+                // Clicking a tactic has always also supplied the tactic name as mtr_tactic.
+                if ($(this).hasClass('mtr-tactic')) {
+                    drilldown_data['mtr_tactic'] = $tactic_col.attr('data-name');
+                }
                 self._drilldown(drilldown_data, e);
             });
         });

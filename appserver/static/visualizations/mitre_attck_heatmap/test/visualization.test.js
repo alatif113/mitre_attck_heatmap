@@ -178,14 +178,28 @@ describe('drilldown', () => {
         });
     });
 
-    test('tactic title click currently fires one drilldown per handler bound in the loop (audit P1-5)', () => {
+    test('tactic title click fires exactly one drilldown (audit P1-5)', () => {
         const viz = render(Viz, loadFixture('typical.json'));
-        const titles = viz.el.querySelectorAll('.mtr-tactic-title');
-        $(titles[0]).trigger('click');
-        // One handler per tactic column bound to the first title, plus the generic .mtr-tactic handler.
-        expect(viz.drilldowns).toHaveLength(titles.length + 1);
-        expect(viz.drilldowns[0].data).toEqual({ mtr_tactic: 'Reconnaissance' });
-        expect(viz.drilldowns[titles.length].data.mtr_tactic_name).toBe('Reconnaissance');
+        $(viz.el.querySelectorAll('.mtr-tactic-title')[0]).trigger('click');
+        expect(viz.drilldowns).toHaveLength(1);
+    });
+
+    test('tactic click supplies the tactic tokens and the legacy mtr_tactic name', () => {
+        const viz = render(Viz, loadFixture('typical.json'));
+        $(viz.el.querySelectorAll('.mtr-tactic-title')[0]).trigger('click');
+        expect(viz.drilldowns[0].data).toMatchObject({
+            mtr_tactic: 'Reconnaissance',
+            mtr_tactic_id: 'TA0043',
+            mtr_tactic_name: 'Reconnaissance',
+            mtr_technique_id: undefined,
+            'mtr_sub-technique_id': undefined
+        });
+    });
+
+    test('technique clicks do not add mtr_tactic', () => {
+        const viz = render(Viz, loadFixture('typical.json'));
+        $(viz.el.querySelector('.mtr-technique[data-id="T1059"]')).trigger('click');
+        expect(viz.drilldowns[0].data).not.toHaveProperty('mtr_tactic');
     });
 });
 
