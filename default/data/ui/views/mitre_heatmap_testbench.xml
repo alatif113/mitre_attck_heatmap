@@ -1,0 +1,487 @@
+<form version="1.1">
+  <label>MITRE Heatmap Test Bench</label>
+  <description>Exercises the MITRE ATT&amp;CK Heatmap visualization with generated data, so it works with nothing ingested.</description>
+  <init>
+    <set token="tok_sub_id">(none)</set>
+    <set token="tok_tech_id">(none)</set>
+    <set token="tok_tactic_id">(none)</set>
+    <set token="tok_sub_name">(none)</set>
+    <set token="tok_tech_name">(none)</set>
+    <set token="tok_tactic_name">(none)</set>
+    <set token="tok_sub_value">(none)</set>
+    <set token="tok_tech_value">(none)</set>
+    <set token="tok_tactic_value">(none)</set>
+  </init>
+  <fieldset submitButton="false">
+    <input type="dropdown" token="matrix" searchWhenChanged="true">
+      <label>Matrix</label>
+      <default>enterprise::</default>
+      <initialValue>enterprise::</initialValue>
+      <choice value="enterprise::">Enterprise - All</choice>
+      <choice value="enterprise::Windows">Enterprise - Windows</choice>
+      <choice value="enterprise::Linux">Enterprise - Linux</choice>
+      <choice value="ics::">ICS (test IDs will not match)</choice>
+      <choice value="mobile::">Mobile (test IDs will not match)</choice>
+      <choice value="d3fend::">D3FEND (test IDs will not match)</choice>
+    </input>
+    <input type="radio" token="display" searchWhenChanged="true">
+      <label>Display</label>
+      <default>id</default>
+      <initialValue>id</initialValue>
+      <choice value="id">ID</choice>
+      <choice value="name">Name</choice>
+    </input>
+    <input type="radio" token="hide_null" searchWhenChanged="true">
+      <label>Hide null</label>
+      <default>no</default>
+      <initialValue>no</initialValue>
+      <choice value="no">No</choice>
+      <choice value="yes">Yes</choice>
+    </input>
+    <input type="checkbox" token="large_toggle" searchWhenChanged="true">
+      <label>Stress test</label>
+      <choice value="on">Load the 50,000-row panel</choice>
+      <delimiter> </delimiter>
+      <change>
+        <condition value="on">
+          <set token="run_large">true</set>
+        </condition>
+        <condition>
+          <unset token="run_large"></unset>
+        </condition>
+      </change>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <html>
+        <style>
+          .mtr-note { margin: 0 0 8px; opacity: 0.8; font-size: 0.9em; }
+          .mtr-tokens { border-collapse: collapse; width: 100%; }
+          .mtr-tokens th, .mtr-tokens td { text-align: left; padding: 6px 10px; border-bottom: 1px solid rgba(128, 128, 128, 0.4); }
+          .mtr-tokens td { font-family: monospace; overflow-wrap: anywhere; }
+        </style>
+        <p>Every panel below feeds the heatmap with test data from <code>| makeresults</code>, <code>| gentimes</code> or <code>| inputlookup</code>.
+        Nothing here needs ingested data. The colors come from the visualization and the surrounding text inherits from the page, so the dashboard reads the same in the light and dark themes.
+        The inputs above apply to every panel. The first three data fields are used as technique ID, value and description; extra fields are ignored.</p>
+      </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Normal data</title>
+      <html>
+        <p class="mtr-note">50 technique and sub-technique IDs with values from 0 to 100 and a two-line description on the first row.</p>
+      </html>
+      <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
+        <search>
+          <query><![CDATA[| makeresults
+| eval id=split("T1592,T1594,T1583,T1584,T1133,T1091,T1047,T1129,T1037,T1543,T1006,T1666,T1557,T1003,T1033,T1613,T1080,T1113,T1071,T1219,T1567,T1029,T1561,T1489,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1037.001,T1037.002,T1037.003,T1037.004,T1037.005,T1071.001,T1071.002,T1071.003,T1071.004,T1071.005,T1219.001,T1219.002,T1219.003,T1543.001,T1543.002,T1543.003,T1059,T1566", ",")
+| mvexpand id
+| streamstats count AS n
+| eval "Detection Count"=(n*37+11)%101
+| eval description="Test detections for ".id." (row ".n.")"
+| eval description=if(n==1, "First line\\nSecond line of the description", description)
+| table id "Detection Count" description]]></query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="height">900</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.matrix">$matrix$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.display">$display$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.hideNull">$hide_null$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.animate">no</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSubTechniques">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.startVal">0</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.endVal">100</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortKey">data-id</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortOrder">asc</option>
+      </viz>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Drilldown</title>
+      <html>
+        <p class="mtr-note">Click a technique, sub-technique or tactic name. The tokens set by the click are shown below.</p>
+      </html>
+      <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
+        <search>
+          <query><![CDATA[| makeresults
+| eval id=split("T1592,T1594,T1583,T1584,T1133,T1091,T1047,T1129,T1037,T1543,T1006,T1666,T1557,T1003,T1033,T1613,T1080,T1113,T1071,T1219,T1567,T1029,T1561,T1489,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1037.001,T1037.002,T1037.003,T1037.004,T1037.005,T1071.001,T1071.002,T1071.003,T1071.004,T1071.005,T1219.001,T1219.002,T1219.003,T1543.001,T1543.002,T1543.003,T1059,T1566", ",")
+| mvexpand id
+| streamstats count AS n
+| eval "Detection Count"=(n*37+11)%101
+| eval description="Test detections for ".id." (row ".n.")"
+| eval description=if(n==1, "First line\\nSecond line of the description", description)
+| table id "Detection Count" description]]></query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="height">900</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.matrix">$matrix$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.display">$display$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.hideNull">$hide_null$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.animate">no</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSubTechniques">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.startVal">0</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.endVal">100</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortKey">data-id</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortOrder">asc</option>
+        <drilldown>
+          <set token="tok_sub_id">$row.mtr_sub-technique_id$</set>
+          <set token="tok_tech_id">$row.mtr_technique_id$</set>
+          <set token="tok_tactic_id">$row.mtr_tactic_id$</set>
+          <set token="tok_sub_name">$row.mtr_sub-technique_name$</set>
+          <set token="tok_tech_name">$row.mtr_technique_name$</set>
+          <set token="tok_tactic_name">$row.mtr_tactic_name$</set>
+          <set token="tok_sub_value">$row.mtr_sub-technique_value$</set>
+          <set token="tok_tech_value">$row.mtr_technique_value$</set>
+          <set token="tok_tactic_value">$row.mtr_tactic_value$</set>
+        </drilldown>
+      </viz>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Drilldown tokens</title>
+      <html>
+        <p class="mtr-note">Values of the <code>mtr_*</code> drilldown tokens from the last click. A level that does not apply to the click may keep its previous value; the panel starts at (none).</p>
+        <table class="mtr-tokens">
+          <tr><th>Level</th><th>ID</th><th>Name</th><th>Value</th></tr>
+          <tr><th>Sub-technique</th><td>$tok_sub_id|h$</td><td>$tok_sub_name|h$</td><td>$tok_sub_value|h$</td></tr>
+          <tr><th>Technique</th><td>$tok_tech_id|h$</td><td>$tok_tech_name|h$</td><td>$tok_tech_value|h$</td></tr>
+          <tr><th>Tactic</th><td>$tok_tactic_id|h$</td><td>$tok_tactic_name|h$</td><td>$tok_tactic_value|h$</td></tr>
+        </table>
+      </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Empty results</title>
+      <html>
+        <p class="mtr-note">The search returns no rows.</p>
+      </html>
+      <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
+        <search>
+          <query><![CDATA[| makeresults
+| eval id="T1059", "Detection Count"=1, description="never shown"
+| where 'Detection Count'<0
+| table id "Detection Count" description]]></query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="height">300</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.matrix">$matrix$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.display">$display$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.hideNull">$hide_null$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.animate">no</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSubTechniques">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.startVal">0</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.endVal">100</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortKey">data-id</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortOrder">asc</option>
+      </viz>
+    </panel>
+    <panel>
+      <title>Single row</title>
+      <html>
+        <p class="mtr-note">One technique with a value of 42.</p>
+      </html>
+      <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
+        <search>
+          <query><![CDATA[| makeresults
+| eval id="T1059", "Detection Count"=42, description="The only row in this result set"
+| table id "Detection Count" description]]></query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="height">300</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.matrix">$matrix$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.display">$display$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.hideNull">$hide_null$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.animate">no</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSubTechniques">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.startVal">0</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.endVal">100</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortKey">data-id</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortOrder">asc</option>
+      </viz>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Null values</title>
+      <html>
+        <p class="mtr-note">Null, empty and non-numeric values in the value column, null IDs and null descriptions. Rows without a number are left uncolored; Hide null removes them.</p>
+      </html>
+      <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
+        <search>
+          <query><![CDATA[| makeresults
+| eval id=split("T1592,T1594,T1583,T1584,T1133,T1091,T1047,T1129,T1037,T1543,T1006,T1666,T1557,T1003,T1033,T1613,T1080,T1113,T1071,T1219,T1567,T1029,T1561,T1489,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1037.001,T1037.002,T1037.003,T1037.004,T1037.005,T1071.001,T1071.002,T1071.003,T1071.004,T1071.005,T1219.001,T1219.002,T1219.003,T1543.001,T1543.002,T1543.003,T1059,T1566", ",")
+| mvexpand id
+| streamstats count AS n
+| eval "Detection Count"=case(n%4==0, null(), n%7==0, "", n%5==0, "N/A", true(), (n*37+11)%101)
+| eval id=if(n%13==0, null(), id)
+| eval description=if(n%3==0, null(), "Row ".n)
+| table id "Detection Count" description]]></query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="height">900</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.matrix">$matrix$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.display">$display$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.hideNull">$hide_null$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.animate">no</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSubTechniques">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.startVal">0</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.endVal">100</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortKey">data-id</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortOrder">asc</option>
+      </viz>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Many series</title>
+      <html>
+        <p class="mtr-note">Generated with gentimes: 31 rows and 30 value columns (series_01 to series_30). Only the first three columns are used, so series_02 appears as the description.</p>
+      </html>
+      <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
+        <search>
+          <query><![CDATA[| gentimes start=01/01/2026 end=02/01/2026 increment=1d
+| streamstats count AS n
+| eval id=mvindex(split("T1592,T1594,T1583,T1584,T1133,T1091,T1047,T1129,T1037,T1543,T1006,T1666,T1557,T1003,T1033,T1613,T1080,T1113,T1071,T1219,T1567,T1029,T1561,T1489,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1037.001,T1037.002,T1037.003,T1037.004,T1037.005,T1071.001,T1071.002,T1071.003,T1071.004,T1071.005,T1219.001,T1219.002,T1219.003,T1543.001,T1543.002,T1543.003,T1059,T1566", ","), n-1)
+| eval series_01=(n*7+1)%101, series_02=(n*8+2)%101, series_03=(n*9+3)%101, series_04=(n*10+4)%101, series_05=(n*11+5)%101, series_06=(n*12+6)%101, series_07=(n*13+7)%101, series_08=(n*14+8)%101, series_09=(n*15+9)%101, series_10=(n*16+10)%101, series_11=(n*17+11)%101, series_12=(n*18+12)%101, series_13=(n*19+13)%101, series_14=(n*20+14)%101, series_15=(n*21+15)%101, series_16=(n*22+16)%101, series_17=(n*23+17)%101, series_18=(n*24+18)%101, series_19=(n*25+19)%101, series_20=(n*26+20)%101, series_21=(n*27+21)%101, series_22=(n*28+22)%101, series_23=(n*29+23)%101, series_24=(n*30+24)%101, series_25=(n*31+25)%101, series_26=(n*32+26)%101, series_27=(n*33+27)%101, series_28=(n*34+28)%101, series_29=(n*35+29)%101, series_30=(n*36+30)%101
+| table id series_01 series_02 series_03 series_04 series_05 series_06 series_07 series_08 series_09 series_10 series_11 series_12 series_13 series_14 series_15 series_16 series_17 series_18 series_19 series_20 series_21 series_22 series_23 series_24 series_25 series_26 series_27 series_28 series_29 series_30]]></query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="height">900</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.matrix">$matrix$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.display">$display$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.hideNull">$hide_null$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.animate">no</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSubTechniques">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.startVal">0</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.endVal">100</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortKey">data-id</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortOrder">asc</option>
+      </viz>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Long field names</title>
+      <html>
+        <p class="mtr-note">The ID, value and description columns have very long names, and the descriptions run past the 256-character preview.</p>
+      </html>
+      <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
+        <search>
+          <query><![CDATA[| makeresults
+| eval id=split("T1592,T1594,T1583,T1584,T1133,T1091,T1047,T1129,T1037,T1543,T1006,T1666,T1557,T1003,T1033,T1613,T1080,T1113,T1071,T1219,T1567,T1029,T1561,T1489,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1037.001,T1037.002,T1037.003,T1037.004,T1037.005,T1071.001,T1071.002,T1071.003,T1071.004,T1071.005,T1219.001,T1219.002,T1219.003,T1543.001,T1543.002,T1543.003,T1059,T1566", ",")
+| mvexpand id
+| streamstats count AS n
+| eval "Detection count with an extraordinarily long field name that runs well past any sensible legend or tooltip width to show how the layout copes"=(n*37+11)%101
+| eval "Description column that also has a very long name so the third field is just as awkward as the second one"="Row ".n.". Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\\nSecond paragraph of the long description."
+| rename id AS "Technique identifier column named at similar length to exercise the first field too"
+| table "Technique identifier column named at similar length to exercise the first field too" "Detection count with an extraordinarily long field name that runs well past any sensible legend or tooltip width to show how the layout copes" "Description column that also has a very long name so the third field is just as awkward as the second one"]]></query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="height">900</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.matrix">$matrix$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.display">$display$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.hideNull">$hide_null$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.animate">no</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSubTechniques">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.startVal">0</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.endVal">100</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortKey">data-id</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortOrder">asc</option>
+      </viz>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Lookup data</title>
+      <html>
+        <p class="mtr-note">Rows read from lookups/mitre_heatmap_test.csv: sub-techniques, an unknown ID, blank and non-numeric values, values outside 0 to 100, and HTML in descriptions.</p>
+      </html>
+      <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
+        <search>
+          <query><![CDATA[| inputlookup mitre_heatmap_test.csv
+| table id count description]]></query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="height">900</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.matrix">$matrix$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.display">$display$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.hideNull">$hide_null$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.animate">no</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSubTechniques">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.startVal">0</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.endVal">100</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortKey">data-id</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortOrder">asc</option>
+      </viz>
+    </panel>
+  </row>
+  <row>
+    <panel depends="$run_large$">
+      <title>Large result</title>
+      <html>
+        <p class="mtr-note">About 50,000 rows cycling through the same IDs. Tick "Load the 50,000-row panel" above to run it; rendering can take several seconds.</p>
+      </html>
+      <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
+        <search>
+          <query><![CDATA[| makeresults count=50000
+| streamstats count AS n
+| eval id=mvindex(split("T1592,T1594,T1583,T1584,T1133,T1091,T1047,T1129,T1037,T1543,T1006,T1666,T1557,T1003,T1033,T1613,T1080,T1113,T1071,T1219,T1567,T1029,T1561,T1489,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1037.001,T1037.002,T1037.003,T1037.004,T1037.005,T1071.001,T1071.002,T1071.003,T1071.004,T1071.005,T1219.001,T1219.002,T1219.003,T1543.001,T1543.002,T1543.003,T1059,T1566", ","), n % 50)
+| eval "Detection Count"=(n*37+11)%101
+| eval description="Row ".n
+| table id "Detection Count" description]]></query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="height">900</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.matrix">$matrix$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.display">$display$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.hideNull">$hide_null$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.animate">no</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSubTechniques">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.startVal">0</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.endVal">100</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortKey">data-id</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortOrder">asc</option>
+      </viz>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Tiny: normal</title>
+      <html>
+        <p class="mtr-note">Very small panel.</p>
+      </html>
+      <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
+        <search>
+          <query><![CDATA[| makeresults
+| eval id=split("T1592,T1594,T1583,T1584,T1133,T1091,T1047,T1129,T1037,T1543,T1006,T1666,T1557,T1003,T1033,T1613,T1080,T1113,T1071,T1219,T1567,T1029,T1561,T1489,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1037.001,T1037.002,T1037.003,T1037.004,T1037.005,T1071.001,T1071.002,T1071.003,T1071.004,T1071.005,T1219.001,T1219.002,T1219.003,T1543.001,T1543.002,T1543.003,T1059,T1566", ",")
+| mvexpand id
+| streamstats count AS n
+| eval "Detection Count"=(n*37+11)%101
+| eval description="Test detections for ".id." (row ".n.")"
+| eval description=if(n==1, "First line\\nSecond line of the description", description)
+| table id "Detection Count" description]]></query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="height">90</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.matrix">$matrix$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.display">$display$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.hideNull">$hide_null$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.animate">no</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSubTechniques">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.startVal">0</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.endVal">100</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortKey">data-id</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortOrder">asc</option>
+      </viz>
+    </panel>
+    <panel>
+      <title>Tiny: single row</title>
+      <html>
+        <p class="mtr-note">Very small panel.</p>
+      </html>
+      <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
+        <search>
+          <query><![CDATA[| makeresults
+| eval id="T1059", "Detection Count"=42, description="The only row in this result set"
+| table id "Detection Count" description]]></query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="height">90</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.matrix">$matrix$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.display">$display$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.hideNull">$hide_null$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.animate">no</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSubTechniques">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.startVal">0</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.endVal">100</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortKey">data-id</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortOrder">asc</option>
+      </viz>
+    </panel>
+    <panel>
+      <title>Tiny: nulls</title>
+      <html>
+        <p class="mtr-note">Very small panel.</p>
+      </html>
+      <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
+        <search>
+          <query><![CDATA[| makeresults
+| eval id=split("T1592,T1594,T1583,T1584,T1133,T1091,T1047,T1129,T1037,T1543,T1006,T1666,T1557,T1003,T1033,T1613,T1080,T1113,T1071,T1219,T1567,T1029,T1561,T1489,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1037.001,T1037.002,T1037.003,T1037.004,T1037.005,T1071.001,T1071.002,T1071.003,T1071.004,T1071.005,T1219.001,T1219.002,T1219.003,T1543.001,T1543.002,T1543.003,T1059,T1566", ",")
+| mvexpand id
+| streamstats count AS n
+| eval "Detection Count"=case(n%4==0, null(), n%7==0, "", n%5==0, "N/A", true(), (n*37+11)%101)
+| eval id=if(n%13==0, null(), id)
+| eval description=if(n%3==0, null(), "Row ".n)
+| table id "Detection Count" description]]></query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="height">90</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.matrix">$matrix$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.display">$display$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.hideNull">$hide_null$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.animate">no</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSubTechniques">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.startVal">0</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.endVal">100</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortKey">data-id</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortOrder">asc</option>
+      </viz>
+    </panel>
+    <panel>
+      <title>Tiny: empty</title>
+      <html>
+        <p class="mtr-note">Very small panel.</p>
+      </html>
+      <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
+        <search>
+          <query><![CDATA[| makeresults
+| eval id="T1059", "Detection Count"=1, description="never shown"
+| where 'Detection Count'<0
+| table id "Detection Count" description]]></query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="height">90</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.matrix">$matrix$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.display">$display$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.hideNull">$hide_null$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.animate">no</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSubTechniques">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.startVal">0</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.endVal">100</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortKey">data-id</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortOrder">asc</option>
+      </viz>
+    </panel>
+  </row>
+</form>

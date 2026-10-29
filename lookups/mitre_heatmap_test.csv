@@ -1,0 +1,47 @@
+id,count,description
+T1592,60,Lookup row 1 for T1592
+T1594,12,Lookup row 2 for T1594
+T1583,65,Lookup row 3 for T1583
+T1584,17,Lookup row 4 for T1584
+T1133,70,Lookup row 5 for T1133
+T1091,22,Lookup row 6 for T1091
+T1047,75,Lookup row 7 for T1047
+T1129,27,Lookup row 8 for T1129
+T1037,80,Lookup row 9 for T1037
+T1543,32,Lookup row 10 for T1543
+T1006,85,Lookup row 11 for T1006
+T1666,37,Lookup row 12 for T1666
+T1557,90,Lookup row 13 for T1557
+T1003,42,Lookup row 14 for T1003
+T1033,95,Lookup row 15 for T1033
+T1613,47,Lookup row 16 for T1613
+T1080,100,Lookup row 17 for T1080
+T1113,52,Lookup row 18 for T1113
+T1071,4,Lookup row 19 for T1071
+T1219,57,Lookup row 20 for T1219
+T1567,9,Lookup row 21 for T1567
+T1029,62,Lookup row 22 for T1029
+T1561,14,Lookup row 23 for T1561
+T1489,67,Lookup row 24 for T1489
+T1003.001,19,Lookup row 25 for T1003.001
+T1003.002,72,Lookup row 26 for T1003.002
+T1003.003,24,Lookup row 27 for T1003.003
+T1003.004,77,Lookup row 28 for T1003.004
+T1003.005,29,Lookup row 29 for T1003.005
+T1003.006,82,Lookup row 30 for T1003.006
+T1003.007,34,Lookup row 31 for T1003.007
+T1003.008,87,Lookup row 32 for T1003.008
+T1037.001,39,Lookup row 33 for T1037.001
+T1037.002,92,Lookup row 34 for T1037.002
+T1037.003,44,Lookup row 35 for T1037.003
+T1037.004,97,Lookup row 36 for T1037.004
+T1059,100,Upper bound
+T1003,0,Zero is a real value
+T1566,150,Above the upper bound
+T1078,-5,Below the lower bound
+T1110,12.5,Decimal value
+T1190,,Blank value is left uncolored
+T1021,n/a,Non-numeric value is ignored
+T9999,50,Unknown technique ID is ignored
+T1486,77,"<b>HTML</b> & ""quotes"", commas, must be escaped"
+T1105,33,"Long description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\nSecond paragraph."

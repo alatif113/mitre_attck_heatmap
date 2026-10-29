@@ -113,6 +113,25 @@ describe('updateView', () => {
         expect(viz.el.querySelector('.mtr-sub-technique[data-id="T1059.001"]').getAttribute('data-desc')).toBe('PowerShell');
     });
 
+    test('renders null ids, values and descriptions without error (test bench "Null values" panel)', () => {
+        const ids = ['T1059', 'T1566', 'T1003', 'T1078', 'T1110', 'T1486'];
+        const data = {
+            fields: [{ name: 'id' }, { name: 'Detection Count' }, { name: 'description' }],
+            rows: [
+                [ids[0], '10', 'ok'],
+                [ids[1], null, null],
+                [ids[2], '', 'blank value'],
+                [ids[3], 'N/A', 'not a number'],
+                [null, '50', 'null id'],
+                [ids[4], '0', null],
+                [ids[5], '99', 'ok']
+            ]
+        };
+        const viz = render(Viz, data);
+        const valued = Array.from(viz.el.querySelectorAll('.mtr-technique[data-value]')).map(el => el.getAttribute('data-id'));
+        expect(new Set(valued)).toEqual(new Set(['T1059', 'T1110', 'T1486']));
+    });
+
     test('renders the large fixture with every known id valued', () => {
         const data = loadFixture('large.js');
         const viz = render(Viz, data);

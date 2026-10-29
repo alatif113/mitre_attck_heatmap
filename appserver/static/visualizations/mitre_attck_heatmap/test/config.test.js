@@ -48,6 +48,102 @@ describe('metadata/default.meta', () => {
     });
 });
 
+describe('test bench dashboard', () => {
+    const VIEW = 'default/data/ui/views/mitre_heatmap_testbench.xml';
+    const xml = read(VIEW);
+    const doc = new DOMParser().parseFromString(xml, 'text/xml');
+    const formatter = read('appserver/static/visualizations/' + VIZ_NAME + '/formatter.html');
+    const formatterKeys = new Set(Array.from(formatter.matchAll(/\{\{VIZ_NAMESPACE\}\}\.(\w+)/g)).map(m => m[1]));
+    const queries = Array.from(doc.querySelectorAll('viz query')).map(q => q.textContent);
+    const knownIds = new Set(enterpriseAttack.techniques.map(t => t.id).concat(enterpriseAttack.sub_techniques.map(s => s.id)));
+
+    test('is well-formed XML', () => {
+        expect(doc.getElementsByTagName('parsererror')).toHaveLength(0);
+        expect(doc.documentElement.tagName).toBe('form');
+    });
+
+    test('uses the declared visualization type', () => {
+        const types = new Set(Array.from(doc.querySelectorAll('viz')).map(v => v.getAttribute('type')));
+        expect(Array.from(types)).toEqual([VIZ_NAME + '.' + VIZ_NAME]);
+        expect(queries.length).toBeGreaterThanOrEqual(10);
+    });
+
+    test('only sets options the formatter defines', () => {
+        const prefix = VIZ_NAME + '.' + VIZ_NAME + '.';
+        Array.from(doc.querySelectorAll('viz option')).forEach(option => {
+            const name = option.getAttribute('name');
+            if (name === 'height') return;
+            expect(name.startsWith(prefix)).toBe(true);
+            expect(formatterKeys).toContain(name.slice(prefix.length));
+        });
+    });
+
+    test('every $token$ used by an option or panel is defined', () => {
+        const defined = new Set(
+            Array.from(doc.querySelectorAll('input[token], init set[token], change set[token]')).map(e => e.getAttribute('token'))
+        );
+        const used = new Set();
+        Array.from(doc.querySelectorAll('viz option')).forEach(o => {
+            (o.textContent.match(/\$[A-Za-z_]\w*\$/g) || []).forEach(t => used.add(t.slice(1, -1)));
+        });
+        Array.from(doc.querySelectorAll('panel[depends]')).forEach(p => {
+            (p.getAttribute('depends').match(/\$[A-Za-z_]\w*\$/g) || []).forEach(t => used.add(t.slice(1, -1)));
+        });
+        Array.from(doc.querySelectorAll('html')).forEach(h => {
+            (h.textContent.match(/\$[A-Za-z_]\w*(?=\|\w+\$)/g) || []).forEach(t => used.add(t.slice(1)));
+        });
+        used.forEach(token => expect(defined).toContain(token));
+    });
+
+    test('searches generate their own data (no index searches)', () => {
+        queries.forEach(q => expect(q.trim()).toMatch(/^\| (makeresults|gentimes|inputlookup)\b/));
+    });
+
+    test('every technique ID in the searches exists in the Enterprise matrix', () => {
+        const ids = [].concat(...queries.map(q => q.match(/T\d{4}(\.\d{3})?/g) || []));
+        expect(ids.length).toBeGreaterThan(40);
+        ids.forEach(id => expect(knownIds).toContain(id));
+    });
+
+    test('drilldown sets all nine documented mtr_* tokens', () => {
+        const fields = Array.from(doc.querySelectorAll('drilldown set')).map(s => s.textContent.replace(/^\$row\.|\$$/g, ''));
+        expect(fields.sort()).toEqual([
+            'mtr_sub-technique_id', 'mtr_sub-technique_name', 'mtr_sub-technique_value',
+            'mtr_tactic_id', 'mtr_tactic_name', 'mtr_tactic_value',
+            'mtr_technique_id', 'mtr_technique_name', 'mtr_technique_value'
+        ]);
+    });
+
+    test('the nav opens this dashboard by default', () => {
+        const nav = new DOMParser().parseFromString(read('default/data/ui/nav/default.xml'), 'text/xml');
+        const views = Array.from(nav.querySelectorAll('view'));
+        expect(views.map(v => v.getAttribute('name'))).toEqual(['mitre_heatmap_testbench']);
+        expect(views[0].getAttribute('default')).toBe('true');
+        expect(fs.existsSync(path.join(APP_ROOT, VIEW))).toBe(true);
+    });
+
+    test('is theme-agnostic: no hardcoded colors or forced theme', () => {
+        expect(doc.documentElement.getAttribute('theme')).toBeNull();
+        expect(xml).not.toMatch(/#[0-9a-fA-F]{3,8}\b/);
+        expect(xml).not.toMatch(/\b(color|background)\s*:\s*(?!inherit|currentColor|transparent)/i);
+    });
+
+    describe('lookup file', () => {
+        const lookup = read('lookups/mitre_heatmap_test.csv').trim().split('\n');
+        const header = lookup[0].split(',');
+
+        test('is the one the search reads and has the columns the search tables', () => {
+            expect(queries.join('\n')).toContain('inputlookup mitre_heatmap_test.csv');
+            expect(header).toEqual(['id', 'count', 'description']);
+        });
+
+        test('uses real technique IDs apart from the deliberate unknown one', () => {
+            const ids = lookup.slice(1).map(line => line.split(',')[0]);
+            expect(ids.filter(id => !knownIds.has(id))).toEqual(['T9999']);
+        });
+    });
+});
+
 describe('formatter.html matrix options', () => {
     const formatter = read('appserver/static/visualizations/' + VIZ_NAME + '/formatter.html');
     const values = Array.from(formatter.matchAll(/<option value="([a-z0-9]+::[^"]*)"/g)).map(m => m[1]);
