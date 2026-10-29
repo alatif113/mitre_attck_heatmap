@@ -128,6 +128,8 @@ define(function() {
             showExportButton: vizUtils.normalizeBoolean(get('showExportButton') || 'no'),
             navigatorLayerName: String(get('navigatorLayerName') || '').trim(),
             navigatorAttackVersion: String(get('navigatorAttackVersion') || '').trim(),
+            matrixSource: get('matrixSource') == 'splunk' ? 'splunk' : 'bundled',
+            attackVersion: String(get('attackVersion') || '').trim(),
             statusMode: columns.status >= 0,
             statusColors: statusColors,
             statusPriority: statusColors.map(entry => entry.key),
@@ -420,6 +422,74 @@ define(function() {
         return layer;
     }
 
+    // ---- Imported matrices (the scripted input's KV Store collection) ----
+
+    const KV_COLLECTION = 'mitre_matrix';
+    const IMPORTED_MATRICES = ['enterprise', 'ics', 'mobile'];
+
+    // The REST URL of a matrix's records in the KV Store, through Splunk Web's
+    // splunkd proxy, derived from the page's own path (which has the optional
+    // root endpoint and the locale in front: /<root>/<locale>/app/...).
+    function kvStoreUrl(pathname, matrix) {
+        let match = String(pathname || '').match(/^(.*?)\/([A-Za-z]{2}(?:-[A-Za-z]{2,4})?)\/(?:app|manager|dashboards|embed|dj)(?:\/|$)/);
+        let base = match ? match[1] + '/' + match[2] : '/en-US';
+        return base + '/splunkd/__raw/servicesNS/nobody/mitre_attck_heatmap/storage/collections/data/' + KV_COLLECTION +
+            '?query=' + encodeURIComponent(JSON.stringify({ matrix: matrix }));
+    }
+
+    // Compares dotted numeric versions: "20.1" > "20.0" > "9.2". Returns -1, 0 or 1.
+    function compareVersions(a, b) {
+        let left = String(a).split('.').map(part => parseInt(part, 10) || 0);
+        let right = String(b).split('.').map(part => parseInt(part, 10) || 0);
+        for (let i = 0; i < Math.max(left.length, right.length); i++) {
+            let difference = (left[i] || 0) - (right[i] || 0);
+            if (difference) return difference < 0 ? -1 : 1;
+        }
+        return 0;
+    }
+
+    // The record to use: the highest version, or with a pin the highest version
+    // equal to it ("20.0") or, for a pin without a dot ("20"), within it.
+    // Returns null when nothing qualifies.
+    function pickMatrixRecord(records, matrix, attackVersion) {
+        let pin = String(attackVersion || '').trim();
+        let candidates = (Array.isArray(records) ? records : []).filter(function(record) {
+            if (!record || record.matrix != matrix || typeof record.data_json != 'string') return false;
+            if (!pin) return true;
+            let version = String(record.version || '');
+            return version == pin || (pin.indexOf('.') < 0 && version.split('.')[0] == pin);
+        });
+        if (candidates.length == 0) return null;
+        return candidates.reduce((best, record) => compareVersions(record.version || '0', best.version || '0') > 0 ? record : best);
+    }
+
+    // Parses a record's matrix and checks it has the shape the renderer needs.
+    // Returns null if it does not.
+    function parseMatrixRecord(record) {
+        let matrix;
+        try {
+            matrix = JSON.parse(record.data_json);
+        } catch (error) {
+            return null;
+        }
+        let isText = value => typeof value == 'string' && value !== '';
+        let valid = !!matrix && Array.isArray(matrix.tactics) && Array.isArray(matrix.techniques) && Array.isArray(matrix.sub_techniques) &&
+            matrix.tactics.length > 0 && matrix.techniques.length > 0 &&
+            matrix.tactics.every(t => t && isText(t.id) && isText(t.name) && isText(t.short_name)) &&
+            matrix.techniques.every(t => t && isText(t.id) && isText(t.name) && Array.isArray(t.tactics)) &&
+            matrix.sub_techniques.every(t => t && isText(t.id) && isText(t.name) && typeof t.technique == 'string');
+        if (!valid) return null;
+        if (!matrix.version && record.version) matrix.version = String(record.version);
+        return matrix;
+    }
+
+    // The one-line message shown when imported data was asked for but is not used.
+    function fallbackNotice(attackVersion) {
+        let pin = String(attackVersion || '').trim();
+        return (pin ? 'ATT&CK version ' + pin + ' has not been imported' : 'Imported ATT&CK data is not available') +
+            '; showing the bundled data.';
+    }
+
     // A row counts when it has a number, or (with a status field) a status.
     function isValidEntry(entry, statusMode) {
         return isValidCount(entry.count) || (!!statusMode && entry.status !== '');
@@ -663,6 +733,12 @@ define(function() {
         statusSummary: statusSummary,
         statusBarGradient: statusBarGradient,
         isValidEntry: isValidEntry,
+        IMPORTED_MATRICES: IMPORTED_MATRICES,
+        kvStoreUrl: kvStoreUrl,
+        compareVersions: compareVersions,
+        pickMatrixRecord: pickMatrixRecord,
+        parseMatrixRecord: parseMatrixRecord,
+        fallbackNotice: fallbackNotice,
         navigatorDomain: navigatorDomain,
         attackMajor: attackMajor,
         normalizeHex: normalizeHex,

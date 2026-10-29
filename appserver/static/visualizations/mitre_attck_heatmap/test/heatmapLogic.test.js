@@ -43,6 +43,8 @@ describe('parseConfig', () => {
             statusDefaultColor: '#8c8c8c',
             scaleMode: 'manual',
             autoLowerBound: 'zero',
+            matrixSource: 'bundled',
+            attackVersion: '',
             rollup: 'none',
             rollupParent: 'fill',
             matrix: 'enterprise',

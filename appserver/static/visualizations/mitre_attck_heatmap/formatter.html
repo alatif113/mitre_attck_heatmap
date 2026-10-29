@@ -16,6 +16,18 @@
         </splunk-text-input>
     </splunk-control-group>
 </form>
+<form class="splunk-formatter-section" section-label="Data">
+    <splunk-control-group label="Matrix data" help="Bundled uses the ATT&CK data shipped with this app. Imported uses the data downloaded by the app's scripted input, if it is enabled.">
+        <splunk-radio-input name="{{VIZ_NAMESPACE}}.matrixSource" value="bundled">
+            <option value="bundled">Bundled</option>
+            <option value="splunk">Imported</option>
+        </splunk-radio-input>
+    </splunk-control-group>
+    <splunk-control-group label="ATT&amp;CK version" help="Only used with imported data. For example 20 or 19.1. Blank uses the newest imported version.">
+        <splunk-text-input name="{{VIZ_NAMESPACE}}.attackVersion" value="">
+        </splunk-text-input>
+    </splunk-control-group>
+</form>
 <form class="splunk-formatter-section" section-label="Layout">
     <splunk-control-group label="Matrix" help="">    
         <splunk-select name="{{VIZ_NAMESPACE}}.matrix" value="enterprise::">

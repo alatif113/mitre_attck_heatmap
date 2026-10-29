@@ -469,3 +469,10 @@
 .mtr-export-button:hover {
 	background: rgba(128, 128, 128, 0.2);
 }
+
+.mtr-notice {
+	margin-top: 0.5rem;
+	text-align: center;
+	font-size: var(--mtr-font-xsmall);
+	opacity: 0.8;
+}

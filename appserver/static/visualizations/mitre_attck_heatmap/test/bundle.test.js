@@ -17,6 +17,13 @@ afterEach(() => {
     document.body.innerHTML = '';
 });
 
+test('the visualization declares no functions inside blocks, which the minified bundle would hoist differently', () => {
+    // The bundle runs in sloppy mode but the minifier assumes strict mode, so a
+    // block-level function declaration can be renamed onto another variable.
+    const source = require('fs').readFileSync(require('path').join(__dirname, '../build/visualization_source.js'), 'utf8');
+    expect(source.match(/^\s*function\s+\w+\s*\(/gm) || []).toEqual([]);
+});
+
 test('the bundle does not include Underscore, which the visualization does not use (audit P2-10)', () => {
     const text = require('fs').readFileSync(require('path').join(__dirname, '../visualization.js'), 'utf8');
     expect(text).not.toContain('Underscore.js');

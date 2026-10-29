@@ -23,6 +23,11 @@ function(
     logic
 ) {
 
+// Imported matrices fetched on this page, by "matrix|pinned version", so several
+// panels share one request. A failed fetch is not kept.
+const matrixCache = new Map();
+const MATRIX_CACHE_MS = 5 * 60 * 1000;
+
 // Extend from SplunkVisualizationBase
 return SplunkVisualizationBase.extend({
 
@@ -69,11 +74,6 @@ return SplunkVisualizationBase.extend({
 
         if (!data) return;
 
-        // Each render starts its own animation loop; stop the previous one.
-        window.cancelAnimationFrame(this._animationFrame);
-
-        this.$el.empty();
-
         let self = this;
         let theme = vizUtils.getCurrentTheme();
         let options;
@@ -87,12 +87,21 @@ return SplunkVisualizationBase.extend({
             sortKey, sortOrder, hideNull, showSubTechniques, showSearchBar, matrix, platform,
             statusMode, statusColors, statusDefaultColor
         } = options;
-        let matrixJSON = logic.selectMatrix(matrix, {
+        let bundledMatrix = logic.selectMatrix(matrix, {
             enterprise: enterpriseAttack,
             ics: icsAttack,
             mobile: mobileAttack,
             d3fend: d3fend
         });
+
+        // Everything up to the end of this method draws one matrix. Bundled data is drawn
+        // at once; imported data when it arrives. (The body keeps its original indentation
+        // so the markup in its template literals is byte-for-byte unchanged.)
+        let render = (matrixJSON, notice) => {
+        // Each render starts its own animation loop; stop the previous one.
+        window.cancelAnimationFrame(this._animationFrame);
+
+        this.$el.empty();
 
         // The numeric sweep means nothing when cells are colored by status.
         self.animate = animate && !statusMode;
@@ -518,6 +527,10 @@ return SplunkVisualizationBase.extend({
             $toolbar.appendTo(this.$el);
         }
 
+        if (notice) {
+            $('<div class="mtr-notice"></div>').text(notice).appendTo(this.$el);
+        }
+
         $content.appendTo(this.$el);
         $legend.appendTo(this.$el);
 
@@ -525,7 +538,10 @@ return SplunkVisualizationBase.extend({
             let steps = logic.animationSteps(startVal, endVal, duration);
             let currStep = startVal;
 
-            function step() {
+            // A function expression, not a declaration: declarations inside blocks are
+            // hoisted differently in strict and sloppy mode, and the bundle's mode is not
+            // the one the minifier assumes.
+            let step = function() {
                 let frame = logic.animationFrame(currStep, steps, endVal, startVal);
 
                 self._setAnimationClass(frame.lower, frame.upper);
@@ -535,8 +551,27 @@ return SplunkVisualizationBase.extend({
                 } else {
                     $('.mtr-technique', self.$el).removeClass('focused').removeClass('defocused');
                 }
-            }
+            };
             self._animationFrame = window.requestAnimationFrame(step);
+        }
+        };
+
+        // A newer render makes any fetch still in flight obsolete.
+        let token = this._renderToken = (this._renderToken || 0) + 1;
+
+        if (options.matrixSource == 'splunk' && logic.IMPORTED_MATRICES.indexOf(matrix) >= 0) {
+            this._loadImportedMatrix(matrix, options.attackVersion).then(function(imported) {
+                if (token !== self._renderToken) return;
+                if (imported) {
+                    render(imported);
+                } else {
+                    render(bundledMatrix, logic.fallbackNotice(options.attackVersion));
+                }
+            }).catch(function(error) {
+                if (window.console) console.error(error);
+            });
+        } else {
+            render(bundledMatrix);
         }
     },
 
@@ -560,6 +595,36 @@ return SplunkVisualizationBase.extend({
                 $(this).removeClass('focused').addClass('defocused');
             }
         })
+    },
+
+    // The matrix records in the KV Store, as parsed JSON.
+    _fetchRecords: function(url) {
+        return Promise.resolve($.ajax({ url: url, dataType: 'json', cache: false }));
+    },
+
+    // The imported matrix to use, or null (nothing imported, no such version,
+    // fetch failed or data malformed), in which case the caller falls back.
+    _loadImportedMatrix: function(matrix, attackVersion) {
+        let key = matrix + '|' + attackVersion;
+        let cached = matrixCache.get(key);
+        if (cached && Date.now() - cached.at < MATRIX_CACHE_MS) return cached.promise;
+
+        let promise = this._fetchRecords(logic.kvStoreUrl(window.location.pathname, matrix)).then(function(records) {
+            let record = logic.pickMatrixRecord(records, matrix, attackVersion);
+            return record ? logic.parseMatrixRecord(record) : null;
+        }).catch(function() {
+            return null;
+        });
+        matrixCache.set(key, { at: Date.now(), promise: promise });
+        promise.then(function(result) {
+            if (!result) matrixCache.delete(key);
+        });
+        return promise;
+    },
+
+    // Test hook: forget what was fetched.
+    _clearMatrixCache: function() {
+        matrixCache.clear();
     },
 
     // Saves text as a file through the browser; no request is made.
