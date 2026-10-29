@@ -68,6 +68,39 @@ describe('several instances on one page (audit P2-2)', () => {
     });
 });
 
+describe('hide null (audit P2-3)', () => {
+    const data = {
+        fields: [{ name: 'id' }, { name: 'count' }],
+        rows: [['T1059.001', '17'], ['T1566', '40']]
+    };
+
+    test('keeps a technique without a value while it has sub-techniques with values', () => {
+        const viz = render(Viz, data, { hideNull: 'yes' });
+        const sub = viz.el.querySelector('.mtr-sub-technique[data-id="T1059.001"]');
+        expect(sub).not.toBeNull();
+        expect(sub.getAttribute('data-value')).toBe('17');
+        expect(viz.el.querySelector('.mtr-technique[data-id="T1059"]')).not.toBeNull();
+    });
+
+    test('still removes techniques and sub-techniques that have nothing', () => {
+        const viz = render(Viz, data, { hideNull: 'yes' });
+        expect(viz.el.querySelector('.mtr-technique[data-id="T1003"]')).toBeNull();
+        expect(viz.el.querySelector('.mtr-sub-technique[data-id="T1059.003"]')).toBeNull();
+        expect(viz.el.querySelector('.mtr-technique[data-id="T1566"]')).not.toBeNull();
+    });
+
+    test('counts the kept technique as having no value in the tactic stats', () => {
+        const viz = render(Viz, data, { hideNull: 'yes' });
+        const execution = viz.el.querySelector('.mtr-tactic-col[data-name="Execution"]');
+        expect(execution.querySelector('.mtr-count .mtr-stats-val').textContent).toBe('0 (0%)');
+    });
+
+    test('is unchanged when hide null is off', () => {
+        const viz = render(Viz, data, { hideNull: 'no' });
+        expect(viz.el.querySelector('.mtr-technique[data-id="T1003"]')).not.toBeNull();
+    });
+});
+
 describe('globals', () => {
     test('rendering and interacting does not create global variables (audit P2-8)', () => {
         const before = new Set(Object.getOwnPropertyNames(window));

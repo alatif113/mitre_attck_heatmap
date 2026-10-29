@@ -286,8 +286,11 @@ return SplunkVisualizationBase.extend({
                 let val = $(this).attr('data-value');
 
                 if (!val && hideNull) {
-                    $(this).parent().remove();
-                    return;
+                    // Keep a technique without a value while a sub-technique under it has one.
+                    if ($('.mtr-sub-technique[data-value]', $(this).parent()).length == 0) {
+                        $(this).parent().remove();
+                        return;
+                    }
                 }
 
                 values.push(val);
