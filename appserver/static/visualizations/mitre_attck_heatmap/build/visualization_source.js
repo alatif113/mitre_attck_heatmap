@@ -193,13 +193,27 @@ return SplunkVisualizationBase.extend({
             });
         })
 
+        // Look elements up by id once instead of running a selector over the
+        // whole matrix for every sub-technique and every result row.
+        let indexById = function(selector) {
+            let index = new Map();
+            $(selector, $content).each(function() {
+                let key = this.getAttribute('data-id');
+                if (!index.has(key)) index.set(key, []);
+                index.get(key).push(this);
+            });
+            return index;
+        };
+
         if (showSubTechniques) {
+            let containersById = indexById('.mtr-technique-container[data-id]');
+
             matrixJSON.sub_techniques.forEach(function(sub_technique) {
                 if (!logic.isOnPlatform(sub_technique, platform)) return;
 
                 let title = (display == 'id') ?  sub_technique.short_id : sub_technique.name;
-                $(`.mtr-technique-container[data-id="${sub_technique.technique}"]`, $content).each(function() {
-                    $('.mtr-sub-technique-container', $(this)).append(`
+                (containersById.get(String(sub_technique.technique)) || []).forEach(function(container) {
+                    $('.mtr-sub-technique-container', $(container)).append(`
                         <div class="mtr-sub-technique mtr-display-${display}" data-id="${sub_technique.id}" data-name="${sub_technique.name}" data-url="${sub_technique.url}">
                             <span>${title}</span>
                         </div>
@@ -208,11 +222,14 @@ return SplunkVisualizationBase.extend({
             })
         }
 
+        let cellsById = indexById('.mtr-technique, .mtr-sub-technique');
+
         data.rows.forEach(function(r) {
             let { id, count, description } = logic.parseRow(r, vizUtils.escapeHtml);
-            let $technique = $(`.mtr-technique[data-id="${id}"], .mtr-sub-technique[data-id="${id}"]`, $content)
 
             if (!logic.isValidCount(count)) return;
+
+            let $technique = $(cellsById.get(id) || []);
 
             let percent = self._getPercent(startVal, endVal, count);
             let color = self._getColor(percent);

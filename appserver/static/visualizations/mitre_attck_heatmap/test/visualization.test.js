@@ -113,6 +113,20 @@ describe('hide null (audit P2-3)', () => {
     });
 });
 
+describe('render time (audit P2-9)', () => {
+    test('rendering about 20,000 rows stays well under the old cost', () => {
+        // Row application used to run a selector over the whole matrix per row
+        // (about 50 s for this input in jsdom); with an id index it takes well under a second.
+        const big = loadFixture('large.js');
+        const rows = [];
+        for (let i = 0; i < 25; i++) rows.push(...big.rows);
+        const start = Date.now();
+        const viz = render(Viz, { fields: big.fields, rows });
+        expect(Date.now() - start).toBeLessThan(15000);
+        expect(viz.el.querySelectorAll('[data-value]').length).toBeGreaterThan(600);
+    }, 60000);
+});
+
 describe('globals', () => {
     test('rendering and interacting does not create global variables (audit P2-8)', () => {
         const before = new Set(Object.getOwnPropertyNames(window));
