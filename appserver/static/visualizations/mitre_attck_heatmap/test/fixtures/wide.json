@@ -1,0 +1,21 @@
+{
+  "fields": [
+    { "name": "technique_id" },
+    { "name": "Alert Count" },
+    { "name": "description" },
+    { "name": "src" },
+    { "name": "dest" },
+    { "name": "user" },
+    { "name": "first_seen" },
+    { "name": "last_seen" },
+    { "name": "severity" },
+    { "name": "rule_name" }
+  ],
+  "rows": [
+    ["T1059.001", "30", "PowerShell", "10.0.0.1", "10.0.0.2", "alice", "2026-10-01T00:00:00Z", "2026-10-28T00:00:00Z", "high", "Encoded PowerShell"],
+    ["T1003.001", "12", "LSASS Memory", "10.0.0.3", "10.0.0.4", "bob", "2026-10-02T00:00:00Z", "2026-10-27T00:00:00Z", "critical", "LSASS Access"],
+    ["T1021.002", "7", "SMB/Windows Admin Shares", "10.0.0.5", "10.0.0.6", "carol", "2026-10-03T00:00:00Z", "2026-10-26T00:00:00Z", "medium", "Admin Share Write"],
+    ["T1071", "55", "Application Layer Protocol", "10.0.0.7", "203.0.113.9", "dave", "2026-10-04T00:00:00Z", "2026-10-25T00:00:00Z", "low", "Beaconing"],
+    ["T1048", "90", "Exfiltration Over Alternative Protocol", "10.0.0.8", "198.51.100.4", "erin", "2026-10-05T00:00:00Z", "2026-10-24T00:00:00Z", "high", "DNS Tunnel"]
+  ]
+}

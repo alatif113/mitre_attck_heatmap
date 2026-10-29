@@ -1,0 +1,19 @@
+{
+  "fields": [{ "name": "id" }, { "name": "Detection Count" }, { "name": "description" }],
+  "rows": [
+    ["T1059", "42", "Command and Scripting Interpreter detections"],
+    ["T1059.001", "17", "PowerShell"],
+    ["T1059.003", "8", null],
+    ["T1078", "65", "Valid Accounts appears under four tactics"],
+    ["T1078.004", "3", "Cloud Accounts"],
+    ["T1566", "100", "Phishing\\nSecond paragraph"],
+    ["T1566.001", "250", "Above the upper bound"],
+    ["T1003", "0", "Zero is a value"],
+    ["T1110", "12.5", "Decimal value"],
+    ["T1021", "-5", "Below the lower bound"],
+    ["T1486", "77", "<b>HTML</b> & \"quotes\" must be escaped"],
+    ["T1190", "n/a", "Non-numeric count is ignored"],
+    ["T9999", "50", "Unknown technique id is ignored"],
+    ["T1105", "33", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident."]
+  ]
+}

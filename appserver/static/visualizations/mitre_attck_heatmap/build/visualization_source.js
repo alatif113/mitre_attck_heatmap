@@ -9,7 +9,8 @@ define([
     'enterpriseAttack',
     'icsAttack',
     'mobileAttack',
-    'd3fend'
+    'd3fend',
+    'heatmapLogic'
     // Add required assets to this list
 ],
 function(
@@ -20,7 +21,8 @@ function(
     enterpriseAttack,
     icsAttack,
     mobileAttack,
-    d3fend
+    d3fend,
+    logic
 ) {
 
 // Extend from SplunkVisualizationBase
@@ -64,44 +66,24 @@ return SplunkVisualizationBase.extend({
         this.$el.empty();
 
         let self = this;
-        let colorMap = this.colorMap;
-        let animate = vizUtils.normalizeBoolean(config[this.getPropertyNamespaceInfo().propertyNamespace + 'animate'] || 'no');
-        let duration = config[this.getPropertyNamespaceInfo().propertyNamespace + 'duration'] || 300;
         let theme = vizUtils.getCurrentTheme();
-        let startColor = config[this.getPropertyNamespaceInfo().propertyNamespace + 'startColor'] || '#53a051';
-        let midColor = config[this.getPropertyNamespaceInfo().propertyNamespace + 'midColor'] || '#f8be34';
-        let endColor = config[this.getPropertyNamespaceInfo().propertyNamespace + 'endColor'] || '#dc4e41';
-        let startVal = config[this.getPropertyNamespaceInfo().propertyNamespace + 'startVal'] || 0;
-        let endVal = config[this.getPropertyNamespaceInfo().propertyNamespace + 'endVal'] || 100;
-        let display = config[this.getPropertyNamespaceInfo().propertyNamespace + 'display'] || 'id';
-        let legendTitle = vizUtils.escapeHtml(config[this.getPropertyNamespaceInfo().propertyNamespace + 'legendTitle']) || data.fields[1].name;
-        let sortKey = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortKey'] || 'data-id'; 
-        let sortOrder = config[this.getPropertyNamespaceInfo().propertyNamespace + 'sortOrder'] || 'asc';
-        let hideNull = vizUtils.normalizeBoolean(config[this.getPropertyNamespaceInfo().propertyNamespace + 'hideNull'] || 'no');
-        let showSubTechniques = vizUtils.normalizeBoolean(config[this.getPropertyNamespaceInfo().propertyNamespace + 'showSubTechniques'] || 'yes');
-        let showSearchBar = vizUtils.normalizeBoolean(config[this.getPropertyNamespaceInfo().propertyNamespace + 'showSearchBar'] || 'yes');
-        let matrixPlatform = (config[this.getPropertyNamespaceInfo().propertyNamespace + 'matrix'] || 'enterprise::').split('::');
-        let matrix = matrixPlatform[0];
-        let platform = matrixPlatform[1].split(',');
-        let matrixJSON = {};
+        let options = logic.parseConfig(config, this.getPropertyNamespaceInfo().propertyNamespace, vizUtils, data.fields);
+        let {
+            animate, duration, startColor, midColor, endColor, startVal, endVal, display, legendTitle,
+            sortKey, sortOrder, hideNull, showSubTechniques, showSearchBar, matrix, platform
+        } = options;
+        let matrixJSON = logic.selectMatrix(matrix, {
+            enterprise: enterpriseAttack,
+            ics: icsAttack,
+            mobile: mobileAttack,
+            d3fend: d3fend
+        });
 
         self.animate = animate;
-        
-        if (matrix == 'ics') {
-            matrixJSON = icsAttack;
-        } else if (matrix == 'mobile') {
-            matrixJSON = mobileAttack;
-        } else if (matrix == 'd3fend') {
-            matrixJSON = d3fend
-        } else {
-            matrixJSON = enterpriseAttack;
-        }
 
         this.$el.attr('class', '').addClass(theme);
 
-        colorMap[0].color = this._hexToRgb(startColor);
-        colorMap[1].color = this._hexToRgb(midColor);
-        colorMap[2].color = this._hexToRgb(endColor);
+        this.colorMap = logic.buildColorMap(startColor, midColor, endColor);
 
         let $searchbar = $(`
             <div class="mtr-search-container">
@@ -114,6 +96,7 @@ return SplunkVisualizationBase.extend({
         
         let $content = $(`<div class="mtr-viz-container"></div>`);
 
+        let legendLabels = logic.legendLabels(startVal, endVal);
         let $legend = $(`
             <div class="mtr-legend">
                 <div class="mtr-legend-title">` + legendTitle + `</div>
@@ -121,14 +104,14 @@ return SplunkVisualizationBase.extend({
                     <div class="mtr-legend-meter"></div>
                 </div>
                 <div class="mtr-legend-val">
-                    <span>` + startVal + `</span>
-                    <span>` + (endVal - startVal)/2 + `</span>
-                    <span>` + endVal + `</span>
+                    <span>` + legendLabels[0] + `</span>
+                    <span>` + legendLabels[1] + `</span>
+                    <span>` + legendLabels[2] + `</span>
                 </div>
             </div>
         `);
 
-        let gradient = '(45deg, ' + startColor + ' 0%, ' + midColor + ' 50%, ' + endColor + ' 100%)';
+        let gradient = logic.legendGradient(startColor, midColor, endColor);
 
         $('.mtr-legend-meter', $legend)
             .css('background', '-moz-linear-gradient' + gradient)
@@ -153,14 +136,10 @@ return SplunkVisualizationBase.extend({
                 let cursor_width = $cursor.width();
                 let legend_width = $(this).width();
                 let x = e.pageX - $(this).offset().left;
-                if (x <= legend_width && x > 0) {
-                    let left = x - cursor_width / 2;
-                    $cursor.css('left', left + 'px');
-
-                    let lower =  left / legend_width * (endVal - startVal);
-                    let upper = (left + cursor_width) / legend_width * (endVal - startVal);
-            
-                    self._setAnimationClass(lower, upper);
+                let range = logic.legendCursorRange(x, cursor_width, legend_width, startVal, endVal);
+                if (range) {
+                    $cursor.css('left', range.left + 'px');
+                    self._setAnimationClass(range.lower, range.upper);
                 };
             }
         })
@@ -200,7 +179,7 @@ return SplunkVisualizationBase.extend({
         })
 
         matrixJSON.techniques.forEach(function(technique) {
-            if (platform != '' && 'platform' in technique && !platform.some(p=> technique.platform.indexOf(p) >= 0)) return;
+            if (!logic.isOnPlatform(technique, platform)) return;
 
             let title = (display == 'id') ?  technique.id : technique.name;
             let $technique = $(`
@@ -219,7 +198,7 @@ return SplunkVisualizationBase.extend({
 
         if (showSubTechniques) {
             matrixJSON.sub_techniques.forEach(function(sub_technique) {
-                if (platform != '' && 'platform' in sub_technique && !platform.some(p=> sub_technique.platform.indexOf(p) >= 0)) return;
+                if (!logic.isOnPlatform(sub_technique, platform)) return;
 
                 let title = (display == 'id') ?  sub_technique.short_id : sub_technique.name;
                 $(`.mtr-technique-container[data-id="${sub_technique.technique}"]`, $content).each(function() {
@@ -233,18 +212,16 @@ return SplunkVisualizationBase.extend({
         }
 
         data.rows.forEach(function(r) {
-            let id = vizUtils.escapeHtml(r[0]);
-            let count = vizUtils.escapeHtml(r[1]);
+            let { id, count, description } = logic.parseRow(r, vizUtils.escapeHtml);
             let $technique = $(`.mtr-technique[data-id="${id}"], .mtr-sub-technique[data-id="${id}"]`, $content)
 
-            if (!$technique || !count || count == '' || count == null || isNaN(count)) return;
+            if (!$technique || !logic.isValidCount(count)) return;
 
-            let percent = self._getPercent(startVal, endVal, count); 
+            let percent = self._getPercent(startVal, endVal, count);
             let color = self._getColor(percent);
-            let description = vizUtils.escapeHtml(r[2]) || "";
 
-            if(percent < 2) percent = 2;
-            
+            percent = logic.visiblePercent(percent);
+
             $technique.attr('data-value', count);
             $technique.attr('data-percent', percent);
             $technique.attr('data-desc', description);
@@ -263,7 +240,7 @@ return SplunkVisualizationBase.extend({
             let url = $(this).attr('data-url') || '';
             let color = self._getColor(percent);
 
-            if(percent < 2) percent = 2;
+            percent = logic.visiblePercent(percent);
 
             let $tooltip = $(`
                 <div class="mtr-technique-tooltip">
@@ -279,25 +256,9 @@ return SplunkVisualizationBase.extend({
                 </div>
             `);
 
-            if ($(this).offset().left > $(window).width() - 400) {
-                $tooltip.addClass('mtr-technique-tooltip-left');
-            } else {
-                $tooltip.addClass('mtr-technique-tooltip-right');
-            }
-            
-            let description_html = '';
-            let showChar = 256; 
-            if (description.length > showChar) {
-                let visible = description.substr(0, showChar);
-                let hidden = description.substr(showChar, description.length - showChar);
-                visible = visible.split('\\n').join('</p><p>');
-                hidden = hidden.split('\\n').join('</p><p>');
-                description_html = `<p>${visible} <span class="more-elipses">...</span><span class="more-content">${hidden}</span><a href="#" class="more-link">Show more</a></p>`;
-            } else {
-                description_html = description.split('\\n').join('</p><p>');
-            }
+            $tooltip.addClass('mtr-technique-tooltip-' + logic.tooltipSide($(this).offset().left, $(window).width()));
 
-            $('.mtr-desc', $tooltip).append(description_html);
+            $('.mtr-desc', $tooltip).append(logic.formatDescription(description));
 
             $('.more-link', $tooltip).click(function(){
                 $('.more-elipses', $tooltip).hide();
@@ -322,9 +283,7 @@ return SplunkVisualizationBase.extend({
         });
 
         $('.mtr-tactic-col', $content).each(function() {
-            let sum = 0;
-            let count = 0;
-            let total = 0;
+            let values = [];
             $('.mtr-technique', this).each(function() {
 
                 let val = $(this).attr('data-value');
@@ -334,27 +293,20 @@ return SplunkVisualizationBase.extend({
                     return;
                 }
 
-                total += 1;
-                if (val && !isNaN(val)) {
-                    sum += +val;
-                    count += 1;
-                }
+                values.push(val);
             });
+
+            let { sum, count, total, mean, coverage } = logic.tacticStats(values);
 
             if (total == 0 && hideNull) {
                 $(this).remove();
                 return
             }
 
-            let mean = Math.round(sum / count);
-            let coverage = Math.round(count / total * 100);
-            if (!mean) mean = 0;
-            if (!coverage) coverage = 0;
-
-            let percent = self._getPercent(startVal, endVal, mean); 
+            let percent = self._getPercent(startVal, endVal, mean);
             let color = self._getColor(percent);
 
-            if(percent < 2) percent = 2;
+            percent = logic.visiblePercent(percent);
 
             $(this).attr('data-value', sum);
             $('.mtr-tactic .mtr-meter-fill', this)
@@ -422,9 +374,7 @@ return SplunkVisualizationBase.extend({
                 } else {
                     $('.mtr-technique', $content).removeClass('focused').addClass('defocused');
                     let $matched = $('.mtr-technique', $content).filter(function() {
-                        let id = $(this).attr('data-id')?.toLowerCase();
-                        let name = $(this).attr('data-name')?.toLowerCase();
-                        return (id?.indexOf(value) > -1 || name?.indexOf(value) > -1);
+                        return logic.matchesSearch($(this).attr('data-id'), $(this).attr('data-name'), value);
                     });
                     $matched.removeClass('defocused').addClass('focused');
                 }
@@ -436,20 +386,14 @@ return SplunkVisualizationBase.extend({
         $legend.appendTo(this.$el);
 
         if (self.animate) {
-            let stepSize = (endVal - startVal) / duration / 60;
-            let stepWidth = (endVal - startVal) * .1;
+            let steps = logic.animationSteps(startVal, endVal, duration);
             let currStep = 0;
 
             function step() {
-                let lower = currStep;
-                let upper = lower + stepSize + stepWidth;
+                let frame = logic.animationFrame(currStep, steps, endVal);
 
-                self._setAnimationClass(lower, upper);
-                if (lower < endVal) {
-                    currStep += stepSize;
-                } else {
-                    currStep = 0
-                }
+                self._setAnimationClass(frame.lower, frame.upper);
+                currStep = frame.next;
                 if (self.animate) {
                     window.requestAnimationFrame(step);
                 } else {
@@ -474,8 +418,7 @@ return SplunkVisualizationBase.extend({
 
     _setAnimationClass: function(lower, upper) {
         $('.mtr-technique').each(function() {
-            let value = $(this).attr('data-value');
-            if (value && value >= lower && value <= upper) {
+            if (logic.inFocusRange($(this).attr('data-value'), lower, upper)) {
                 $(this).addClass('focused').removeClass('defocused');
             } else {
                 $(this).removeClass('focused').addClass('defocused');
@@ -484,79 +427,18 @@ return SplunkVisualizationBase.extend({
     },
 
     _getPercent: function(lowerBound, upperBound, value) {
-        let percent = Math.round(100 * (value - lowerBound) / (upperBound - lowerBound));
-        if (percent > 100) percent = 100;
-        if (percent < 0) percent = 0;
-        return percent;
-    },
-
-    _hexToRgb: function(h) {
-        let r = 0, g = 0, b = 0;
-
-        // 3 digits
-        if (h.length == 4) {
-            r = "0x" + h[1] + h[1];
-            g = "0x" + h[2] + h[2];
-            b = "0x" + h[3] + h[3];
-
-        // 6 digits
-        } else if (h.length == 7) {
-            r = "0x" + h[1] + h[2];
-            g = "0x" + h[3] + h[4];
-            b = "0x" + h[5] + h[6];
-        }
-        
-        return {r: r, g: g, b: b};
+        return logic.getPercent(lowerBound, upperBound, value);
     },
 
     _getColor: function(percent) {
-        for (var i = 1; i < this.colorMap.length - 1; i++) {
-            if (percent < this.colorMap[i].pct) {
-                break;
-            }
-        }
-
-        let lower = this.colorMap[i - 1];
-        let upper = this.colorMap[i];
-        let range = upper.pct - lower.pct;
-        let rangePct = (percent - lower.pct) / range;
-        let pctLower = 1 - rangePct;
-        let pctUpper = rangePct;
-        let color = {
-            r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
-            g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
-            b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
-        };
-
-        let luminance = ( 0.299 * color.r + 0.587 * color.g + 0.114 * color.b)/255;
-        let foreground = (luminance > 0.65) ? 'rgb(0,0,0)' : 'rgb(255,255,255)';
-
-        return {
-            background: 'rgb(' + [color.r, color.g, color.b].join(',') + ')',
-            luminance: luminance,
-            foreground: foreground
-        }
+        return logic.getColor(percent, this.colorMap);
     },
 
     _sortElements: function($container, key, order) {
-        let flip = (order == 'asc') ? 1 : -1;
         $children = $container.children().sort(function(a, b) {
             let $t1 = $('.mtr-technique', $(a));
             let $t2 = $('.mtr-technique', $(b));
-
-            if (key == 'data-id' || key == 'data-name') {
-                return flip * ($t1.attr(key) < $t2.attr(key) ? -1 : 1);
-            }
-
-            if (key == 'data-value') {
-                aVal = parseInt($t1.attr(key));
-                bVal = parseInt($t2.attr(key));
-                if (!Number.isInteger(aVal)) aVal = -1;
-                if (!Number.isInteger(bVal)) bVal = -1;
-                return flip * (aVal < bVal ? -1 : 1);
-            }
-
-            return 0;
+            return logic.compareByKey(key, order, $t1.attr(key), $t2.attr(key));
         });
         $container.append($children);
     },

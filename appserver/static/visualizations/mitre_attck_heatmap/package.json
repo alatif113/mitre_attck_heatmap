@@ -6,7 +6,8 @@
   "scripts": {
     "build": "babel build --out-dir src && npx terser src/visualization_source.js --compress --mangle --output src/visualization_source.js && /Applications/Splunk/bin/splunk cmd node ./node_modules/webpack/bin/webpack.js",
     "devbuild": "$SPLUNK_HOME/bin/splunk cmd node ./node_modules/webpack/bin/webpack.js --progress",
-    "watch": "$SPLUNK_HOME/bin/splunk cmd node ./node_modules/webpack/bin/webpack.js -d --watch --progress"
+    "watch": "$SPLUNK_HOME/bin/splunk cmd node ./node_modules/webpack/bin/webpack.js -d --watch --progress",
+    "test": "cd test && npm test"
   },
   "author": "Splunk",
   "license": "MIT",
