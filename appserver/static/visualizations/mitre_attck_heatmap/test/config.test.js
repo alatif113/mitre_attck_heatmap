@@ -48,6 +48,31 @@ describe('metadata/default.meta', () => {
     });
 });
 
+describe('format options are declared everywhere (audit P3-3)', () => {
+    const NS = 'display.visualizations.custom.' + VIZ_NAME + '.' + VIZ_NAME + '.';
+    const keysOf = text => Array.from(text.matchAll(/^display\.visualizations\.custom\.\w+\.\w+\.(\w+)\s*=/gm)).map(m => m[1]);
+    const formatter = read('appserver/static/visualizations/' + VIZ_NAME + '/formatter.html');
+    const formatterKeys = Array.from(formatter.matchAll(/\{\{VIZ_NAMESPACE\}\}\.(\w+)/g)).map(m => m[1]);
+    const confKeys = keysOf(read('default/savedsearches.conf'));
+    const specKeys = keysOf(read('README/savedsearches.conf.spec'));
+
+    test('every option in the format menu has a default in savedsearches.conf', () => {
+        formatterKeys.forEach(key => expect(confKeys).toContain(key));
+    });
+
+    test('every option in the format menu is declared in savedsearches.conf.spec', () => {
+        formatterKeys.forEach(key => expect(specKeys).toContain(key));
+    });
+
+    test('conf and spec declare the same options', () => {
+        expect(confKeys.slice().sort()).toEqual(specKeys.slice().sort());
+    });
+
+    test('showSearchBar defaults to yes, as the code and format menu do', () => {
+        expect(read('default/savedsearches.conf')).toMatch(new RegExp('^' + NS.replace(/\./g, '\\.') + 'showSearchBar = yes$', 'm'));
+    });
+});
+
 describe('test bench dashboard', () => {
     const VIEW = 'default/data/ui/views/mitre_heatmap_testbench.xml';
     const xml = read(VIEW);

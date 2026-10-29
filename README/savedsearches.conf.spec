@@ -11,5 +11,6 @@ display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.theme = <s
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.hideNull = <string>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.matrix = <string>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.showSubTechniques = <string>
+display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar = <string>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.animate = <string>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.duration = <float>
