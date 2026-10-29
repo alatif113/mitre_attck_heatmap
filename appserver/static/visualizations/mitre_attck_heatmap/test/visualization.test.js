@@ -532,7 +532,8 @@ describe('updateView', () => {
         const viz = render(Viz, loadFixture('typical.json'));
         const columns = Array.from(viz.el.querySelectorAll('.mtr-technique[data-id="T1078"]'))
             .map(el => el.closest('.mtr-tactic-col').getAttribute('data-name'));
-        expect(columns.sort()).toEqual(['Defense Evasion', 'Initial Access', 'Persistence', 'Privilege Escalation']);
+        // ATT&CK v20 replaced Defense Evasion with Stealth and Defense Impairment.
+        expect(columns.sort()).toEqual(['Initial Access', 'Persistence', 'Privilege Escalation', 'Stealth']);
     });
 
     test('platform filter drops techniques that are not on the platform', () => {

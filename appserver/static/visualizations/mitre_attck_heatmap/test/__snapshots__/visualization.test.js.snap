@@ -14,8 +14,8 @@ exports[`render snapshots empty.json with defaults 1`] = `
 exports[`render snapshots large.js with defaults 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 427263,
-  "htmlSha256": "de7d34a280e4893037e11ec110cbdece67e3c05b48d05fa41c11890c0d7f8683",
+  "htmlLength": 427981,
+  "htmlSha256": "0b61771c341d7106b1f368774bed49c78e5e4da33b93a514d2d49de99d197f6f",
   "legend": {
     "labels": [
       "0",
@@ -27,240 +27,257 @@ exports[`render snapshots large.js with defaults 1`] = `
   "tactics": [
     {
       "firstTechniques": [
-        "T1596",
-        "T1591",
-        "T1594",
+        "T1590",
+        "T1681",
+        "T1595",
       ],
       "id": "TA0043",
       "stats": [
-        "817",
-        "11 (100%)",
-        "74",
+        "905",
+        "12 (100%)",
+        "75",
       ],
       "subTechniques": 34,
-      "techniques": 11,
-      "value": "817",
-      "withValue": 11,
+      "techniques": 12,
+      "value": "905",
+      "withValue": 12,
     },
     {
       "firstTechniques": [
-        "T1584",
-        "T1587",
+        "T1586",
         "T1650",
+        "T1587",
       ],
       "id": "TA0042",
       "stats": [
-        "464",
-        "8 (100%)",
-        "58",
+        "534",
+        "9 (100%)",
+        "59",
       ],
-      "subTechniques": 39,
-      "techniques": 8,
-      "value": "464",
-      "withValue": 8,
+      "subTechniques": 42,
+      "techniques": 9,
+      "value": "534",
+      "withValue": 9,
     },
     {
       "firstTechniques": [
-        "T1669",
-        "T1659",
-        "T1195",
+        "T1200",
+        "T1190",
+        "T1091",
       ],
       "id": "TA0001",
       "stats": [
-        "913",
+        "997",
         "11 (100%)",
-        "83",
+        "91",
       ],
       "subTechniques": 11,
       "techniques": 11,
-      "value": "913",
+      "value": "997",
       "withValue": 11,
     },
     {
       "firstTechniques": [
-        "T1203",
-        "T1047",
-        "T1059",
+        "T1127",
+        "T1677",
+        "T1106",
       ],
       "id": "TA0002",
       "stats": [
-        "1,158",
-        "17 (100%)",
-        "68",
+        "1,381",
+        "22 (100%)",
+        "63",
       ],
-      "subTechniques": 29,
-      "techniques": 17,
-      "value": "1158",
-      "withValue": 17,
+      "subTechniques": 44,
+      "techniques": 22,
+      "value": "1381",
+      "withValue": 22,
     },
     {
       "firstTechniques": [
         "T1671",
-        "T1556",
-        "T1653",
+        "T1098",
+        "T1053",
       ],
       "id": "TA0003",
       "stats": [
-        "1,789",
-        "23 (100%)",
-        "78",
+        "1,835",
+        "22 (100%)",
+        "83",
       ],
-      "subTechniques": 103,
-      "techniques": 23,
-      "value": "1789",
-      "withValue": 23,
+      "subTechniques": 91,
+      "techniques": 22,
+      "value": "1835",
+      "withValue": 22,
     },
     {
       "firstTechniques": [
-        "T1547",
-        "T1546",
-        "T1068",
+        "T1484",
+        "T1098",
+        "T1611",
       ],
       "id": "TA0004",
       "stats": [
-        "1,175",
-        "14 (100%)",
-        "84",
+        "966",
+        "13 (100%)",
+        "74",
       ],
-      "subTechniques": 95,
-      "techniques": 14,
-      "value": "1175",
-      "withValue": 14,
+      "subTechniques": 83,
+      "techniques": 13,
+      "value": "966",
+      "withValue": 13,
     },
     {
       "firstTechniques": [
-        "T1666",
-        "T1218",
+        "T1127",
         "T1497",
+        "T1221",
       ],
       "id": "TA0005",
       "stats": [
-        "3,154",
-        "47 (100%)",
-        "67",
-      ],
-      "subTechniques": 168,
-      "techniques": 47,
-      "value": "3154",
-      "withValue": 47,
-    },
-    {
-      "firstTechniques": [
-        "T1003",
-        "T1556",
-        "T1552",
-      ],
-      "id": "TA0006",
-      "stats": [
-        "1,275",
-        "17 (100%)",
-        "75",
-      ],
-      "subTechniques": 50,
-      "techniques": 17,
-      "value": "1275",
-      "withValue": 17,
-    },
-    {
-      "firstTechniques": [
-        "T1497",
-        "T1033",
-        "T1201",
-      ],
-      "id": "TA0007",
-      "stats": [
-        "2,820",
-        "34 (100%)",
+        "2,586",
+        "31 (100%)",
         "83",
       ],
-      "subTechniques": 15,
-      "techniques": 34,
-      "value": "2820",
-      "withValue": 34,
+      "subTechniques": 120,
+      "techniques": 31,
+      "value": "2586",
+      "withValue": 31,
     },
     {
       "firstTechniques": [
-        "T1534",
-        "T1091",
-        "T1080",
+        "T1685",
+        "T1484",
+        "T1666",
       ],
-      "id": "TA0008",
+      "id": "TA0112",
       "stats": [
-        "865",
-        "9 (100%)",
-        "96",
-      ],
-      "subTechniques": 14,
-      "techniques": 9,
-      "value": "865",
-      "withValue": 9,
-    },
-    {
-      "firstTechniques": [
-        "T1039",
-        "T1125",
-        "T1530",
-      ],
-      "id": "TA0009",
-      "stats": [
-        "1,336",
-        "17 (100%)",
-        "79",
-      ],
-      "subTechniques": 24,
-      "techniques": 17,
-      "value": "1336",
-      "withValue": 17,
-    },
-    {
-      "firstTechniques": [
-        "T1571",
-        "T1071",
-        "T1102",
-      ],
-      "id": "TA0011",
-      "stats": [
-        "1,518",
+        "1,242",
         "18 (100%)",
-        "84",
+        "69",
       ],
-      "subTechniques": 27,
+      "subTechniques": 39,
       "techniques": 18,
-      "value": "1518",
+      "value": "1242",
       "withValue": 18,
     },
     {
       "firstTechniques": [
-        "T1029",
-        "T1048",
-        "T1567",
+        "T1555",
+        "T1606",
+        "T1110",
       ],
-      "id": "TA0010",
+      "id": "TA0006",
       "stats": [
-        "682",
-        "9 (100%)",
-        "76",
+        "1,509",
+        "18 (100%)",
+        "84",
       ],
-      "subTechniques": 10,
+      "subTechniques": 50,
+      "techniques": 18,
+      "value": "1509",
+      "withValue": 18,
+    },
+    {
+      "firstTechniques": [
+        "T1518",
+        "T1120",
+        "T1497",
+      ],
+      "id": "TA0007",
+      "stats": [
+        "2,281",
+        "34 (100%)",
+        "67",
+      ],
+      "subTechniques": 15,
+      "techniques": 34,
+      "value": "2281",
+      "withValue": 34,
+    },
+    {
+      "firstTechniques": [
+        "T1080",
+        "T1550",
+        "T1021",
+      ],
+      "id": "TA0008",
+      "stats": [
+        "654",
+        "9 (100%)",
+        "73",
+      ],
+      "subTechniques": 14,
       "techniques": 9,
-      "value": "682",
+      "value": "654",
       "withValue": 9,
     },
     {
       "firstTechniques": [
-        "T1657",
-        "T1486",
-        "T1485",
+        "T1113",
+        "T1039",
+        "T1530",
+      ],
+      "id": "TA0009",
+      "stats": [
+        "1,284",
+        "17 (100%)",
+        "76",
+      ],
+      "subTechniques": 24,
+      "techniques": 17,
+      "value": "1284",
+      "withValue": 17,
+    },
+    {
+      "firstTechniques": [
+        "T1572",
+        "T1001",
+        "T1568",
+      ],
+      "id": "TA0011",
+      "stats": [
+        "1,201",
+        "18 (100%)",
+        "67",
+      ],
+      "subTechniques": 27,
+      "techniques": 18,
+      "value": "1201",
+      "withValue": 18,
+    },
+    {
+      "firstTechniques": [
+        "T1020",
+        "T1537",
+        "T1030",
+      ],
+      "id": "TA0010",
+      "stats": [
+        "850",
+        "10 (100%)",
+        "85",
+      ],
+      "subTechniques": 10,
+      "techniques": 10,
+      "value": "850",
+      "withValue": 10,
+    },
+    {
+      "firstTechniques": [
+        "T1490",
+        "T1498",
+        "T1491",
       ],
       "id": "TA0040",
       "stats": [
-        "983",
+        "1,091",
         "15 (100%)",
-        "66",
+        "73",
       ],
       "subTechniques": 18,
       "techniques": 15,
-      "value": "983",
+      "value": "1091",
       "withValue": 15,
     },
   ],
@@ -271,8 +288,8 @@ exports[`render snapshots large.js with defaults 1`] = `
 exports[`render snapshots large.js with display name 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 443945,
-  "htmlSha256": "9f37853505026ae07a82c23e45f2a47663b9c1c0153d59748a7730aab8e9042a",
+  "htmlLength": 444374,
+  "htmlSha256": "95f6bc3c51017fb867775245fd34399f1bc25877c848b081342cf6855ab02e88",
   "legend": {
     "labels": [
       "0",
@@ -284,240 +301,257 @@ exports[`render snapshots large.js with display name 1`] = `
   "tactics": [
     {
       "firstTechniques": [
-        "T1596",
-        "T1591",
-        "T1594",
+        "T1590",
+        "T1681",
+        "T1595",
       ],
       "id": "TA0043",
       "stats": [
-        "817",
-        "11 (100%)",
-        "74",
+        "905",
+        "12 (100%)",
+        "75",
       ],
       "subTechniques": 34,
-      "techniques": 11,
-      "value": "817",
-      "withValue": 11,
+      "techniques": 12,
+      "value": "905",
+      "withValue": 12,
     },
     {
       "firstTechniques": [
-        "T1584",
-        "T1587",
+        "T1586",
         "T1650",
+        "T1587",
       ],
       "id": "TA0042",
       "stats": [
-        "464",
-        "8 (100%)",
-        "58",
+        "534",
+        "9 (100%)",
+        "59",
       ],
-      "subTechniques": 39,
-      "techniques": 8,
-      "value": "464",
-      "withValue": 8,
+      "subTechniques": 42,
+      "techniques": 9,
+      "value": "534",
+      "withValue": 9,
     },
     {
       "firstTechniques": [
-        "T1669",
-        "T1659",
-        "T1195",
+        "T1200",
+        "T1190",
+        "T1091",
       ],
       "id": "TA0001",
       "stats": [
-        "913",
+        "997",
         "11 (100%)",
-        "83",
+        "91",
       ],
       "subTechniques": 11,
       "techniques": 11,
-      "value": "913",
+      "value": "997",
       "withValue": 11,
     },
     {
       "firstTechniques": [
-        "T1203",
-        "T1047",
-        "T1059",
+        "T1127",
+        "T1677",
+        "T1106",
       ],
       "id": "TA0002",
       "stats": [
-        "1,158",
-        "17 (100%)",
-        "68",
+        "1,381",
+        "22 (100%)",
+        "63",
       ],
-      "subTechniques": 29,
-      "techniques": 17,
-      "value": "1158",
-      "withValue": 17,
+      "subTechniques": 44,
+      "techniques": 22,
+      "value": "1381",
+      "withValue": 22,
     },
     {
       "firstTechniques": [
         "T1671",
-        "T1556",
-        "T1653",
+        "T1098",
+        "T1053",
       ],
       "id": "TA0003",
       "stats": [
-        "1,789",
-        "23 (100%)",
-        "78",
+        "1,835",
+        "22 (100%)",
+        "83",
       ],
-      "subTechniques": 103,
-      "techniques": 23,
-      "value": "1789",
-      "withValue": 23,
+      "subTechniques": 91,
+      "techniques": 22,
+      "value": "1835",
+      "withValue": 22,
     },
     {
       "firstTechniques": [
-        "T1547",
-        "T1546",
-        "T1068",
+        "T1484",
+        "T1098",
+        "T1611",
       ],
       "id": "TA0004",
       "stats": [
-        "1,175",
-        "14 (100%)",
-        "84",
+        "966",
+        "13 (100%)",
+        "74",
       ],
-      "subTechniques": 95,
-      "techniques": 14,
-      "value": "1175",
-      "withValue": 14,
+      "subTechniques": 83,
+      "techniques": 13,
+      "value": "966",
+      "withValue": 13,
     },
     {
       "firstTechniques": [
-        "T1666",
-        "T1218",
+        "T1127",
         "T1497",
+        "T1221",
       ],
       "id": "TA0005",
       "stats": [
-        "3,154",
-        "47 (100%)",
-        "67",
-      ],
-      "subTechniques": 168,
-      "techniques": 47,
-      "value": "3154",
-      "withValue": 47,
-    },
-    {
-      "firstTechniques": [
-        "T1003",
-        "T1556",
-        "T1552",
-      ],
-      "id": "TA0006",
-      "stats": [
-        "1,275",
-        "17 (100%)",
-        "75",
-      ],
-      "subTechniques": 50,
-      "techniques": 17,
-      "value": "1275",
-      "withValue": 17,
-    },
-    {
-      "firstTechniques": [
-        "T1497",
-        "T1033",
-        "T1201",
-      ],
-      "id": "TA0007",
-      "stats": [
-        "2,820",
-        "34 (100%)",
+        "2,586",
+        "31 (100%)",
         "83",
       ],
-      "subTechniques": 15,
-      "techniques": 34,
-      "value": "2820",
-      "withValue": 34,
+      "subTechniques": 120,
+      "techniques": 31,
+      "value": "2586",
+      "withValue": 31,
     },
     {
       "firstTechniques": [
-        "T1534",
-        "T1091",
-        "T1080",
+        "T1685",
+        "T1484",
+        "T1666",
       ],
-      "id": "TA0008",
+      "id": "TA0112",
       "stats": [
-        "865",
-        "9 (100%)",
-        "96",
-      ],
-      "subTechniques": 14,
-      "techniques": 9,
-      "value": "865",
-      "withValue": 9,
-    },
-    {
-      "firstTechniques": [
-        "T1039",
-        "T1125",
-        "T1530",
-      ],
-      "id": "TA0009",
-      "stats": [
-        "1,336",
-        "17 (100%)",
-        "79",
-      ],
-      "subTechniques": 24,
-      "techniques": 17,
-      "value": "1336",
-      "withValue": 17,
-    },
-    {
-      "firstTechniques": [
-        "T1571",
-        "T1071",
-        "T1102",
-      ],
-      "id": "TA0011",
-      "stats": [
-        "1,518",
+        "1,242",
         "18 (100%)",
-        "84",
+        "69",
       ],
-      "subTechniques": 27,
+      "subTechniques": 39,
       "techniques": 18,
-      "value": "1518",
+      "value": "1242",
       "withValue": 18,
     },
     {
       "firstTechniques": [
-        "T1029",
-        "T1048",
-        "T1567",
+        "T1555",
+        "T1606",
+        "T1110",
       ],
-      "id": "TA0010",
+      "id": "TA0006",
       "stats": [
-        "682",
-        "9 (100%)",
-        "76",
+        "1,509",
+        "18 (100%)",
+        "84",
       ],
-      "subTechniques": 10,
+      "subTechniques": 50,
+      "techniques": 18,
+      "value": "1509",
+      "withValue": 18,
+    },
+    {
+      "firstTechniques": [
+        "T1518",
+        "T1120",
+        "T1497",
+      ],
+      "id": "TA0007",
+      "stats": [
+        "2,281",
+        "34 (100%)",
+        "67",
+      ],
+      "subTechniques": 15,
+      "techniques": 34,
+      "value": "2281",
+      "withValue": 34,
+    },
+    {
+      "firstTechniques": [
+        "T1080",
+        "T1550",
+        "T1021",
+      ],
+      "id": "TA0008",
+      "stats": [
+        "654",
+        "9 (100%)",
+        "73",
+      ],
+      "subTechniques": 14,
       "techniques": 9,
-      "value": "682",
+      "value": "654",
       "withValue": 9,
     },
     {
       "firstTechniques": [
-        "T1657",
-        "T1486",
-        "T1485",
+        "T1113",
+        "T1039",
+        "T1530",
+      ],
+      "id": "TA0009",
+      "stats": [
+        "1,284",
+        "17 (100%)",
+        "76",
+      ],
+      "subTechniques": 24,
+      "techniques": 17,
+      "value": "1284",
+      "withValue": 17,
+    },
+    {
+      "firstTechniques": [
+        "T1572",
+        "T1001",
+        "T1568",
+      ],
+      "id": "TA0011",
+      "stats": [
+        "1,201",
+        "18 (100%)",
+        "67",
+      ],
+      "subTechniques": 27,
+      "techniques": 18,
+      "value": "1201",
+      "withValue": 18,
+    },
+    {
+      "firstTechniques": [
+        "T1020",
+        "T1537",
+        "T1030",
+      ],
+      "id": "TA0010",
+      "stats": [
+        "850",
+        "10 (100%)",
+        "85",
+      ],
+      "subTechniques": 10,
+      "techniques": 10,
+      "value": "850",
+      "withValue": 10,
+    },
+    {
+      "firstTechniques": [
+        "T1490",
+        "T1498",
+        "T1491",
       ],
       "id": "TA0040",
       "stats": [
-        "983",
+        "1,091",
         "15 (100%)",
-        "66",
+        "73",
       ],
       "subTechniques": 18,
       "techniques": 15,
-      "value": "983",
+      "value": "1091",
       "withValue": 15,
     },
   ],
@@ -528,8 +562,8 @@ exports[`render snapshots large.js with display name 1`] = `
 exports[`render snapshots large.js with hide null 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 427263,
-  "htmlSha256": "de7d34a280e4893037e11ec110cbdece67e3c05b48d05fa41c11890c0d7f8683",
+  "htmlLength": 427981,
+  "htmlSha256": "0b61771c341d7106b1f368774bed49c78e5e4da33b93a514d2d49de99d197f6f",
   "legend": {
     "labels": [
       "0",
@@ -541,240 +575,257 @@ exports[`render snapshots large.js with hide null 1`] = `
   "tactics": [
     {
       "firstTechniques": [
-        "T1596",
-        "T1591",
-        "T1594",
+        "T1590",
+        "T1681",
+        "T1595",
       ],
       "id": "TA0043",
       "stats": [
-        "817",
-        "11 (100%)",
-        "74",
+        "905",
+        "12 (100%)",
+        "75",
       ],
       "subTechniques": 34,
-      "techniques": 11,
-      "value": "817",
-      "withValue": 11,
+      "techniques": 12,
+      "value": "905",
+      "withValue": 12,
     },
     {
       "firstTechniques": [
-        "T1584",
-        "T1587",
+        "T1586",
         "T1650",
+        "T1587",
       ],
       "id": "TA0042",
       "stats": [
-        "464",
-        "8 (100%)",
-        "58",
+        "534",
+        "9 (100%)",
+        "59",
       ],
-      "subTechniques": 39,
-      "techniques": 8,
-      "value": "464",
-      "withValue": 8,
+      "subTechniques": 42,
+      "techniques": 9,
+      "value": "534",
+      "withValue": 9,
     },
     {
       "firstTechniques": [
-        "T1669",
-        "T1659",
-        "T1195",
+        "T1200",
+        "T1190",
+        "T1091",
       ],
       "id": "TA0001",
       "stats": [
-        "913",
+        "997",
         "11 (100%)",
-        "83",
+        "91",
       ],
       "subTechniques": 11,
       "techniques": 11,
-      "value": "913",
+      "value": "997",
       "withValue": 11,
     },
     {
       "firstTechniques": [
-        "T1203",
-        "T1047",
-        "T1059",
+        "T1127",
+        "T1677",
+        "T1106",
       ],
       "id": "TA0002",
       "stats": [
-        "1,158",
-        "17 (100%)",
-        "68",
+        "1,381",
+        "22 (100%)",
+        "63",
       ],
-      "subTechniques": 29,
-      "techniques": 17,
-      "value": "1158",
-      "withValue": 17,
+      "subTechniques": 44,
+      "techniques": 22,
+      "value": "1381",
+      "withValue": 22,
     },
     {
       "firstTechniques": [
         "T1671",
-        "T1556",
-        "T1653",
+        "T1098",
+        "T1053",
       ],
       "id": "TA0003",
       "stats": [
-        "1,789",
-        "23 (100%)",
-        "78",
+        "1,835",
+        "22 (100%)",
+        "83",
       ],
-      "subTechniques": 103,
-      "techniques": 23,
-      "value": "1789",
-      "withValue": 23,
+      "subTechniques": 91,
+      "techniques": 22,
+      "value": "1835",
+      "withValue": 22,
     },
     {
       "firstTechniques": [
-        "T1547",
-        "T1546",
-        "T1068",
+        "T1484",
+        "T1098",
+        "T1611",
       ],
       "id": "TA0004",
       "stats": [
-        "1,175",
-        "14 (100%)",
-        "84",
+        "966",
+        "13 (100%)",
+        "74",
       ],
-      "subTechniques": 95,
-      "techniques": 14,
-      "value": "1175",
-      "withValue": 14,
+      "subTechniques": 83,
+      "techniques": 13,
+      "value": "966",
+      "withValue": 13,
     },
     {
       "firstTechniques": [
-        "T1666",
-        "T1218",
+        "T1127",
         "T1497",
+        "T1221",
       ],
       "id": "TA0005",
       "stats": [
-        "3,154",
-        "47 (100%)",
-        "67",
-      ],
-      "subTechniques": 168,
-      "techniques": 47,
-      "value": "3154",
-      "withValue": 47,
-    },
-    {
-      "firstTechniques": [
-        "T1003",
-        "T1556",
-        "T1552",
-      ],
-      "id": "TA0006",
-      "stats": [
-        "1,275",
-        "17 (100%)",
-        "75",
-      ],
-      "subTechniques": 50,
-      "techniques": 17,
-      "value": "1275",
-      "withValue": 17,
-    },
-    {
-      "firstTechniques": [
-        "T1497",
-        "T1033",
-        "T1201",
-      ],
-      "id": "TA0007",
-      "stats": [
-        "2,820",
-        "34 (100%)",
+        "2,586",
+        "31 (100%)",
         "83",
       ],
-      "subTechniques": 15,
-      "techniques": 34,
-      "value": "2820",
-      "withValue": 34,
+      "subTechniques": 120,
+      "techniques": 31,
+      "value": "2586",
+      "withValue": 31,
     },
     {
       "firstTechniques": [
-        "T1534",
-        "T1091",
-        "T1080",
+        "T1685",
+        "T1484",
+        "T1666",
       ],
-      "id": "TA0008",
+      "id": "TA0112",
       "stats": [
-        "865",
-        "9 (100%)",
-        "96",
-      ],
-      "subTechniques": 14,
-      "techniques": 9,
-      "value": "865",
-      "withValue": 9,
-    },
-    {
-      "firstTechniques": [
-        "T1039",
-        "T1125",
-        "T1530",
-      ],
-      "id": "TA0009",
-      "stats": [
-        "1,336",
-        "17 (100%)",
-        "79",
-      ],
-      "subTechniques": 24,
-      "techniques": 17,
-      "value": "1336",
-      "withValue": 17,
-    },
-    {
-      "firstTechniques": [
-        "T1571",
-        "T1071",
-        "T1102",
-      ],
-      "id": "TA0011",
-      "stats": [
-        "1,518",
+        "1,242",
         "18 (100%)",
-        "84",
+        "69",
       ],
-      "subTechniques": 27,
+      "subTechniques": 39,
       "techniques": 18,
-      "value": "1518",
+      "value": "1242",
       "withValue": 18,
     },
     {
       "firstTechniques": [
-        "T1029",
-        "T1048",
-        "T1567",
+        "T1555",
+        "T1606",
+        "T1110",
       ],
-      "id": "TA0010",
+      "id": "TA0006",
       "stats": [
-        "682",
-        "9 (100%)",
-        "76",
+        "1,509",
+        "18 (100%)",
+        "84",
       ],
-      "subTechniques": 10,
+      "subTechniques": 50,
+      "techniques": 18,
+      "value": "1509",
+      "withValue": 18,
+    },
+    {
+      "firstTechniques": [
+        "T1518",
+        "T1120",
+        "T1497",
+      ],
+      "id": "TA0007",
+      "stats": [
+        "2,281",
+        "34 (100%)",
+        "67",
+      ],
+      "subTechniques": 15,
+      "techniques": 34,
+      "value": "2281",
+      "withValue": 34,
+    },
+    {
+      "firstTechniques": [
+        "T1080",
+        "T1550",
+        "T1021",
+      ],
+      "id": "TA0008",
+      "stats": [
+        "654",
+        "9 (100%)",
+        "73",
+      ],
+      "subTechniques": 14,
       "techniques": 9,
-      "value": "682",
+      "value": "654",
       "withValue": 9,
     },
     {
       "firstTechniques": [
-        "T1657",
-        "T1486",
-        "T1485",
+        "T1113",
+        "T1039",
+        "T1530",
+      ],
+      "id": "TA0009",
+      "stats": [
+        "1,284",
+        "17 (100%)",
+        "76",
+      ],
+      "subTechniques": 24,
+      "techniques": 17,
+      "value": "1284",
+      "withValue": 17,
+    },
+    {
+      "firstTechniques": [
+        "T1572",
+        "T1001",
+        "T1568",
+      ],
+      "id": "TA0011",
+      "stats": [
+        "1,201",
+        "18 (100%)",
+        "67",
+      ],
+      "subTechniques": 27,
+      "techniques": 18,
+      "value": "1201",
+      "withValue": 18,
+    },
+    {
+      "firstTechniques": [
+        "T1020",
+        "T1537",
+        "T1030",
+      ],
+      "id": "TA0010",
+      "stats": [
+        "850",
+        "10 (100%)",
+        "85",
+      ],
+      "subTechniques": 10,
+      "techniques": 10,
+      "value": "850",
+      "withValue": 10,
+    },
+    {
+      "firstTechniques": [
+        "T1490",
+        "T1498",
+        "T1491",
       ],
       "id": "TA0040",
       "stats": [
-        "983",
+        "1,091",
         "15 (100%)",
-        "66",
+        "73",
       ],
       "subTechniques": 18,
       "techniques": 15,
-      "value": "983",
+      "value": "1091",
       "withValue": 15,
     },
   ],
@@ -785,8 +836,8 @@ exports[`render snapshots large.js with hide null 1`] = `
 exports[`render snapshots large.js with sort by id desc 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 427263,
-  "htmlSha256": "14816f728c493665b3cc91a12f3f041accdc1f3f77567aa490403cd483eb08db",
+  "htmlLength": 427981,
+  "htmlSha256": "0dfeb9d45653a13d5b0dce9c8b57b445b850f665b513fff812e2a7e4efc68eaa",
   "legend": {
     "labels": [
       "0",
@@ -798,37 +849,37 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
   "tactics": [
     {
       "firstTechniques": [
+        "T1682",
         "T1681",
         "T1598",
-        "T1597",
       ],
       "id": "TA0043",
       "stats": [
-        "817",
-        "11 (100%)",
-        "74",
+        "905",
+        "12 (100%)",
+        "75",
       ],
       "subTechniques": 34,
-      "techniques": 11,
-      "value": "817",
-      "withValue": 11,
+      "techniques": 12,
+      "value": "905",
+      "withValue": 12,
     },
     {
       "firstTechniques": [
+        "T1683",
         "T1650",
         "T1608",
-        "T1588",
       ],
       "id": "TA0042",
       "stats": [
-        "464",
-        "8 (100%)",
-        "58",
+        "534",
+        "9 (100%)",
+        "59",
       ],
-      "subTechniques": 39,
-      "techniques": 8,
-      "value": "464",
-      "withValue": 8,
+      "subTechniques": 42,
+      "techniques": 9,
+      "value": "534",
+      "withValue": 9,
     },
     {
       "firstTechniques": [
@@ -838,31 +889,31 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       ],
       "id": "TA0001",
       "stats": [
-        "913",
+        "997",
         "11 (100%)",
-        "83",
+        "91",
       ],
       "subTechniques": 11,
       "techniques": 11,
-      "value": "913",
+      "value": "997",
       "withValue": 11,
     },
     {
       "firstTechniques": [
+        "T1699",
+        "T1698",
         "T1677",
-        "T1675",
-        "T1674",
       ],
       "id": "TA0002",
       "stats": [
-        "1,158",
-        "17 (100%)",
-        "68",
+        "1,381",
+        "22 (100%)",
+        "63",
       ],
-      "subTechniques": 29,
-      "techniques": 17,
-      "value": "1158",
-      "withValue": 17,
+      "subTechniques": 44,
+      "techniques": 22,
+      "value": "1381",
+      "withValue": 22,
     },
     {
       "firstTechniques": [
@@ -872,65 +923,82 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       ],
       "id": "TA0003",
       "stats": [
-        "1,789",
-        "23 (100%)",
-        "78",
+        "1,835",
+        "22 (100%)",
+        "83",
       ],
-      "subTechniques": 103,
-      "techniques": 23,
-      "value": "1789",
-      "withValue": 23,
+      "subTechniques": 91,
+      "techniques": 22,
+      "value": "1835",
+      "withValue": 22,
     },
     {
       "firstTechniques": [
         "T1611",
-        "T1574",
         "T1548",
+        "T1547",
       ],
       "id": "TA0004",
       "stats": [
-        "1,175",
-        "14 (100%)",
-        "84",
+        "966",
+        "13 (100%)",
+        "74",
       ],
-      "subTechniques": 95,
-      "techniques": 14,
-      "value": "1175",
-      "withValue": 14,
+      "subTechniques": 83,
+      "techniques": 13,
+      "value": "966",
+      "withValue": 13,
     },
     {
       "firstTechniques": [
+        "T1696",
+        "T1684",
         "T1679",
-        "T1678",
-        "T1672",
       ],
       "id": "TA0005",
       "stats": [
-        "3,154",
-        "47 (100%)",
-        "67",
+        "2,586",
+        "31 (100%)",
+        "83",
       ],
-      "subTechniques": 168,
-      "techniques": 47,
-      "value": "3154",
-      "withValue": 47,
+      "subTechniques": 120,
+      "techniques": 31,
+      "value": "2586",
+      "withValue": 31,
     },
     {
       "firstTechniques": [
+        "T1690",
+        "T1689",
+        "T1688",
+      ],
+      "id": "TA0112",
+      "stats": [
+        "1,242",
+        "18 (100%)",
+        "69",
+      ],
+      "subTechniques": 39,
+      "techniques": 18,
+      "value": "1242",
+      "withValue": 18,
+    },
+    {
+      "firstTechniques": [
+        "T1697",
         "T1649",
         "T1621",
-        "T1606",
       ],
       "id": "TA0006",
       "stats": [
-        "1,275",
-        "17 (100%)",
-        "75",
+        "1,509",
+        "18 (100%)",
+        "84",
       ],
       "subTechniques": 50,
-      "techniques": 17,
-      "value": "1275",
-      "withValue": 17,
+      "techniques": 18,
+      "value": "1509",
+      "withValue": 18,
     },
     {
       "firstTechniques": [
@@ -940,13 +1008,13 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       ],
       "id": "TA0007",
       "stats": [
-        "2,820",
+        "2,281",
         "34 (100%)",
-        "83",
+        "67",
       ],
       "subTechniques": 15,
       "techniques": 34,
-      "value": "2820",
+      "value": "2281",
       "withValue": 34,
     },
     {
@@ -957,13 +1025,13 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       ],
       "id": "TA0008",
       "stats": [
-        "865",
+        "654",
         "9 (100%)",
-        "96",
+        "73",
       ],
       "subTechniques": 14,
       "techniques": 9,
-      "value": "865",
+      "value": "654",
       "withValue": 9,
     },
     {
@@ -974,13 +1042,13 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       ],
       "id": "TA0009",
       "stats": [
-        "1,336",
+        "1,284",
         "17 (100%)",
-        "79",
+        "76",
       ],
       "subTechniques": 24,
       "techniques": 17,
-      "value": "1336",
+      "value": "1284",
       "withValue": 17,
     },
     {
@@ -991,31 +1059,31 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       ],
       "id": "TA0011",
       "stats": [
-        "1,518",
+        "1,201",
         "18 (100%)",
-        "84",
+        "67",
       ],
       "subTechniques": 27,
       "techniques": 18,
-      "value": "1518",
+      "value": "1201",
       "withValue": 18,
     },
     {
       "firstTechniques": [
+        "T1700",
         "T1567",
         "T1537",
-        "T1052",
       ],
       "id": "TA0010",
       "stats": [
-        "682",
-        "9 (100%)",
-        "76",
+        "850",
+        "10 (100%)",
+        "85",
       ],
       "subTechniques": 10,
-      "techniques": 9,
-      "value": "682",
-      "withValue": 9,
+      "techniques": 10,
+      "value": "850",
+      "withValue": 10,
     },
     {
       "firstTechniques": [
@@ -1025,13 +1093,13 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       ],
       "id": "TA0040",
       "stats": [
-        "983",
+        "1,091",
         "15 (100%)",
-        "66",
+        "73",
       ],
       "subTechniques": 18,
       "techniques": 15,
-      "value": "983",
+      "value": "1091",
       "withValue": 15,
     },
   ],
@@ -1042,8 +1110,8 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
 exports[`render snapshots single-row.json with defaults 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 310826,
-  "htmlSha256": "fb331e98d13e4d7425f9ce364a08d557f1b1cc5fc595344fc31d5bca47267463",
+  "htmlLength": 312366,
+  "htmlSha256": "f738ea809ad32bfc6492fc0a2c795e3f7d38b2600f283e1e237244db884890f2",
   "legend": {
     "labels": [
       "0",
@@ -1055,9 +1123,9 @@ exports[`render snapshots single-row.json with defaults 1`] = `
   "tactics": [
     {
       "firstTechniques": [
+        "T1682",
+        "T1681",
         "T1598",
-        "T1597",
-        "T1593",
       ],
       "id": "TA0043",
       "stats": [
@@ -1066,15 +1134,15 @@ exports[`render snapshots single-row.json with defaults 1`] = `
         "0",
       ],
       "subTechniques": 34,
-      "techniques": 11,
+      "techniques": 12,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1587",
+        "T1683",
         "T1650",
-        "T1588",
+        "T1608",
       ],
       "id": "TA0042",
       "stats": [
@@ -1082,16 +1150,16 @@ exports[`render snapshots single-row.json with defaults 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 39,
-      "techniques": 8,
+      "subTechniques": 42,
+      "techniques": 9,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
         "T1669",
-        "T1189",
-        "T1200",
+        "T1659",
+        "T1566",
       ],
       "id": "TA0001",
       "stats": [
@@ -1106,26 +1174,26 @@ exports[`render snapshots single-row.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1648",
-        "T1651",
-        "T1569",
+        "T1699",
+        "T1698",
+        "T1677",
       ],
       "id": "TA0002",
       "stats": [
         "42",
-        "1 (6%)",
+        "1 (5%)",
         "42",
       ],
-      "subTechniques": 29,
-      "techniques": 17,
+      "subTechniques": 44,
+      "techniques": 22,
       "value": "42",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1556",
+        "T1671",
+        "T1668",
         "T1653",
-        "T1136",
       ],
       "id": "TA0003",
       "stats": [
@@ -1133,16 +1201,16 @@ exports[`render snapshots single-row.json with defaults 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 103,
-      "techniques": 23,
+      "subTechniques": 91,
+      "techniques": 22,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1484",
-        "T1134",
-        "T1546",
+        "T1611",
+        "T1548",
+        "T1547",
       ],
       "id": "TA0004",
       "stats": [
@@ -1150,16 +1218,16 @@ exports[`render snapshots single-row.json with defaults 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 95,
-      "techniques": 14,
+      "subTechniques": 83,
+      "techniques": 13,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1127",
-        "T1211",
-        "T1216",
+        "T1696",
+        "T1684",
+        "T1679",
       ],
       "id": "TA0005",
       "stats": [
@@ -1167,16 +1235,33 @@ exports[`render snapshots single-row.json with defaults 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 168,
-      "techniques": 47,
+      "subTechniques": 120,
+      "techniques": 31,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1556",
-        "T1111",
-        "T1056",
+        "T1690",
+        "T1689",
+        "T1688",
+      ],
+      "id": "TA0112",
+      "stats": [
+        "0",
+        "0 (0%)",
+        "0",
+      ],
+      "subTechniques": 39,
+      "techniques": 18,
+      "value": "0",
+      "withValue": 0,
+    },
+    {
+      "firstTechniques": [
+        "T1697",
+        "T1649",
+        "T1621",
       ],
       "id": "TA0006",
       "stats": [
@@ -1185,15 +1270,15 @@ exports[`render snapshots single-row.json with defaults 1`] = `
         "0",
       ],
       "subTechniques": 50,
-      "techniques": 17,
+      "techniques": 18,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1124",
         "T1680",
-        "T1622",
+        "T1673",
+        "T1654",
       ],
       "id": "TA0007",
       "stats": [
@@ -1209,8 +1294,8 @@ exports[`render snapshots single-row.json with defaults 1`] = `
     {
       "firstTechniques": [
         "T1570",
-        "T1534",
-        "T1210",
+        "T1563",
+        "T1550",
       ],
       "id": "TA0008",
       "stats": [
@@ -1225,9 +1310,9 @@ exports[`render snapshots single-row.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1213",
-        "T1056",
-        "T1039",
+        "T1602",
+        "T1560",
+        "T1557",
       ],
       "id": "TA0009",
       "stats": [
@@ -1242,9 +1327,9 @@ exports[`render snapshots single-row.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1008",
         "T1665",
-        "T1105",
+        "T1659",
+        "T1573",
       ],
       "id": "TA0011",
       "stats": [
@@ -1259,9 +1344,9 @@ exports[`render snapshots single-row.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1052",
+        "T1700",
+        "T1567",
         "T1537",
-        "T1030",
       ],
       "id": "TA0010",
       "stats": [
@@ -1270,15 +1355,15 @@ exports[`render snapshots single-row.json with defaults 1`] = `
         "0",
       ],
       "subTechniques": 10,
-      "techniques": 9,
+      "techniques": 10,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1529",
-        "T1490",
-        "T1495",
+        "T1667",
+        "T1657",
+        "T1565",
       ],
       "id": "TA0040",
       "stats": [
@@ -1299,8 +1384,8 @@ exports[`render snapshots single-row.json with defaults 1`] = `
 exports[`render snapshots typical.json with custom scale and legend 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 313443,
-  "htmlSha256": "a63bb917c34f0f551d239a288e5a36bfab9a59357ec7269a322092a5d7dd2ce4",
+  "htmlLength": 314967,
+  "htmlSha256": "54b93b6ef5c4d4f5137eb16c142791153c1f7b00bd42f4ba6e881b4554a0a774",
   "legend": {
     "labels": [
       "50",
@@ -1312,9 +1397,9 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
   "tactics": [
     {
       "firstTechniques": [
+        "T1682",
+        "T1681",
         "T1598",
-        "T1597",
-        "T1593",
       ],
       "id": "TA0043",
       "stats": [
@@ -1323,15 +1408,15 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
         "0",
       ],
       "subTechniques": 34,
-      "techniques": 11,
+      "techniques": 12,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1587",
+        "T1683",
         "T1650",
-        "T1588",
+        "T1608",
       ],
       "id": "TA0042",
       "stats": [
@@ -1339,15 +1424,15 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 39,
-      "techniques": 8,
+      "subTechniques": 42,
+      "techniques": 9,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
         "T1669",
-        "T1189",
+        "T1659",
         "T1200",
       ],
       "id": "TA0001",
@@ -1363,94 +1448,111 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
     },
     {
       "firstTechniques": [
-        "T1648",
-        "T1651",
-        "T1569",
+        "T1699",
+        "T1698",
+        "T1677",
       ],
       "id": "TA0002",
       "stats": [
         "42",
-        "1 (6%)",
+        "1 (5%)",
         "42",
       ],
-      "subTechniques": 29,
-      "techniques": 17,
+      "subTechniques": 44,
+      "techniques": 22,
       "value": "42",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1556",
+        "T1671",
+        "T1668",
         "T1653",
-        "T1136",
       ],
       "id": "TA0003",
       "stats": [
         "65",
-        "1 (4%)",
+        "1 (5%)",
         "65",
       ],
-      "subTechniques": 103,
-      "techniques": 23,
+      "subTechniques": 91,
+      "techniques": 22,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1484",
-        "T1134",
-        "T1546",
+        "T1611",
+        "T1548",
+        "T1547",
       ],
       "id": "TA0004",
       "stats": [
         "65",
-        "1 (7%)",
+        "1 (8%)",
         "65",
       ],
-      "subTechniques": 95,
-      "techniques": 14,
+      "subTechniques": 83,
+      "techniques": 13,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1127",
-        "T1211",
-        "T1216",
+        "T1696",
+        "T1684",
+        "T1679",
       ],
       "id": "TA0005",
       "stats": [
         "65",
-        "1 (2%)",
+        "1 (3%)",
         "65",
       ],
-      "subTechniques": 168,
-      "techniques": 47,
+      "subTechniques": 120,
+      "techniques": 31,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1556",
-        "T1111",
-        "T1056",
+        "T1690",
+        "T1689",
+        "T1688",
+      ],
+      "id": "TA0112",
+      "stats": [
+        "0",
+        "0 (0%)",
+        "0",
+      ],
+      "subTechniques": 39,
+      "techniques": 18,
+      "value": "0",
+      "withValue": 0,
+    },
+    {
+      "firstTechniques": [
+        "T1697",
+        "T1649",
+        "T1621",
       ],
       "id": "TA0006",
       "stats": [
         "12.5",
-        "2 (12%)",
+        "2 (11%)",
         "6",
       ],
       "subTechniques": 50,
-      "techniques": 17,
+      "techniques": 18,
       "value": "12.5",
       "withValue": 2,
     },
     {
       "firstTechniques": [
-        "T1124",
         "T1680",
-        "T1622",
+        "T1673",
+        "T1654",
       ],
       "id": "TA0007",
       "stats": [
@@ -1467,7 +1569,7 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
       "firstTechniques": [
         "T1021",
         "T1570",
-        "T1534",
+        "T1563",
       ],
       "id": "TA0008",
       "stats": [
@@ -1482,9 +1584,9 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
     },
     {
       "firstTechniques": [
-        "T1213",
-        "T1056",
-        "T1039",
+        "T1602",
+        "T1560",
+        "T1557",
       ],
       "id": "TA0009",
       "stats": [
@@ -1499,9 +1601,9 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
     },
     {
       "firstTechniques": [
-        "T1008",
         "T1665",
-        "T1132",
+        "T1659",
+        "T1573",
       ],
       "id": "TA0011",
       "stats": [
@@ -1516,9 +1618,9 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
     },
     {
       "firstTechniques": [
-        "T1052",
+        "T1700",
+        "T1567",
         "T1537",
-        "T1030",
       ],
       "id": "TA0010",
       "stats": [
@@ -1527,15 +1629,15 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
         "0",
       ],
       "subTechniques": 10,
-      "techniques": 9,
+      "techniques": 10,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1529",
-        "T1490",
-        "T1495",
+        "T1667",
+        "T1657",
+        "T1565",
       ],
       "id": "TA0040",
       "stats": [
@@ -2024,8 +2126,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
 exports[`render snapshots typical.json with defaults 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 313437,
-  "htmlSha256": "10f82db27ee86ea332e8b510308d8fe6bbcdadb6c2c6bfe11a34ae3e92474e23",
+  "htmlLength": 314977,
+  "htmlSha256": "6b92f522fa2bb4ae3925b40780cd353e45412168485be3339c0e8f8b7aa82809",
   "legend": {
     "labels": [
       "0",
@@ -2037,9 +2139,9 @@ exports[`render snapshots typical.json with defaults 1`] = `
   "tactics": [
     {
       "firstTechniques": [
+        "T1682",
+        "T1681",
         "T1598",
-        "T1597",
-        "T1593",
       ],
       "id": "TA0043",
       "stats": [
@@ -2048,15 +2150,15 @@ exports[`render snapshots typical.json with defaults 1`] = `
         "0",
       ],
       "subTechniques": 34,
-      "techniques": 11,
+      "techniques": 12,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1587",
+        "T1683",
         "T1650",
-        "T1588",
+        "T1608",
       ],
       "id": "TA0042",
       "stats": [
@@ -2064,15 +2166,15 @@ exports[`render snapshots typical.json with defaults 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 39,
-      "techniques": 8,
+      "subTechniques": 42,
+      "techniques": 9,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
         "T1669",
-        "T1189",
+        "T1659",
         "T1200",
       ],
       "id": "TA0001",
@@ -2088,94 +2190,111 @@ exports[`render snapshots typical.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1648",
-        "T1651",
-        "T1569",
+        "T1699",
+        "T1698",
+        "T1677",
       ],
       "id": "TA0002",
       "stats": [
         "42",
-        "1 (6%)",
+        "1 (5%)",
         "42",
       ],
-      "subTechniques": 29,
-      "techniques": 17,
+      "subTechniques": 44,
+      "techniques": 22,
       "value": "42",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1556",
+        "T1671",
+        "T1668",
         "T1653",
-        "T1136",
       ],
       "id": "TA0003",
       "stats": [
         "65",
-        "1 (4%)",
+        "1 (5%)",
         "65",
       ],
-      "subTechniques": 103,
-      "techniques": 23,
+      "subTechniques": 91,
+      "techniques": 22,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1484",
-        "T1134",
-        "T1546",
+        "T1611",
+        "T1548",
+        "T1547",
       ],
       "id": "TA0004",
       "stats": [
         "65",
-        "1 (7%)",
+        "1 (8%)",
         "65",
       ],
-      "subTechniques": 95,
-      "techniques": 14,
+      "subTechniques": 83,
+      "techniques": 13,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1127",
-        "T1211",
-        "T1216",
+        "T1696",
+        "T1684",
+        "T1679",
       ],
       "id": "TA0005",
       "stats": [
         "65",
-        "1 (2%)",
+        "1 (3%)",
         "65",
       ],
-      "subTechniques": 168,
-      "techniques": 47,
+      "subTechniques": 120,
+      "techniques": 31,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1556",
-        "T1111",
-        "T1056",
+        "T1690",
+        "T1689",
+        "T1688",
+      ],
+      "id": "TA0112",
+      "stats": [
+        "0",
+        "0 (0%)",
+        "0",
+      ],
+      "subTechniques": 39,
+      "techniques": 18,
+      "value": "0",
+      "withValue": 0,
+    },
+    {
+      "firstTechniques": [
+        "T1697",
+        "T1649",
+        "T1621",
       ],
       "id": "TA0006",
       "stats": [
         "12.5",
-        "2 (12%)",
+        "2 (11%)",
         "6",
       ],
       "subTechniques": 50,
-      "techniques": 17,
+      "techniques": 18,
       "value": "12.5",
       "withValue": 2,
     },
     {
       "firstTechniques": [
-        "T1124",
         "T1680",
-        "T1622",
+        "T1673",
+        "T1654",
       ],
       "id": "TA0007",
       "stats": [
@@ -2192,7 +2311,7 @@ exports[`render snapshots typical.json with defaults 1`] = `
       "firstTechniques": [
         "T1021",
         "T1570",
-        "T1534",
+        "T1563",
       ],
       "id": "TA0008",
       "stats": [
@@ -2207,9 +2326,9 @@ exports[`render snapshots typical.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1213",
-        "T1056",
-        "T1039",
+        "T1602",
+        "T1560",
+        "T1557",
       ],
       "id": "TA0009",
       "stats": [
@@ -2224,9 +2343,9 @@ exports[`render snapshots typical.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1008",
         "T1665",
-        "T1132",
+        "T1659",
+        "T1573",
       ],
       "id": "TA0011",
       "stats": [
@@ -2241,9 +2360,9 @@ exports[`render snapshots typical.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1052",
+        "T1700",
+        "T1567",
         "T1537",
-        "T1030",
       ],
       "id": "TA0010",
       "stats": [
@@ -2252,15 +2371,15 @@ exports[`render snapshots typical.json with defaults 1`] = `
         "0",
       ],
       "subTechniques": 10,
-      "techniques": 9,
+      "techniques": 10,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1529",
-        "T1490",
-        "T1495",
+        "T1667",
+        "T1657",
+        "T1565",
       ],
       "id": "TA0040",
       "stats": [
@@ -2281,8 +2400,8 @@ exports[`render snapshots typical.json with defaults 1`] = `
 exports[`render snapshots typical.json with display name 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 330119,
-  "htmlSha256": "c5f10689583748f6b1eb2d19f7be63fe41ee8e98669c95b11d44bc86470797a8",
+  "htmlLength": 331370,
+  "htmlSha256": "da1054d3e26e990fbcbaa54302e00f50d697973523e59480925a08d77746eea8",
   "legend": {
     "labels": [
       "0",
@@ -2294,9 +2413,9 @@ exports[`render snapshots typical.json with display name 1`] = `
   "tactics": [
     {
       "firstTechniques": [
+        "T1682",
+        "T1681",
         "T1598",
-        "T1597",
-        "T1593",
       ],
       "id": "TA0043",
       "stats": [
@@ -2305,15 +2424,15 @@ exports[`render snapshots typical.json with display name 1`] = `
         "0",
       ],
       "subTechniques": 34,
-      "techniques": 11,
+      "techniques": 12,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1587",
+        "T1683",
         "T1650",
-        "T1588",
+        "T1608",
       ],
       "id": "TA0042",
       "stats": [
@@ -2321,15 +2440,15 @@ exports[`render snapshots typical.json with display name 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 39,
-      "techniques": 8,
+      "subTechniques": 42,
+      "techniques": 9,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
         "T1669",
-        "T1189",
+        "T1659",
         "T1200",
       ],
       "id": "TA0001",
@@ -2345,94 +2464,111 @@ exports[`render snapshots typical.json with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1648",
-        "T1651",
-        "T1569",
+        "T1699",
+        "T1698",
+        "T1677",
       ],
       "id": "TA0002",
       "stats": [
         "42",
-        "1 (6%)",
+        "1 (5%)",
         "42",
       ],
-      "subTechniques": 29,
-      "techniques": 17,
+      "subTechniques": 44,
+      "techniques": 22,
       "value": "42",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1556",
+        "T1671",
+        "T1668",
         "T1653",
-        "T1136",
       ],
       "id": "TA0003",
       "stats": [
         "65",
-        "1 (4%)",
+        "1 (5%)",
         "65",
       ],
-      "subTechniques": 103,
-      "techniques": 23,
+      "subTechniques": 91,
+      "techniques": 22,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1484",
-        "T1134",
-        "T1546",
+        "T1611",
+        "T1548",
+        "T1547",
       ],
       "id": "TA0004",
       "stats": [
         "65",
-        "1 (7%)",
+        "1 (8%)",
         "65",
       ],
-      "subTechniques": 95,
-      "techniques": 14,
+      "subTechniques": 83,
+      "techniques": 13,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1127",
-        "T1211",
-        "T1216",
+        "T1696",
+        "T1684",
+        "T1679",
       ],
       "id": "TA0005",
       "stats": [
         "65",
-        "1 (2%)",
+        "1 (3%)",
         "65",
       ],
-      "subTechniques": 168,
-      "techniques": 47,
+      "subTechniques": 120,
+      "techniques": 31,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1556",
-        "T1111",
-        "T1056",
+        "T1690",
+        "T1689",
+        "T1688",
+      ],
+      "id": "TA0112",
+      "stats": [
+        "0",
+        "0 (0%)",
+        "0",
+      ],
+      "subTechniques": 39,
+      "techniques": 18,
+      "value": "0",
+      "withValue": 0,
+    },
+    {
+      "firstTechniques": [
+        "T1697",
+        "T1649",
+        "T1621",
       ],
       "id": "TA0006",
       "stats": [
         "12.5",
-        "2 (12%)",
+        "2 (11%)",
         "6",
       ],
       "subTechniques": 50,
-      "techniques": 17,
+      "techniques": 18,
       "value": "12.5",
       "withValue": 2,
     },
     {
       "firstTechniques": [
-        "T1124",
         "T1680",
-        "T1622",
+        "T1673",
+        "T1654",
       ],
       "id": "TA0007",
       "stats": [
@@ -2449,7 +2585,7 @@ exports[`render snapshots typical.json with display name 1`] = `
       "firstTechniques": [
         "T1021",
         "T1570",
-        "T1534",
+        "T1563",
       ],
       "id": "TA0008",
       "stats": [
@@ -2464,9 +2600,9 @@ exports[`render snapshots typical.json with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1213",
-        "T1056",
-        "T1039",
+        "T1602",
+        "T1560",
+        "T1557",
       ],
       "id": "TA0009",
       "stats": [
@@ -2481,9 +2617,9 @@ exports[`render snapshots typical.json with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1008",
         "T1665",
-        "T1132",
+        "T1659",
+        "T1573",
       ],
       "id": "TA0011",
       "stats": [
@@ -2498,9 +2634,9 @@ exports[`render snapshots typical.json with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1052",
+        "T1700",
+        "T1567",
         "T1537",
-        "T1030",
       ],
       "id": "TA0010",
       "stats": [
@@ -2509,15 +2645,15 @@ exports[`render snapshots typical.json with display name 1`] = `
         "0",
       ],
       "subTechniques": 10,
-      "techniques": 9,
+      "techniques": 10,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1529",
-        "T1490",
-        "T1495",
+        "T1667",
+        "T1657",
+        "T1565",
       ],
       "id": "TA0040",
       "stats": [
@@ -2538,8 +2674,8 @@ exports[`render snapshots typical.json with display name 1`] = `
 exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 87356,
-  "htmlSha256": "c00b354aa497ae1b62e5f1ad44eb651de7d07fd48531cf28eb469826df9e4687",
+  "htmlLength": 91020,
+  "htmlSha256": "a019ea5709cbc72aab87fd1561c96a1af7c901d2dff81e25ced6ac0cf834c6fc",
   "legend": {
     "labels": [
       "0",
@@ -2578,8 +2714,8 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
     {
       "firstTechniques": [
         "T1199",
-        "T1190",
         "T1195",
+        "T1190",
       ],
       "id": "TA0001",
       "stats": [
@@ -2594,26 +2730,26 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
     },
     {
       "firstTechniques": [
-        "T1648",
-        "T1651",
-        "T1072",
+        "T1699",
+        "T1698",
+        "T1677",
       ],
       "id": "TA0002",
       "stats": [
         "42",
-        "1 (17%)",
+        "1 (13%)",
         "42",
       ],
       "subTechniques": 2,
-      "techniques": 6,
+      "techniques": 8,
       "value": "42",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1556",
-        "T1136",
         "T1671",
+        "T1556",
+        "T1546",
       ],
       "id": "TA0003",
       "stats": [
@@ -2628,9 +2764,9 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
     },
     {
       "firstTechniques": [
+        "T1548",
         "T1546",
         "T1098",
-        "T1548",
       ],
       "id": "TA0004",
       "stats": [
@@ -2645,43 +2781,60 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
     },
     {
       "firstTechniques": [
-        "T1211",
-        "T1556",
-        "T1656",
+        "T1696",
+        "T1684",
+        "T1535",
       ],
       "id": "TA0005",
       "stats": [
         "65",
-        "1 (10%)",
+        "1 (20%)",
         "65",
       ],
-      "subTechniques": 16,
-      "techniques": 10,
+      "subTechniques": 5,
+      "techniques": 5,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1556",
+        "T1687",
+        "T1685",
+        "T1666",
+      ],
+      "id": "TA0112",
+      "stats": [
+        "0",
+        "0 (0%)",
+        "0",
+      ],
+      "subTechniques": 10,
+      "techniques": 5,
+      "value": "0",
+      "withValue": 0,
+    },
+    {
+      "firstTechniques": [
+        "T1697",
         "T1621",
         "T1606",
       ],
       "id": "TA0006",
       "stats": [
         "12.5",
-        "1 (11%)",
+        "1 (10%)",
         "13",
       ],
       "subTechniques": 12,
-      "techniques": 9,
+      "techniques": 10,
       "value": "12.5",
       "withValue": 1,
     },
     {
       "firstTechniques": [
         "T1680",
-        "T1538",
-        "T1518",
+        "T1654",
+        "T1619",
       ],
       "id": "TA0007",
       "stats": [
@@ -2697,8 +2850,8 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
     {
       "firstTechniques": [
         "T1021",
+        "T1550",
         "T1534",
-        "T1072",
       ],
       "id": "TA0008",
       "stats": [
@@ -2713,9 +2866,9 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
     },
     {
       "firstTechniques": [
-        "T1213",
-        "T1074",
         "T1530",
+        "T1213",
+        "T1119",
       ],
       "id": "TA0009",
       "stats": [
@@ -2743,9 +2896,9 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
     },
     {
       "firstTechniques": [
-        "T1537",
-        "T1048",
+        "T1700",
         "T1567",
+        "T1537",
       ],
       "id": "TA0010",
       "stats": [
@@ -2754,15 +2907,15 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
         "0",
       ],
       "subTechniques": 1,
-      "techniques": 3,
+      "techniques": 4,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1490",
-        "T1498",
-        "T1485",
+        "T1657",
+        "T1531",
+        "T1499",
       ],
       "id": "TA0040",
       "stats": [
@@ -2783,8 +2936,8 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
 exports[`render snapshots typical.json with enterprise windows 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 232166,
-  "htmlSha256": "eea35c58d13eeca39a8d5668a0aba43712ad0678f88e77949c210839a7b2c8eb",
+  "htmlLength": 233966,
+  "htmlSha256": "bffd7cbad24b8fd3d6bfc60757ab63777afca016a785bf9f5b8d1cbd7e6a9498",
   "legend": {
     "labels": [
       "0",
@@ -2823,7 +2976,7 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
     {
       "firstTechniques": [
         "T1669",
-        "T1189",
+        "T1659",
         "T1200",
       ],
       "id": "TA0001",
@@ -2839,26 +2992,26 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
     },
     {
       "firstTechniques": [
-        "T1569",
-        "T1203",
-        "T1559",
+        "T1699",
+        "T1698",
+        "T1674",
       ],
       "id": "TA0002",
       "stats": [
         "42",
-        "1 (9%)",
+        "1 (6%)",
         "42",
       ],
-      "subTechniques": 16,
-      "techniques": 11,
+      "subTechniques": 29,
+      "techniques": 16,
       "value": "42",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1556",
+        "T1668",
         "T1653",
-        "T1136",
+        "T1556",
       ],
       "id": "TA0003",
       "stats": [
@@ -2866,50 +3019,67 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
         "1 (5%)",
         "65",
       ],
-      "subTechniques": 70,
-      "techniques": 21,
+      "subTechniques": 60,
+      "techniques": 20,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1484",
-        "T1134",
-        "T1546",
+        "T1611",
+        "T1548",
+        "T1547",
       ],
       "id": "TA0004",
       "stats": [
         "65",
-        "1 (7%)",
+        "1 (8%)",
         "65",
       ],
-      "subTechniques": 61,
-      "techniques": 14,
+      "subTechniques": 51,
+      "techniques": 13,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1127",
-        "T1211",
-        "T1216",
+        "T1684",
+        "T1679",
+        "T1678",
       ],
       "id": "TA0005",
       "stats": [
         "65",
-        "1 (3%)",
+        "1 (4%)",
         "65",
       ],
-      "subTechniques": 127,
-      "techniques": 38,
+      "subTechniques": 104,
+      "techniques": 28,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1556",
-        "T1111",
-        "T1056",
+        "T1690",
+        "T1689",
+        "T1688",
+      ],
+      "id": "TA0112",
+      "stats": [
+        "0",
+        "0 (0%)",
+        "0",
+      ],
+      "subTechniques": 19,
+      "techniques": 12,
+      "value": "0",
+      "withValue": 0,
+    },
+    {
+      "firstTechniques": [
+        "T1649",
+        "T1621",
+        "T1606",
       ],
       "id": "TA0006",
       "stats": [
@@ -2924,9 +3094,9 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
     },
     {
       "firstTechniques": [
-        "T1124",
         "T1680",
-        "T1622",
+        "T1673",
+        "T1654",
       ],
       "id": "TA0007",
       "stats": [
@@ -2943,7 +3113,7 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
       "firstTechniques": [
         "T1021",
         "T1570",
-        "T1534",
+        "T1563",
       ],
       "id": "TA0008",
       "stats": [
@@ -2951,16 +3121,16 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
         "1 (11%)",
         "-5",
       ],
-      "subTechniques": 8,
+      "subTechniques": 9,
       "techniques": 9,
       "value": "-5",
       "withValue": 1,
     },
     {
       "firstTechniques": [
+        "T1560",
+        "T1557",
         "T1213",
-        "T1056",
-        "T1039",
       ],
       "id": "TA0009",
       "stats": [
@@ -2975,9 +3145,9 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
     },
     {
       "firstTechniques": [
-        "T1008",
         "T1665",
-        "T1132",
+        "T1659",
+        "T1573",
       ],
       "id": "TA0011",
       "stats": [
@@ -2992,9 +3162,9 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
     },
     {
       "firstTechniques": [
+        "T1700",
+        "T1567",
         "T1052",
-        "T1030",
-        "T1048",
       ],
       "id": "TA0010",
       "stats": [
@@ -3003,15 +3173,15 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
         "0",
       ],
       "subTechniques": 9,
-      "techniques": 8,
+      "techniques": 9,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1529",
-        "T1490",
-        "T1495",
+        "T1667",
+        "T1657",
+        "T1565",
       ],
       "id": "TA0040",
       "stats": [
@@ -3032,8 +3202,8 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
 exports[`render snapshots typical.json with hide null 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 33289,
-  "htmlSha256": "fc202ecdfde884638e348ce1cf82e51fafc647b3350da5a16dda9dbce6d908f6",
+  "htmlLength": 33265,
+  "htmlSha256": "532b90a3d56d63aeaf77cb55a21bb2020d8a4d2fad62c6119d56b7321d3dc3d0",
   "legend": {
     "labels": [
       "0",
@@ -3188,8 +3358,8 @@ exports[`render snapshots typical.json with hide null 1`] = `
 exports[`render snapshots typical.json with ics 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 66443,
-  "htmlSha256": "405a3a2bcb6d40a85a39b720f8c7b1824ff685595559d76d623a7e8594a0c6fe",
+  "htmlLength": 73806,
+  "htmlSha256": "8e9b53f215a60b767a623a285f3cbeb239bd723e24d39cff26ec9e355f7943f0",
   "legend": {
     "labels": [
       "0",
@@ -3201,9 +3371,9 @@ exports[`render snapshots typical.json with ics 1`] = `
   "tactics": [
     {
       "firstTechniques": [
-        "T0883",
         "T0886",
-        "T0847",
+        "T0883",
+        "T0866",
       ],
       "id": "TA0108",
       "stats": [
@@ -3218,8 +3388,8 @@ exports[`render snapshots typical.json with ics 1`] = `
     },
     {
       "firstTechniques": [
-        "T0834",
-        "T0823",
+        "T1701",
+        "T0895",
         "T0874",
       ],
       "id": "TA0104",
@@ -3228,16 +3398,16 @@ exports[`render snapshots typical.json with ics 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 0,
-      "techniques": 10,
+      "subTechniques": 6,
+      "techniques": 9,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
+        "T1694",
+        "T1693",
         "T0889",
-        "T0839",
-        "T0873",
       ],
       "id": "TA0110",
       "stats": [
@@ -3245,8 +3415,8 @@ exports[`render snapshots typical.json with ics 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 0,
-      "techniques": 6,
+      "subTechniques": 5,
+      "techniques": 5,
       "value": "0",
       "withValue": 0,
     },
@@ -3268,9 +3438,9 @@ exports[`render snapshots typical.json with ics 1`] = `
     },
     {
       "firstTechniques": [
-        "T0849",
-        "T0820",
-        "T0856",
+        "T1692",
+        "T0894",
+        "T0872",
       ],
       "id": "TA0103",
       "stats": [
@@ -3278,16 +3448,16 @@ exports[`render snapshots typical.json with ics 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 0,
+      "subTechniques": 2,
       "techniques": 7,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T0840",
+        "T0888",
+        "T0887",
         "T0846",
-        "T0842",
       ],
       "id": "TA0102",
       "stats": [
@@ -3295,16 +3465,16 @@ exports[`render snapshots typical.json with ics 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 0,
+      "subTechniques": 3,
       "techniques": 5,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T0867",
+        "T1694",
         "T0886",
-        "T0859",
+        "T0867",
       ],
       "id": "TA0109",
       "stats": [
@@ -3312,16 +3482,16 @@ exports[`render snapshots typical.json with ics 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 0,
-      "techniques": 7,
+      "subTechniques": 5,
+      "techniques": 6,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
         "T0893",
-        "T0852",
-        "T0830",
+        "T0887",
+        "T0877",
       ],
       "id": "TA0100",
       "stats": [
@@ -3337,8 +3507,8 @@ exports[`render snapshots typical.json with ics 1`] = `
     {
       "firstTechniques": [
         "T0885",
-        "T0869",
         "T0884",
+        "T0869",
       ],
       "id": "TA0101",
       "stats": [
@@ -3346,16 +3516,16 @@ exports[`render snapshots typical.json with ics 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 0,
+      "subTechniques": 2,
       "techniques": 3,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T0892",
-        "T0838",
-        "T0857",
+        "T1695",
+        "T1693",
+        "T1691",
       ],
       "id": "TA0107",
       "stats": [
@@ -3363,16 +3533,16 @@ exports[`render snapshots typical.json with ics 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 0,
-      "techniques": 14,
+      "subTechniques": 7,
+      "techniques": 13,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T0839",
-        "T0806",
-        "T0856",
+        "T1693",
+        "T1692",
+        "T0836",
       ],
       "id": "TA0106",
       "stats": [
@@ -3380,16 +3550,16 @@ exports[`render snapshots typical.json with ics 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 0,
-      "techniques": 5,
+      "subTechniques": 4,
+      "techniques": 4,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T0813",
         "T0882",
-        "T0826",
+        "T0880",
+        "T0879",
       ],
       "id": "TA0105",
       "stats": [
@@ -3410,8 +3580,8 @@ exports[`render snapshots typical.json with ics 1`] = `
 exports[`render snapshots typical.json with mobile android 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 84488,
-  "htmlSha256": "ab240aa8dc574c963393cafa34be95cace76e96040efd3ee53471c251136ce62",
+  "htmlLength": 80102,
+  "htmlSha256": "ce1f64f9652b35b455a5f63cb621adf3304c4fd22d80f4b2a81b722813a85cc3",
   "legend": {
     "labels": [
       "0",
@@ -3423,8 +3593,8 @@ exports[`render snapshots typical.json with mobile android 1`] = `
   "tactics": [
     {
       "firstTechniques": [
-        "T1456",
-        "T1461",
+        "T1664",
+        "T1661",
         "T1660",
       ],
       "id": "TA0027",
@@ -3434,15 +3604,15 @@ exports[`render snapshots typical.json with mobile android 1`] = `
         "0",
       ],
       "subTechniques": 3,
-      "techniques": 8,
+      "techniques": 9,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
         "T1658",
-        "T1575",
         "T1623",
+        "T1603",
       ],
       "id": "TA0041",
       "stats": [
@@ -3457,9 +3627,9 @@ exports[`render snapshots typical.json with mobile android 1`] = `
     },
     {
       "firstTechniques": [
-        "T1624",
-        "T1577",
         "T1676",
+        "T1645",
+        "T1625",
       ],
       "id": "TA0028",
       "stats": [
@@ -3475,8 +3645,8 @@ exports[`render snapshots typical.json with mobile android 1`] = `
     {
       "firstTechniques": [
         "T1631",
-        "T1404",
         "T1626",
+        "T1404",
       ],
       "id": "TA0029",
       "stats": [
@@ -3491,9 +3661,9 @@ exports[`render snapshots typical.json with mobile android 1`] = `
     },
     {
       "firstTechniques": [
-        "T1628",
+        "T1670",
+        "T1661",
         "T1655",
-        "T1516",
       ],
       "id": "TA0030",
       "stats": [
@@ -3508,9 +3678,9 @@ exports[`render snapshots typical.json with mobile android 1`] = `
     },
     {
       "firstTechniques": [
-        "T1414",
-        "T1417",
+        "T1635",
         "T1517",
+        "T1453",
       ],
       "id": "TA0031",
       "stats": [
@@ -3525,9 +3695,9 @@ exports[`render snapshots typical.json with mobile android 1`] = `
     },
     {
       "firstTechniques": [
+        "T1430",
         "T1426",
-        "T1421",
-        "T1422",
+        "T1424",
       ],
       "id": "TA0032",
       "stats": [
@@ -3558,9 +3728,9 @@ exports[`render snapshots typical.json with mobile android 1`] = `
     },
     {
       "firstTechniques": [
-        "T1532",
-        "T1533",
-        "T1512",
+        "T1676",
+        "T1638",
+        "T1636",
       ],
       "id": "TA0035",
       "stats": [
@@ -3575,9 +3745,9 @@ exports[`render snapshots typical.json with mobile android 1`] = `
     },
     {
       "firstTechniques": [
-        "T1521",
+        "T1663",
         "T1644",
-        "T1481",
+        "T1637",
       ],
       "id": "TA0037",
       "stats": [
@@ -3592,8 +3762,8 @@ exports[`render snapshots typical.json with mobile android 1`] = `
     },
     {
       "firstTechniques": [
-        "T1639",
         "T1646",
+        "T1639",
       ],
       "id": "TA0036",
       "stats": [
@@ -3608,9 +3778,9 @@ exports[`render snapshots typical.json with mobile android 1`] = `
     },
     {
       "firstTechniques": [
+        "T1662",
+        "T1643",
         "T1642",
-        "T1640",
-        "T1471",
       ],
       "id": "TA0034",
       "stats": [
@@ -3623,32 +3793,6 @@ exports[`render snapshots typical.json with mobile android 1`] = `
       "value": "0",
       "withValue": 0,
     },
-    {
-      "firstTechniques": [],
-      "id": "TA0038",
-      "stats": [
-        "0",
-        "0 (0%)",
-        "0",
-      ],
-      "subTechniques": 0,
-      "techniques": 0,
-      "value": "0",
-      "withValue": 0,
-    },
-    {
-      "firstTechniques": [],
-      "id": "TA0039",
-      "stats": [
-        "0",
-        "0 (0%)",
-        "0",
-      ],
-      "subTechniques": 0,
-      "techniques": 0,
-      "value": "0",
-      "withValue": 0,
-    },
   ],
   "theme": "light",
 }
@@ -3657,8 +3801,8 @@ exports[`render snapshots typical.json with mobile android 1`] = `
 exports[`render snapshots typical.json with no sub-techniques 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 135237,
-  "htmlSha256": "9e05e578bb05e515f0fbc056ab69664bf144205c88c08a2853461c213ab6ad2b",
+  "htmlLength": 141215,
+  "htmlSha256": "2cc4c760748a2ba94bf81501ad91ce23f0ef4b1f91c7572009f565c0ddf43860",
   "legend": {
     "labels": [
       "0",
@@ -3670,9 +3814,9 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
   "tactics": [
     {
       "firstTechniques": [
+        "T1682",
+        "T1681",
         "T1598",
-        "T1597",
-        "T1593",
       ],
       "id": "TA0043",
       "stats": [
@@ -3681,15 +3825,15 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
         "0",
       ],
       "subTechniques": 0,
-      "techniques": 11,
+      "techniques": 12,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1587",
+        "T1683",
         "T1650",
-        "T1588",
+        "T1608",
       ],
       "id": "TA0042",
       "stats": [
@@ -3698,14 +3842,14 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
         "0",
       ],
       "subTechniques": 0,
-      "techniques": 8,
+      "techniques": 9,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
         "T1669",
-        "T1189",
+        "T1659",
         "T1200",
       ],
       "id": "TA0001",
@@ -3721,94 +3865,111 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
     },
     {
       "firstTechniques": [
-        "T1648",
-        "T1651",
-        "T1569",
+        "T1699",
+        "T1698",
+        "T1677",
       ],
       "id": "TA0002",
       "stats": [
         "42",
-        "1 (6%)",
+        "1 (5%)",
         "42",
       ],
       "subTechniques": 0,
-      "techniques": 17,
+      "techniques": 22,
       "value": "42",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1556",
+        "T1671",
+        "T1668",
         "T1653",
-        "T1136",
       ],
       "id": "TA0003",
       "stats": [
         "65",
-        "1 (4%)",
+        "1 (5%)",
         "65",
       ],
       "subTechniques": 0,
-      "techniques": 23,
+      "techniques": 22,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1484",
-        "T1134",
-        "T1546",
+        "T1611",
+        "T1548",
+        "T1547",
       ],
       "id": "TA0004",
       "stats": [
         "65",
-        "1 (7%)",
+        "1 (8%)",
         "65",
       ],
       "subTechniques": 0,
-      "techniques": 14,
+      "techniques": 13,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1127",
-        "T1211",
-        "T1216",
+        "T1696",
+        "T1684",
+        "T1679",
       ],
       "id": "TA0005",
       "stats": [
         "65",
-        "1 (2%)",
+        "1 (3%)",
         "65",
       ],
       "subTechniques": 0,
-      "techniques": 47,
+      "techniques": 31,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1556",
-        "T1111",
-        "T1056",
+        "T1690",
+        "T1689",
+        "T1688",
+      ],
+      "id": "TA0112",
+      "stats": [
+        "0",
+        "0 (0%)",
+        "0",
+      ],
+      "subTechniques": 0,
+      "techniques": 18,
+      "value": "0",
+      "withValue": 0,
+    },
+    {
+      "firstTechniques": [
+        "T1697",
+        "T1649",
+        "T1621",
       ],
       "id": "TA0006",
       "stats": [
         "12.5",
-        "2 (12%)",
+        "2 (11%)",
         "6",
       ],
       "subTechniques": 0,
-      "techniques": 17,
+      "techniques": 18,
       "value": "12.5",
       "withValue": 2,
     },
     {
       "firstTechniques": [
-        "T1124",
         "T1680",
-        "T1622",
+        "T1673",
+        "T1654",
       ],
       "id": "TA0007",
       "stats": [
@@ -3825,7 +3986,7 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
       "firstTechniques": [
         "T1021",
         "T1570",
-        "T1534",
+        "T1563",
       ],
       "id": "TA0008",
       "stats": [
@@ -3840,9 +4001,9 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
     },
     {
       "firstTechniques": [
-        "T1213",
-        "T1056",
-        "T1039",
+        "T1602",
+        "T1560",
+        "T1557",
       ],
       "id": "TA0009",
       "stats": [
@@ -3857,9 +4018,9 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
     },
     {
       "firstTechniques": [
-        "T1008",
         "T1665",
-        "T1132",
+        "T1659",
+        "T1573",
       ],
       "id": "TA0011",
       "stats": [
@@ -3874,9 +4035,9 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
     },
     {
       "firstTechniques": [
-        "T1052",
+        "T1700",
+        "T1567",
         "T1537",
-        "T1030",
       ],
       "id": "TA0010",
       "stats": [
@@ -3885,15 +4046,15 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
         "0",
       ],
       "subTechniques": 0,
-      "techniques": 9,
+      "techniques": 10,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1529",
-        "T1490",
-        "T1495",
+        "T1667",
+        "T1657",
+        "T1565",
       ],
       "id": "TA0040",
       "stats": [
@@ -3914,8 +4075,8 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
 exports[`render snapshots typical.json with search bar off 1`] = `
 {
   "hasSearchBar": false,
-  "htmlLength": 313155,
-  "htmlSha256": "1774a3e34bedd9bf3c0ca21c64e720827ef474fb97268e8fae7eb4199f07e07b",
+  "htmlLength": 314695,
+  "htmlSha256": "f7896219e7f133709eee50c8aecb2419b3ded77a3a505849690b88b9b88103c8",
   "legend": {
     "labels": [
       "0",
@@ -3927,9 +4088,9 @@ exports[`render snapshots typical.json with search bar off 1`] = `
   "tactics": [
     {
       "firstTechniques": [
+        "T1682",
+        "T1681",
         "T1598",
-        "T1597",
-        "T1593",
       ],
       "id": "TA0043",
       "stats": [
@@ -3938,15 +4099,15 @@ exports[`render snapshots typical.json with search bar off 1`] = `
         "0",
       ],
       "subTechniques": 34,
-      "techniques": 11,
+      "techniques": 12,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1587",
+        "T1683",
         "T1650",
-        "T1588",
+        "T1608",
       ],
       "id": "TA0042",
       "stats": [
@@ -3954,15 +4115,15 @@ exports[`render snapshots typical.json with search bar off 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 39,
-      "techniques": 8,
+      "subTechniques": 42,
+      "techniques": 9,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
         "T1669",
-        "T1189",
+        "T1659",
         "T1200",
       ],
       "id": "TA0001",
@@ -3978,94 +4139,111 @@ exports[`render snapshots typical.json with search bar off 1`] = `
     },
     {
       "firstTechniques": [
-        "T1648",
-        "T1651",
-        "T1569",
+        "T1699",
+        "T1698",
+        "T1677",
       ],
       "id": "TA0002",
       "stats": [
         "42",
-        "1 (6%)",
+        "1 (5%)",
         "42",
       ],
-      "subTechniques": 29,
-      "techniques": 17,
+      "subTechniques": 44,
+      "techniques": 22,
       "value": "42",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1556",
+        "T1671",
+        "T1668",
         "T1653",
-        "T1136",
       ],
       "id": "TA0003",
       "stats": [
         "65",
-        "1 (4%)",
+        "1 (5%)",
         "65",
       ],
-      "subTechniques": 103,
-      "techniques": 23,
+      "subTechniques": 91,
+      "techniques": 22,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1484",
-        "T1134",
-        "T1546",
+        "T1611",
+        "T1548",
+        "T1547",
       ],
       "id": "TA0004",
       "stats": [
         "65",
-        "1 (7%)",
+        "1 (8%)",
         "65",
       ],
-      "subTechniques": 95,
-      "techniques": 14,
+      "subTechniques": 83,
+      "techniques": 13,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1127",
-        "T1211",
-        "T1216",
+        "T1696",
+        "T1684",
+        "T1679",
       ],
       "id": "TA0005",
       "stats": [
         "65",
-        "1 (2%)",
+        "1 (3%)",
         "65",
       ],
-      "subTechniques": 168,
-      "techniques": 47,
+      "subTechniques": 120,
+      "techniques": 31,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1556",
-        "T1111",
-        "T1056",
+        "T1690",
+        "T1689",
+        "T1688",
+      ],
+      "id": "TA0112",
+      "stats": [
+        "0",
+        "0 (0%)",
+        "0",
+      ],
+      "subTechniques": 39,
+      "techniques": 18,
+      "value": "0",
+      "withValue": 0,
+    },
+    {
+      "firstTechniques": [
+        "T1697",
+        "T1649",
+        "T1621",
       ],
       "id": "TA0006",
       "stats": [
         "12.5",
-        "2 (12%)",
+        "2 (11%)",
         "6",
       ],
       "subTechniques": 50,
-      "techniques": 17,
+      "techniques": 18,
       "value": "12.5",
       "withValue": 2,
     },
     {
       "firstTechniques": [
-        "T1124",
         "T1680",
-        "T1622",
+        "T1673",
+        "T1654",
       ],
       "id": "TA0007",
       "stats": [
@@ -4082,7 +4260,7 @@ exports[`render snapshots typical.json with search bar off 1`] = `
       "firstTechniques": [
         "T1021",
         "T1570",
-        "T1534",
+        "T1563",
       ],
       "id": "TA0008",
       "stats": [
@@ -4097,9 +4275,9 @@ exports[`render snapshots typical.json with search bar off 1`] = `
     },
     {
       "firstTechniques": [
-        "T1213",
-        "T1056",
-        "T1039",
+        "T1602",
+        "T1560",
+        "T1557",
       ],
       "id": "TA0009",
       "stats": [
@@ -4114,9 +4292,9 @@ exports[`render snapshots typical.json with search bar off 1`] = `
     },
     {
       "firstTechniques": [
-        "T1008",
         "T1665",
-        "T1132",
+        "T1659",
+        "T1573",
       ],
       "id": "TA0011",
       "stats": [
@@ -4131,9 +4309,9 @@ exports[`render snapshots typical.json with search bar off 1`] = `
     },
     {
       "firstTechniques": [
-        "T1052",
+        "T1700",
+        "T1567",
         "T1537",
-        "T1030",
       ],
       "id": "TA0010",
       "stats": [
@@ -4142,15 +4320,15 @@ exports[`render snapshots typical.json with search bar off 1`] = `
         "0",
       ],
       "subTechniques": 10,
-      "techniques": 9,
+      "techniques": 10,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1529",
-        "T1490",
-        "T1495",
+        "T1667",
+        "T1657",
+        "T1565",
       ],
       "id": "TA0040",
       "stats": [
@@ -4171,8 +4349,8 @@ exports[`render snapshots typical.json with search bar off 1`] = `
 exports[`render snapshots typical.json with sort by id desc 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 313437,
-  "htmlSha256": "c197b0c88406491b0f6858f66f57b4dcfc0ee940f3eef51614ec9b2fe92bb3bd",
+  "htmlLength": 314977,
+  "htmlSha256": "ed4dc8fa4bcf4f95b1d12d3e8b0113f308d0f9ab30bbcda9cc3f6994e729f5ba",
   "legend": {
     "labels": [
       "0",
@@ -4184,9 +4362,9 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
   "tactics": [
     {
       "firstTechniques": [
+        "T1682",
         "T1681",
         "T1598",
-        "T1597",
       ],
       "id": "TA0043",
       "stats": [
@@ -4195,15 +4373,15 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
         "0",
       ],
       "subTechniques": 34,
-      "techniques": 11,
+      "techniques": 12,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
+        "T1683",
         "T1650",
         "T1608",
-        "T1588",
       ],
       "id": "TA0042",
       "stats": [
@@ -4211,8 +4389,8 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 39,
-      "techniques": 8,
+      "subTechniques": 42,
+      "techniques": 9,
       "value": "0",
       "withValue": 0,
     },
@@ -4235,18 +4413,18 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
     },
     {
       "firstTechniques": [
+        "T1699",
+        "T1698",
         "T1677",
-        "T1675",
-        "T1674",
       ],
       "id": "TA0002",
       "stats": [
         "42",
-        "1 (6%)",
+        "1 (5%)",
         "42",
       ],
-      "subTechniques": 29,
-      "techniques": 17,
+      "subTechniques": 44,
+      "techniques": 22,
       "value": "42",
       "withValue": 1,
     },
@@ -4259,62 +4437,79 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
       "id": "TA0003",
       "stats": [
         "65",
-        "1 (4%)",
+        "1 (5%)",
         "65",
       ],
-      "subTechniques": 103,
-      "techniques": 23,
+      "subTechniques": 91,
+      "techniques": 22,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
         "T1611",
-        "T1574",
         "T1548",
+        "T1547",
       ],
       "id": "TA0004",
       "stats": [
         "65",
-        "1 (7%)",
+        "1 (8%)",
         "65",
       ],
-      "subTechniques": 95,
-      "techniques": 14,
+      "subTechniques": 83,
+      "techniques": 13,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
+        "T1696",
+        "T1684",
         "T1679",
-        "T1678",
-        "T1672",
       ],
       "id": "TA0005",
       "stats": [
         "65",
-        "1 (2%)",
+        "1 (3%)",
         "65",
       ],
-      "subTechniques": 168,
-      "techniques": 47,
+      "subTechniques": 120,
+      "techniques": 31,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
+        "T1690",
+        "T1689",
+        "T1688",
+      ],
+      "id": "TA0112",
+      "stats": [
+        "0",
+        "0 (0%)",
+        "0",
+      ],
+      "subTechniques": 39,
+      "techniques": 18,
+      "value": "0",
+      "withValue": 0,
+    },
+    {
+      "firstTechniques": [
+        "T1697",
         "T1649",
         "T1621",
-        "T1606",
       ],
       "id": "TA0006",
       "stats": [
         "12.5",
-        "2 (12%)",
+        "2 (11%)",
         "6",
       ],
       "subTechniques": 50,
-      "techniques": 17,
+      "techniques": 18,
       "value": "12.5",
       "withValue": 2,
     },
@@ -4388,9 +4583,9 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
     },
     {
       "firstTechniques": [
+        "T1700",
         "T1567",
         "T1537",
-        "T1052",
       ],
       "id": "TA0010",
       "stats": [
@@ -4399,7 +4594,7 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
         "0",
       ],
       "subTechniques": 10,
-      "techniques": 9,
+      "techniques": 10,
       "value": "0",
       "withValue": 0,
     },
@@ -4428,8 +4623,8 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
 exports[`render snapshots typical.json with sort by name asc 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 313437,
-  "htmlSha256": "ff1f462856d51c22a914854f06ded15f8a339a04d7c30702407fda29ecc1f2a2",
+  "htmlLength": 314977,
+  "htmlSha256": "6dd40311c01e6ce4820a1c4e278593c801b29baacd4576d4e6af9a1c34fcd2b0",
   "legend": {
     "labels": [
       "0",
@@ -4452,7 +4647,7 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
         "0",
       ],
       "subTechniques": 34,
-      "techniques": 11,
+      "techniques": 12,
       "value": "0",
       "withValue": 0,
     },
@@ -4468,8 +4663,8 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 39,
-      "techniques": 8,
+      "subTechniques": 42,
+      "techniques": 9,
       "value": "0",
       "withValue": 0,
     },
@@ -4492,18 +4687,18 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
     },
     {
       "firstTechniques": [
+        "T1197",
         "T1651",
         "T1059",
-        "T1609",
       ],
       "id": "TA0002",
       "stats": [
         "42",
-        "1 (6%)",
+        "1 (5%)",
         "42",
       ],
-      "subTechniques": 29,
-      "techniques": 17,
+      "subTechniques": 44,
+      "techniques": 22,
       "value": "42",
       "withValue": 1,
     },
@@ -4516,11 +4711,11 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
       "id": "TA0003",
       "stats": [
         "65",
-        "1 (4%)",
+        "1 (5%)",
         "65",
       ],
-      "subTechniques": 103,
-      "techniques": 23,
+      "subTechniques": 91,
+      "techniques": 22,
       "value": "65",
       "withValue": 1,
     },
@@ -4533,30 +4728,47 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
       "id": "TA0004",
       "stats": [
         "65",
-        "1 (7%)",
+        "1 (8%)",
         "65",
       ],
-      "subTechniques": 95,
-      "techniques": 14,
+      "subTechniques": 83,
+      "techniques": 13,
       "value": "65",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1548",
         "T1134",
+        "T1696",
         "T1197",
       ],
       "id": "TA0005",
       "stats": [
         "65",
-        "1 (2%)",
+        "1 (3%)",
         "65",
       ],
-      "subTechniques": 168,
-      "techniques": 47,
+      "subTechniques": 120,
+      "techniques": 31,
       "value": "65",
       "withValue": 1,
+    },
+    {
+      "firstTechniques": [
+        "T1686",
+        "T1685",
+        "T1484",
+      ],
+      "id": "TA0112",
+      "stats": [
+        "0",
+        "0 (0%)",
+        "0",
+      ],
+      "subTechniques": 39,
+      "techniques": 18,
+      "value": "0",
+      "withValue": 0,
     },
     {
       "firstTechniques": [
@@ -4567,11 +4779,11 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
       "id": "TA0006",
       "stats": [
         "12.5",
-        "2 (12%)",
+        "2 (11%)",
         "6",
       ],
       "subTechniques": 50,
-      "techniques": 17,
+      "techniques": 18,
       "value": "12.5",
       "withValue": 2,
     },
@@ -4645,9 +4857,9 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
     },
     {
       "firstTechniques": [
+        "T1700",
         "T1020",
         "T1030",
-        "T1048",
       ],
       "id": "TA0010",
       "stats": [
@@ -4656,7 +4868,7 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
         "0",
       ],
       "subTechniques": 10,
-      "techniques": 9,
+      "techniques": 10,
       "value": "0",
       "withValue": 0,
     },
@@ -4685,8 +4897,8 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
 exports[`render snapshots wide.json with defaults 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 311397,
-  "htmlSha256": "9bea878544d1c57044e976c9b4faaf8d15828f9a5354d5d3f0775a91f3e8116e",
+  "htmlLength": 312937,
+  "htmlSha256": "106624b420e4c52953bc03b462954c480c96032bd987413916d18725152f9e30",
   "legend": {
     "labels": [
       "0",
@@ -4698,9 +4910,9 @@ exports[`render snapshots wide.json with defaults 1`] = `
   "tactics": [
     {
       "firstTechniques": [
+        "T1682",
+        "T1681",
         "T1598",
-        "T1597",
-        "T1593",
       ],
       "id": "TA0043",
       "stats": [
@@ -4709,15 +4921,15 @@ exports[`render snapshots wide.json with defaults 1`] = `
         "0",
       ],
       "subTechniques": 34,
-      "techniques": 11,
+      "techniques": 12,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1587",
+        "T1683",
         "T1650",
-        "T1588",
+        "T1608",
       ],
       "id": "TA0042",
       "stats": [
@@ -4725,16 +4937,16 @@ exports[`render snapshots wide.json with defaults 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 39,
-      "techniques": 8,
+      "subTechniques": 42,
+      "techniques": 9,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
         "T1669",
-        "T1189",
-        "T1200",
+        "T1659",
+        "T1566",
       ],
       "id": "TA0001",
       "stats": [
@@ -4749,9 +4961,9 @@ exports[`render snapshots wide.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1648",
-        "T1651",
-        "T1569",
+        "T1699",
+        "T1698",
+        "T1677",
       ],
       "id": "TA0002",
       "stats": [
@@ -4759,16 +4971,16 @@ exports[`render snapshots wide.json with defaults 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 29,
-      "techniques": 17,
+      "subTechniques": 44,
+      "techniques": 22,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1556",
+        "T1671",
+        "T1668",
         "T1653",
-        "T1136",
       ],
       "id": "TA0003",
       "stats": [
@@ -4776,16 +4988,16 @@ exports[`render snapshots wide.json with defaults 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 103,
-      "techniques": 23,
+      "subTechniques": 91,
+      "techniques": 22,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1484",
-        "T1134",
-        "T1546",
+        "T1611",
+        "T1548",
+        "T1547",
       ],
       "id": "TA0004",
       "stats": [
@@ -4793,16 +5005,16 @@ exports[`render snapshots wide.json with defaults 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 95,
-      "techniques": 14,
+      "subTechniques": 83,
+      "techniques": 13,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1127",
-        "T1211",
-        "T1216",
+        "T1696",
+        "T1684",
+        "T1679",
       ],
       "id": "TA0005",
       "stats": [
@@ -4810,16 +5022,33 @@ exports[`render snapshots wide.json with defaults 1`] = `
         "0 (0%)",
         "0",
       ],
-      "subTechniques": 168,
-      "techniques": 47,
+      "subTechniques": 120,
+      "techniques": 31,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1556",
-        "T1111",
-        "T1056",
+        "T1690",
+        "T1689",
+        "T1688",
+      ],
+      "id": "TA0112",
+      "stats": [
+        "0",
+        "0 (0%)",
+        "0",
+      ],
+      "subTechniques": 39,
+      "techniques": 18,
+      "value": "0",
+      "withValue": 0,
+    },
+    {
+      "firstTechniques": [
+        "T1697",
+        "T1649",
+        "T1621",
       ],
       "id": "TA0006",
       "stats": [
@@ -4828,15 +5057,15 @@ exports[`render snapshots wide.json with defaults 1`] = `
         "0",
       ],
       "subTechniques": 50,
-      "techniques": 17,
+      "techniques": 18,
       "value": "0",
       "withValue": 0,
     },
     {
       "firstTechniques": [
-        "T1124",
         "T1680",
-        "T1622",
+        "T1673",
+        "T1654",
       ],
       "id": "TA0007",
       "stats": [
@@ -4852,8 +5081,8 @@ exports[`render snapshots wide.json with defaults 1`] = `
     {
       "firstTechniques": [
         "T1570",
-        "T1534",
-        "T1210",
+        "T1563",
+        "T1550",
       ],
       "id": "TA0008",
       "stats": [
@@ -4868,9 +5097,9 @@ exports[`render snapshots wide.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1213",
-        "T1056",
-        "T1039",
+        "T1602",
+        "T1560",
+        "T1557",
       ],
       "id": "TA0009",
       "stats": [
@@ -4885,9 +5114,9 @@ exports[`render snapshots wide.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1008",
         "T1665",
-        "T1105",
+        "T1659",
+        "T1573",
       ],
       "id": "TA0011",
       "stats": [
@@ -4902,26 +5131,26 @@ exports[`render snapshots wide.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1052",
+        "T1700",
+        "T1567",
         "T1537",
-        "T1030",
       ],
       "id": "TA0010",
       "stats": [
         "90",
-        "1 (11%)",
+        "1 (10%)",
         "90",
       ],
       "subTechniques": 10,
-      "techniques": 9,
+      "techniques": 10,
       "value": "90",
       "withValue": 1,
     },
     {
       "firstTechniques": [
-        "T1529",
-        "T1490",
-        "T1495",
+        "T1667",
+        "T1657",
+        "T1565",
       ],
       "id": "TA0040",
       "stats": [
