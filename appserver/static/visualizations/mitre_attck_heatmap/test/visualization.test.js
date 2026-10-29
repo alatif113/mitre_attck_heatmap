@@ -387,6 +387,13 @@ describe('search bar', () => {
         expect(viz.el.querySelectorAll('.mtr-technique.defocused').length).toBeGreaterThan(100);
     });
 
+    test('finds names containing characters that HTML escaping would change (audit P2-7)', () => {
+        const viz = render(Viz, loadFixture('single-row.json'), { matrix: 'ics::' });
+        search(viz, 'Point & Tag');
+        const focused = Array.from(viz.el.querySelectorAll('.mtr-technique.focused')).map(el => el.getAttribute('data-name'));
+        expect(focused).toEqual(['Point & Tag Identification']);
+    });
+
     test('clearing the search removes focus classes', () => {
         const viz = render(Viz, loadFixture('typical.json'));
         search(viz, 'T1059');

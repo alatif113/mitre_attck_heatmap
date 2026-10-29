@@ -372,7 +372,8 @@ return SplunkVisualizationBase.extend({
 
         if (showSearchBar) {
             $('input', $searchbar).on('change', function() {
-                let value = vizUtils.escapeHtml(this.value).toLowerCase();
+                // Compared with attribute values, not written into HTML, so no escaping.
+                let value = this.value.toLowerCase();
                 if(value == '' || value == null) {
                     $('.mtr-technique', $content).removeClass('focused').removeClass('defocused');
                 } else {
