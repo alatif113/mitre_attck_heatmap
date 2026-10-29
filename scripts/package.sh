@@ -7,7 +7,9 @@
 # Steps: npm ci -> npm run build -> verify visualization.js is fresh -> tar.
 # The archive is written to the app root and contains a single top-level
 # <app_id>/ directory, as Splunk expects. node_modules, tests and local/ are
-# left out, along with this scripts/ directory and hidden files (.git,
+# left out, along with bin/ (the data converter is a development tool that
+# downloads files and writes into the app, which Splunk Cloud vetting flags),
+# this scripts/ directory and hidden files (.git,
 # .gitignore, .slimignore, .env, .DS_Store), which AppInspect rejects.
 # iCloud conflict copies such as "visualization 2.js" are skipped too.
 #
@@ -86,6 +88,7 @@ rsync -am \
     --exclude='test' \
     --exclude='tests' \
     --exclude='/local/' \
+    --exclude='/bin/' \
     --exclude='/scripts/' \
     --exclude='/*.tgz' \
     --exclude='.git' \
@@ -107,7 +110,7 @@ tar -czf "$ARCHIVE" -C "$STAGE" "$APP_ID"
 
 echo "==> Checking archive"
 LISTING="$(tar -tzf "$ARCHIVE")"
-if echo "$LISTING" | grep -Eq '(^|/)(node_modules|test|tests)(/|$)|^[^/]+/local(/|$)|(^|/)\.env$'; then
+if echo "$LISTING" | grep -Eq '(^|/)(node_modules|test|tests)(/|$)|^[^/]+/(local|bin)(/|$)|(^|/)\.env$'; then
     die "archive contains excluded paths"
 fi
 ARCHIVED_VISIBLE="$(tar -xzOf "$ARCHIVE" "$APP_ID/default/app.conf" | sed -nE 's/^is_visible[[:space:]]*=[[:space:]]*([01]).*/\1/p')"
