@@ -3,7 +3,6 @@
  */
 define([
     'jquery',
-    'underscore',
     'api/SplunkVisualizationBase',
     'api/SplunkVisualizationUtils',
     'enterpriseAttack',
@@ -15,7 +14,6 @@ define([
 ],
 function(
     $,
-    _,
     SplunkVisualizationBase,
     vizUtils,
     enterpriseAttack,

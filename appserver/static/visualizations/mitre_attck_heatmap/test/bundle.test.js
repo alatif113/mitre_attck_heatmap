@@ -17,6 +17,12 @@ afterEach(() => {
     document.body.innerHTML = '';
 });
 
+test('the bundle does not include Underscore, which the visualization does not use (audit P2-10)', () => {
+    const text = require('fs').readFileSync(require('path').join(__dirname, '../visualization.js'), 'utf8');
+    expect(text).not.toContain('Underscore.js');
+    expect(text.split('\n').length).toBeLessThan(12000);
+});
+
 test.each(scenarios())('$fixture with $name renders identically', ({ fixture, options }) => {
     const data = loadFixture(fixture);
     const fromSource = render(Source, data, options).el.innerHTML;
