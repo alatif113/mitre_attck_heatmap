@@ -4,6 +4,7 @@
   "description": "Jest harness for the heatmap visualization. Kept separate from the build package so installing Jest cannot shift the pinned Babel/browserslist versions the webpack 1 build depends on.",
   "scripts": {
     "test": "jest",
+    "test:python": "python3 -I -m unittest discover -s python -p 'test_*.py'",
     "test:coverage": "jest --coverage"
   },
   "devDependencies": {
