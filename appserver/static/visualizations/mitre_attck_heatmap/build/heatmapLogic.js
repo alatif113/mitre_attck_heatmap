@@ -432,8 +432,16 @@ define(function() {
     // The REST URL of a matrix's records in the KV Store, through Splunk Web's
     // splunkd proxy, derived from the page's own path (which has the optional
     // root endpoint and the locale in front: /<root>/<locale>/app/...).
-    function kvStoreUrl(pathname, matrix) {
-        let match = String(pathname || '').match(/^(.*?)\/([A-Za-z]{2}(?:-[A-Za-z]{2,4})?)\/(?:app|manager|dashboards|embed|dj)(?:\/|$)/);
+    // `pathnames` is one path or a list of candidates; the first that looks like a
+    // Splunk Web page wins (inside a Dashboard Studio iframe the document's own
+    // path is meaningless, but its base URL is the dashboard's).
+    function kvStoreUrl(pathnames, matrix) {
+        let pattern = /^(.*?)\/([A-Za-z]{2}(?:-[A-Za-z]{2,4})?)\/(?:app|manager|dashboards|embed|dj)(?:\/|$)/;
+        let match = null;
+        [].concat(pathnames).some(function(pathname) {
+            match = String(pathname || '').match(pattern);
+            return !!match;
+        });
         let base = match ? match[1] + '/' + match[2] : '/en-US';
         return base + '/splunkd/__raw/servicesNS/nobody/mitre_attck_heatmap/storage/collections/data/' + KV_COLLECTION +
             '?query=' + encodeURIComponent(JSON.stringify({ matrix: matrix }));

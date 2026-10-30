@@ -531,3 +531,57 @@
 .mtr-compact.mtr-short .mtr-legend {
 	display: none;
 }
+
+/* Tooltip paragraphs. The same reset exists above for classic dashboards; this one does
+   not depend on their page structure, so it also applies inside Dashboard Studio. */
+.mtr-technique-tooltip .mtr-desc p {
+	padding: 0;
+	margin: 0;
+	margin-top: 0.5em;
+}
+
+/* Shown instead of a download where the browser blocks downloads (Dashboard Studio). */
+.mtr-export-dialog {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(0, 0, 0, 0.45);
+}
+
+.mtr-export-panel {
+	box-sizing: border-box;
+	width: min(90%, 640px);
+	padding: 1rem;
+	border-radius: 6px;
+	background: Canvas;
+	color: CanvasText;
+}
+
+.mtr-export-note {
+	margin: 0 0 0.5rem;
+	font-size: var(--mtr-font-small);
+}
+
+.mtr-export-text {
+	box-sizing: border-box;
+	width: 100%;
+	height: 12rem;
+	font-family: monospace;
+	font-size: var(--mtr-font-xsmall);
+}
+
+.mtr-export-actions {
+	margin-top: 0.5rem;
+	text-align: right;
+}
+
+.mtr-export-actions button {
+	margin-left: 0.5rem;
+	cursor: pointer;
+}

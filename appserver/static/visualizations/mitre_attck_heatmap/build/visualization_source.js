@@ -368,6 +368,11 @@ return SplunkVisualizationBase.extend({
                 return false;
             });
 
+            // A sandboxed iframe cannot open new windows, so show the address as text.
+            if (self._isSandboxed()) {
+                $('.mtr-ref', $tooltip).text(url);
+            }
+
             let status = $(this).attr('data-status');
             if (status) {
                 let $badge = $('<div class="mtr-status"><span class="mtr-status-swatch"></span><span class="mtr-status-text"></span></div>');
@@ -642,9 +647,71 @@ return SplunkVisualizationBase.extend({
         })
     },
 
+    // A panel with the exported text in a box, for places where a file cannot be downloaded.
+    _showExportText: function(filename, text) {
+        $('.mtr-export-dialog', this.$el).remove();
+        let $dialog = $(
+            '<div class="mtr-export-dialog" role="dialog">' +
+                '<div class="mtr-export-panel">' +
+                    '<p class="mtr-export-note"></p>' +
+                    '<textarea class="mtr-export-text" readonly></textarea>' +
+                    '<div class="mtr-export-actions">' +
+                        '<button type="button" class="mtr-export-copy">Copy</button>' +
+                        '<button type="button" class="mtr-export-close">Close</button>' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+        );
+        $('.mtr-export-note', $dialog).text(
+            'This dashboard does not allow a visualization to download files. Copy the layer and save it as ' + filename + '.'
+        );
+        $('.mtr-export-text', $dialog).val(text);
+        $('.mtr-export-copy', $dialog).on('click', function() {
+            let box = $('.mtr-export-text', $dialog)[0];
+            box.focus();
+            box.select();
+            let copied = false;
+            try {
+                copied = document.execCommand('copy');
+            } catch (error) {
+                copied = false;
+            }
+            $(this).text(copied ? 'Copied' : 'Press Ctrl+C to copy');
+        });
+        $('.mtr-export-close', $dialog).on('click', function() {
+            $dialog.remove();
+        });
+        $dialog.appendTo(this.$el);
+    },
+
     // The matrix records in the KV Store, as parsed JSON.
+    // fetch rather than XMLHttpRequest: inside a Dashboard Studio iframe (sandboxed, no
+    // cookies of its own) Splunk replaces fetch with a version that makes same-origin
+    // requests through the dashboard page; XMLHttpRequest would not be proxied.
     _fetchRecords: function(url) {
-        return Promise.resolve($.ajax({ url: url, dataType: 'json', cache: false }));
+        return fetch(url, { credentials: 'same-origin', headers: { Accept: 'application/json' } }).then(function(response) {
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            return response.json();
+        });
+    },
+
+    // True when the visualization runs in a sandboxed iframe (as in Dashboard Studio): it
+    // has no origin of its own, cannot download files and cannot open new windows.
+    _isSandboxed: function() {
+        return window.origin === 'null' || window.location.protocol === 'about:';
+    },
+
+    // The KV Store URL for a matrix. The document's base URL is tried first: inside a
+    // Studio iframe (a srcdoc document) it is the dashboard page, while location is not.
+    _matrixUrl: function(matrix) {
+        let paths = [];
+        try {
+            paths.push(new URL(document.baseURI).pathname);
+        } catch (error) {
+            // no usable base URL
+        }
+        paths.push(window.location.pathname);
+        return logic.kvStoreUrl(paths, matrix);
     },
 
     // The imported matrix to use, or null (nothing imported, no such version,
@@ -654,7 +721,7 @@ return SplunkVisualizationBase.extend({
         let cached = matrixCache.get(key);
         if (cached && Date.now() - cached.at < MATRIX_CACHE_MS) return cached.promise;
 
-        let promise = this._fetchRecords(logic.kvStoreUrl(window.location.pathname, matrix)).then(function(records) {
+        let promise = this._fetchRecords(this._matrixUrl(matrix)).then(function(records) {
             let record = logic.pickMatrixRecord(records, matrix, attackVersion);
             return record ? logic.parseMatrixRecord(record) : null;
         }).catch(function() {
@@ -674,6 +741,10 @@ return SplunkVisualizationBase.extend({
 
     // Saves text as a file through the browser; no request is made.
     _download: function(filename, text) {
+        // A sandboxed iframe cannot download files; offer the text to copy instead.
+        if (this._isSandboxed()) {
+            return this._showExportText(filename, text);
+        }
         let url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
         let link = document.createElement('a');
         link.href = url;

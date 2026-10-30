@@ -55,7 +55,10 @@ function buildNavigatorLayer(model){var versions={};if(model.attackVersion)versi
 var KV_COLLECTION="mitre_matrix";var IMPORTED_MATRICES=["enterprise","ics","mobile"];// The REST URL of a matrix's records in the KV Store, through Splunk Web's
 // splunkd proxy, derived from the page's own path (which has the optional
 // root endpoint and the locale in front: /<root>/<locale>/app/...).
-function kvStoreUrl(pathname,matrix){var match=String(pathname||"").match(/^(.*?)\/([A-Za-z]{2}(?:-[A-Za-z]{2,4})?)\/(?:app|manager|dashboards|embed|dj)(?:\/|$)/);var base=match?match[1]+"/"+match[2]:"/en-US";return base+"/splunkd/__raw/servicesNS/nobody/mitre_attck_heatmap/storage/collections/data/"+KV_COLLECTION+"?query="+encodeURIComponent(JSON.stringify({matrix:matrix}))}// Compares dotted numeric versions: "20.1" > "20.0" > "9.2". Returns -1, 0 or 1.
+// `pathnames` is one path or a list of candidates; the first that looks like a
+// Splunk Web page wins (inside a Dashboard Studio iframe the document's own
+// path is meaningless, but its base URL is the dashboard's).
+function kvStoreUrl(pathnames,matrix){var pattern=/^(.*?)\/([A-Za-z]{2}(?:-[A-Za-z]{2,4})?)\/(?:app|manager|dashboards|embed|dj)(?:\/|$)/;var match=null;[].concat(pathnames).some(function(pathname){match=String(pathname||"").match(pattern);return!!match});var base=match?match[1]+"/"+match[2]:"/en-US";return base+"/splunkd/__raw/servicesNS/nobody/mitre_attck_heatmap/storage/collections/data/"+KV_COLLECTION+"?query="+encodeURIComponent(JSON.stringify({matrix:matrix}))}// Compares dotted numeric versions: "20.1" > "20.0" > "9.2". Returns -1, 0 or 1.
 function compareVersions(a,b){var left=String(a).split(".").map(function(part){return parseInt(part,10)||0});var right=String(b).split(".").map(function(part){return parseInt(part,10)||0});for(var i=0;i<Math.max(left.length,right.length);i++){var difference=(left[i]||0)-(right[i]||0);if(difference)return difference<0?-1:1}return 0}// The record to use: the highest version, or with a pin the highest version
 // equal to it ("20.0") or, for a pin without a dot ("20"), within it.
 // Returns null when nothing qualifies.
