@@ -9,7 +9,7 @@ import unittest
 from common import bundle
 import enterpriseAttack2json as cli
 from mitre_attck import output
-from test_d3fend import ONTOLOGY
+from test_d3fend import BIG_ONTOLOGY as ONTOLOGY
 
 MODULES = ['enterpriseAttack.js', 'icsAttack.js', 'mobileAttack.js', 'd3fend.js']
 

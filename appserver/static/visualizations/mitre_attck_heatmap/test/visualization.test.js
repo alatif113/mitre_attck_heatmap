@@ -954,3 +954,49 @@ test('requests row-major output', () => {
 test('mock namespace matches savedsearches.conf keys', () => {
     expect(Object.keys(buildConfig()).every(key => key.startsWith(NAMESPACE))).toBe(true);
 });
+
+
+describe('D3FEND (audit P1-1)', () => {
+    const cell = (viz, id) => viz.el.querySelector('.mtr-technique[data-id="' + id + '"]');
+    const rows = [['D3-AI', '10'], ['D3-HCI', '30'], ['D3-CH', '5'], ['D3-ABPI', '8']];
+    const draw = options => render(Viz, { fields: [{ name: 'id' }, { name: 'count' }], rows }, Object.assign({ matrix: 'd3fend::' }, options));
+
+    test('shows seven tactic columns with the techniques in them', () => {
+        const viz = draw();
+        const columns = Array.from(viz.el.querySelectorAll('.mtr-tactic-col')).map(c => c.getAttribute('data-name'));
+        expect(columns).toEqual(['Model', 'Harden', 'Detect', 'Isolate', 'Deceive', 'Evict', 'Restore']);
+        expect(viz.el.querySelector('.mtr-tactic-col[data-name="Model"] .mtr-technique[data-id="D3-AI"]')).not.toBeNull();
+        expect(viz.el.querySelector('.mtr-tactic-col[data-name="Harden"] .mtr-technique[data-id="D3-CH"]')).not.toBeNull();
+        expect(viz.el.querySelectorAll('.mtr-technique').length).toBe(30);
+    });
+
+    test('a sub-technique attaches to its technique and is listed in its tooltip with its own id', () => {
+        const viz = draw();
+        expect(viz.el.querySelector('.mtr-technique-container[data-id="D3-AI"] .mtr-sub-technique[data-id="D3-HCI"]')).not.toBeNull();
+        $(cell(viz, 'D3-AI')).trigger('mouseenter');
+        const first = viz.el.querySelector('.mtr-sub-row');
+        expect(first.querySelector('.mtr-sub-id').textContent).toBe('D3-HCI');
+        expect(first.querySelector('.mtr-sub-val').textContent).toBe('30');
+        expect(viz.el.querySelector('.mtr-corner, .mtr-technique[data-id="D3-AI"]').classList.contains('mtr-has-subs')).toBe(true);
+        $(first).trigger('click');
+        expect(viz.drilldowns[0].data).toMatchObject({ 'mtr_sub-technique_id': 'D3-HCI', mtr_technique_id: 'D3-AI', mtr_tactic_name: 'Model' });
+    });
+
+    test('a sub-technique deeper in the ontology still reaches its technique', () => {
+        const viz = draw();
+        expect(viz.el.querySelector('.mtr-technique-container[data-id="D3-EI"] .mtr-sub-technique[data-id="D3-ABPI"]')).not.toBeNull();
+    });
+
+    test('roll-up works: sub-technique values reach their technique', () => {
+        const viz = draw({ rollup: 'sum' });
+        const rows2 = [['D3-HCI', '30'], ['D3-ALLM', '12']];
+        const rolled = render(Viz, { fields: [{ name: 'id' }, { name: 'count' }], rows: rows2 }, { matrix: 'd3fend::', rollup: 'sum' });
+        expect(cell(rolled, 'D3-AI').getAttribute('data-value')).toBe('30');
+        expect(viz).toBeDefined();
+    });
+
+    test('ID display shows full D3FEND ids in the cells', () => {
+        const viz = draw();
+        expect(cell(viz, 'D3-CH').querySelector('.mtr-cell-id').textContent).toBe('D3-CH');
+    });
+});

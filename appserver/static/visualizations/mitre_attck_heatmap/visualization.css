@@ -788,7 +788,8 @@
 
 .mtr-sub-id {
 	flex: none;
-	width: 34px;
+	/* ATT&CK's ".001" fits; D3FEND's "D3-ABPI" is wider. */
+	min-width: 34px;
 	font-family: var(--mtr-mono);
 	font-size: 10.5px;
 	color: var(--mtr-muted);

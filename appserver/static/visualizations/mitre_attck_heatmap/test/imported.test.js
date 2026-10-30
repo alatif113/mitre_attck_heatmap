@@ -204,7 +204,8 @@ describe('rendering', () => {
         const viz = await draw([record('20.0')], { matrix: 'd3fend::' });
         expect(viz._fetchRecords).not.toHaveBeenCalled();
         expect(viz.el.querySelector('.mtr-notice')).toBeNull();
-        expect(viz.el.querySelectorAll('.mtr-tactic-col').length).toBeGreaterThan(10);
+        expect(Array.from(viz.el.querySelectorAll('.mtr-tactic-col')).map(c => c.getAttribute('data-name')))
+            .toEqual(['Model', 'Harden', 'Detect', 'Isolate', 'Deceive', 'Evict', 'Restore']);
     });
 
     test('panels on one page share a single request, and a failure is retried', async () => {
