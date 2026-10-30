@@ -7,7 +7,9 @@
 # Steps: npm ci -> npm run build -> verify visualization.js is fresh -> tar.
 # The archive is written to the app root and contains a single top-level
 # <app_id>/ directory, as Splunk expects. node_modules, tests and local/ are
-# left out, along with bin/enterpriseAttack2json.py (the offline converter is a
+# left out, along with the build sources (build/, src/, webpack and Babel configs,
+# package.json): Splunk loads only the built visualization.js, visualization.css,
+# formatter.html and preview.png. Also left out: bin/enterpriseAttack2json.py (the offline converter is a
 # development tool that writes into the app, which Splunk Cloud vetting flags;
 # the scripted input bin/import_matrices.py and its package ship),
 # this scripts/ directory and hidden files (.git,
@@ -101,6 +103,12 @@ rsync -am \
     --exclude='/images/' \
     --exclude='/docs/' \
     --exclude='/CLAUDE.md' \
+    --exclude='/appserver/static/visualizations/*/build/' \
+    --exclude='/appserver/static/visualizations/*/src/' \
+    --exclude='/appserver/static/visualizations/*/babel.config.json' \
+    --exclude='/appserver/static/visualizations/*/webpack.config.js' \
+    --exclude='/appserver/static/visualizations/*/package.json' \
+    --exclude='/appserver/static/visualizations/*/package-lock.json' \
     --exclude='/*.tgz' \
     --exclude='.git' \
     --exclude='.env' \
@@ -134,6 +142,9 @@ LISTING="$(tar -tzf "$ARCHIVE")"
 if echo "$LISTING" | grep -Eq '(^|/)(node_modules|test|tests)(/|$)|^[^/]+/local(/|$)|enterpriseAttack2json|^[^/]+/(images|docs)(/|$)|^[^/]+/CLAUDE\.md$|__pycache__|\.pyc$|(^|/)\.env$'; then
     die "archive contains excluded paths"
 fi
+# The visualization folder ships only what Splunk loads.
+EXTRA="$(echo "$LISTING" | grep -E "^$APP_ID/appserver/static/visualizations/[^/]+/." | grep -Ev "/(visualization\.js|visualization\.css|formatter\.html|preview\.png)$" || true)"
+[ -z "$EXTRA" ] || die "visualization folder contains build files: $EXTRA"
 ARCHIVED_VISIBLE="$(tar -xzOf "$ARCHIVE" "$APP_ID/default/app.conf" | sed -nE 's/^is_visible[[:space:]]*=[[:space:]]*([01]).*/\1/p')"
 [ "$ARCHIVED_VISIBLE" = "$IS_VISIBLE" ] || die "archived app.conf has is_visible=$ARCHIVED_VISIBLE, expected $IS_VISIBLE"
 if [ "$APP_ENV" = test ]; then

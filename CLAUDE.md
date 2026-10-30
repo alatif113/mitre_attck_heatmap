@@ -25,7 +25,7 @@ npm run devbuild   # webpack only (uses $SPLUNK_HOME); skips babel/terser, so sr
 
 `npm run build` runs webpack with system Node, so no Splunk install is needed (verified byte-for-byte against the committed artifacts with Node 22 after `npm ci`). `npm run build:splunk` is the old variant that uses `/Applications/Splunk/bin/splunk cmd node`. The webpack version is 1.x and relies on `resolve.root`. Its externals are `api/SplunkVisualizationBase` and `api/SplunkVisualizationUtils`, which Splunk provides at runtime. `node_modules/` is not checked in.
 
-`.slimignore` keeps `build/`, `src/`, the package files and the webpack/babel configs out of the packaged app. The shipped viz is only `visualization.js`, `visualization.css`, `formatter.html` and `preview.png`.
+`scripts/package.sh` (and `.slimignore`) keep `build/`, `src/`, the package files and the webpack/babel configs out of the packaged app, and the script fails if anything else lands in the visualization folder. The shipped viz is only `visualization.js`, `visualization.css`, `formatter.html` and `preview.png`.
 
 ## Tests
 
@@ -68,7 +68,7 @@ Data flow in `updateView`: resolve fields â†’ parse rows into one entry per id â
 
 - `scripts/package.sh` builds and writes `<app_id>.tgz` into the app root. `APP_ENV=production` (default) packages the app hidden (`is_visible = 0`) without the test bench; `APP_ENV=test` makes it visible and adds `default/data/ui/nav/default.xml`, the test bench dashboard (`mitre_heatmap_testbench.xml`) and `lookups/mitre_heatmap_test.csv`. Visibility is rewritten in the staged copy only; `default/app.conf` in the repo stays `is_visible = 0`.
 - `scripts/deploy_dev.sh` packages with `APP_ENV=test` (unless set), scp's the archive to the dev host, then installs it through the REST API. `--ssh-install` (with `--restart`) unpacks it over ssh instead, for when REST is unavailable (a Free license answers every REST call with 401). Test packages get a fresh `build` number so browsers load the new static files. Settings live in the git-ignored `.env`; see the script header.
-- The package ships `bin/import_matrices.py` and `bin/mitre_attck/` (the scripted input) but not `bin/enterpriseAttack2json.py`, `scripts/`, `.env`, tests or hidden files.
+- The package ships `bin/import_matrices.py` and `bin/mitre_attck/` (the scripted input) but not `bin/enterpriseAttack2json.py`, `scripts/`, `docs/`, `images/`, `CLAUDE.md`, `.env`, tests or hidden files.
 - The repo sits in iCloud Drive, which can create duplicates such as `visualization 2.js`. The package script skips names like that, but they are worth deleting.
 
 ## Dashboard Studio
