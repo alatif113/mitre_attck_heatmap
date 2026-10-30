@@ -1,60 +1,418 @@
-:root {
-	--mtr-bg-black: #000000;
-	--mtr-bg-gray-dark: #31373E;
-	--mtr-bg-gray-med: #3C444D;
-	--mtr-bg-gray-light: #f1f4f5;
-	--mtr-text-white: #FFFFFF;
-	--mtr-text-black: #000000;
-	--mtr-text-gray: rgb(175, 182, 189);
-	--mtr-transition-short: all cubic-bezier(0.65, 0.05, 0.36, 1) 200ms;
-    --mtr-transition-long: all cubic-bezier(0.65, 0.05, 0.36, 1) 500ms;
-	--mtr-font-xlarge: 1.4rem;
-	--mtr-font-large: 1.2rem;
-	--mtr-font-medium: 1rem;
-	--mtr-font-small: .9rem;
-	--mtr-font-xsmall: .8rem;
-	--mtr-font-xxsmall: .7rem;
+/*
+ * MITRE ATT&CK heatmap
+ *
+ * Colors, type and spacing are tokens on .mtr-viz (light) and .mtr-viz.dark. The theme
+ * class comes from Splunk (or from the dashboard in Dashboard Studio); cell colors are set
+ * by the script from the value bands.
+ */
+.mtr-viz {
+	--mtr-text: #151A1E;
+	--mtr-muted: #59636E;
+	--mtr-panel: #F1F4F6;
+	--mtr-surface: #E6EAEE;
+	--mtr-border: #DDE2E7;
+	--mtr-border-strong: #AEB7C0;
+	--mtr-accent: #0B6BCB;
+	--mtr-accent-soft: rgba(11, 107, 203, 0.12);
+	--mtr-tip: #FFFFFF;
+	--mtr-code: #EEF1F4;
+	--mtr-hatch: rgba(0, 0, 0, 0.045);
+	--mtr-nodata-text: #3F4954;
+	--mtr-shadow: 0 6px 20px rgba(16, 24, 32, 0.14), 0 1px 3px rgba(16, 24, 32, 0.08);
+	--mtr-font: "Splunk Platform Sans", "Proxima Nova", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	--mtr-mono: "Splunk Platform Mono", Inconsolata, Consolas, "Droid Sans Mono", Monaco, "Courier New", Courier, monospace;
+	--mtr-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+	--mtr-tw: 44px;
+	--mtr-colmin: 76px;
+	--mtr-colmax: 200px;
+	--mtr-th: 28px;
+	--mtr-labh: 88px;
+	font-family: var(--mtr-font);
+	font-size: 12px;
+	line-height: 16px;
+	color: var(--mtr-text);
+}
+
+.mtr-viz.dark {
+	--mtr-text: #ECEFF2;
+	--mtr-muted: #A1ABB5;
+	--mtr-panel: #1A2025;
+	--mtr-surface: #2A333A;
+	--mtr-border: #2E373E;
+	--mtr-border-strong: #56616B;
+	--mtr-accent: #5AA9F0;
+	--mtr-accent-soft: rgba(90, 169, 240, 0.16);
+	--mtr-tip: #1B2126;
+	--mtr-code: #262E35;
+	--mtr-hatch: rgba(255, 255, 255, 0.045);
+	--mtr-nodata-text: #C3CBD3;
+	--mtr-shadow: 0 10px 28px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.mtr-viz.mtr-display-name {
+	--mtr-tw: 132px;
+	--mtr-colmin: 140px;
+	--mtr-colmax: 260px;
+	--mtr-th: 39px;
+}
+
+.mtr-viz *,
+.mtr-viz *::before,
+.mtr-viz *::after {
+	box-sizing: border-box;
+}
+
+.mtr-viz button {
+	font: inherit;
+	color: inherit;
+}
+
+.mtr-viz :focus-visible {
+	outline: 2px solid var(--mtr-accent);
+	outline-offset: 2px;
+}
+
+/* ---- Top row: search and filter, legend ------------------------------------ */
+
+.mtr-top {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 12px 24px;
+	padding: 16px 16px 12px;
+}
+
+.mtr-controls {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px 12px;
 }
 
 .mtr-search-container {
-	margin-top: 1rem;
-	text-align: center;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
 }
 
+.mtr-search {
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+
+.mtr-search-input {
+	width: 200px;
+	height: 32px;
+	padding: 0 30px 0 10px;
+	border-radius: 8px;
+	border: 1px solid var(--mtr-border);
+	background: transparent;
+	color: var(--mtr-text);
+	font: inherit;
+	font-size: 13px;
+	transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.mtr-search-input:focus {
+	border-color: var(--mtr-accent);
+	box-shadow: 0 0 0 3px var(--mtr-accent-soft);
+	outline: none;
+}
+
+.mtr-search kbd {
+	position: absolute;
+	right: 8px;
+	font: inherit;
+	font-size: 10.5px;
+	padding: 0 5px;
+	border-radius: 4px;
+	border: 1px solid var(--mtr-border);
+	color: var(--mtr-muted);
+	pointer-events: none;
+}
+
+.mtr-search-container.mtr-has-query kbd,
+.mtr-search:focus-within kbd {
+	display: none;
+}
+
+.mtr-search-clear {
+	position: absolute;
+	right: 3px;
+	display: none;
+	width: 26px;
+	height: 26px;
+	border: 0;
+	border-radius: 6px;
+	background: transparent;
+	color: var(--mtr-muted);
+	cursor: pointer;
+}
+
+.mtr-search-container.mtr-has-query .mtr-search-clear {
+	display: block;
+}
+
+.mtr-search-clear:hover,
+.mtr-search-prev:hover:not(:disabled),
+.mtr-search-next:hover:not(:disabled) {
+	background: var(--mtr-surface);
+}
+
+.mtr-search-prev,
+.mtr-search-next {
+	width: 32px;
+	height: 32px;
+	padding: 0;
+	border: 1px solid var(--mtr-border);
+	border-radius: 8px;
+	background: transparent;
+	cursor: pointer;
+}
+
+.mtr-search-prev:disabled,
+.mtr-search-next:disabled {
+	opacity: 0.4;
+	cursor: default;
+}
+
+.mtr-search-status {
+	max-width: 300px;
+	font-size: 12px;
+	color: var(--mtr-muted);
+}
+
+.mtr-filter {
+	display: flex;
+	gap: 2px;
+	padding: 3px;
+	border-radius: 9px;
+	background: var(--mtr-surface);
+}
+
+.mtr-filter button {
+	height: 26px;
+	padding: 0 11px;
+	border: 0;
+	border-radius: 7px;
+	background: transparent;
+	color: var(--mtr-muted);
+	font-size: 12px;
+	font-weight: 500;
+	cursor: pointer;
+	white-space: nowrap;
+	transition: background-color 180ms ease, color 180ms ease;
+}
+
+.mtr-filter button:hover {
+	color: var(--mtr-text);
+}
+
+.mtr-filter button.mtr-on {
+	background: var(--mtr-tip);
+	color: var(--mtr-text);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), 0 0 0 1px var(--mtr-border);
+}
+
+.mtr-toolbar {
+	display: flex;
+	align-items: center;
+}
+
+.mtr-export-button {
+	cursor: pointer;
+	font: inherit;
+	color: inherit;
+	height: 32px;
+	padding: 0 12px;
+	border-radius: 8px;
+	border: 1px solid var(--mtr-border);
+	background: transparent;
+	transition: background-color 160ms ease;
+}
+
+.mtr-export-button:hover {
+	background: var(--mtr-surface);
+}
+
+/* ---- Legend ---------------------------------------------------------------- */
+
+.mtr-legend {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 6px;
+}
+
+.mtr-legend-top {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	width: 100%;
+	font-size: 11px;
+	color: var(--mtr-muted);
+}
+
+.mtr-legend-title {
+	font-weight: 600;
+	color: var(--mtr-text);
+}
+
+.mtr-legend-bands {
+	display: flex;
+	align-items: flex-start;
+	gap: 3px;
+	padding-bottom: 16px;
+}
+
+.mtr-band-col {
+	position: relative;
+	width: 40px;
+}
+
+.mtr-band-col-nodata {
+	width: 46px;
+	margin-left: 8px;
+}
+
+.mtr-band {
+	display: block;
+	width: 100%;
+	height: 10px;
+	padding: 0;
+	border: 0;
+	border-radius: 3px;
+	cursor: pointer;
+	transition: transform 160ms var(--mtr-ease), opacity 200ms ease, box-shadow 160ms ease;
+}
+
+.mtr-band:hover,
+.mtr-band.mtr-band-on {
+	transform: translateY(-1px) scaleY(1.3);
+	box-shadow: 0 0 0 2px var(--mtr-panel), 0 0 0 3px var(--mtr-accent);
+}
+
+.mtr-band.mtr-band-pinned {
+	box-shadow: 0 0 0 2px var(--mtr-panel), 0 0 0 4px var(--mtr-accent);
+}
+
+.mtr-band.mtr-band-off {
+	opacity: 0.35;
+}
+
+.mtr-nodata-swatch {
+	background-color: var(--mtr-surface);
+	background-image: repeating-linear-gradient(135deg, transparent 0 4px, var(--mtr-hatch) 4px 5px);
+	border: 1px solid var(--mtr-border);
+}
+
+.mtr-band-edge {
+	position: absolute;
+	top: 15px;
+	left: 0;
+	font-family: var(--mtr-mono);
+	font-size: 9.5px;
+	color: var(--mtr-muted);
+	white-space: nowrap;
+}
+
+.mtr-band-edge-end {
+	left: auto;
+	right: 0;
+}
+
+/* With many bands the labels between would collide: show the outer edges only. */
+@media (max-width: 700px) {
+	.mtr-band-col:not(:first-child):not(:nth-last-child(2)) .mtr-band-edge:not(.mtr-band-edge-end) {
+		display: none;
+	}
+}
+
+.mtr-status-legend {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 14px;
+}
+
+.mtr-status-item {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 2px 4px;
+	border: 0;
+	border-radius: 6px;
+	background: transparent;
+	font-size: 12px;
+	cursor: default;
+}
+
+.mtr-status-item:hover {
+	background: var(--mtr-surface);
+}
+
+.mtr-status-swatch {
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	border-radius: 3px;
+	border: 1px solid rgba(128, 128, 128, 0.5);
+}
+
+.mtr-status-count {
+	color: var(--mtr-muted);
+}
+
+/* ---- Messages ---------------------------------------------------------------- */
+
+.mtr-message {
+	margin: 16px;
+	padding: 36px 20px;
+	border-radius: 10px;
+	background: var(--mtr-panel);
+	text-align: center;
+	line-height: 1.5;
+}
+
+.mtr-message b {
+	display: block;
+	margin-bottom: 4px;
+	font-size: 15px;
+}
+
+.mtr-message span {
+	color: var(--mtr-muted);
+	font-size: 13px;
+}
+
+.mtr-notice {
+	margin: 0 16px 8px;
+	padding: 9px 12px;
+	border-radius: 8px;
+	font-size: 12px;
+	background: rgba(248, 190, 52, 0.18);
+	border: 1px solid rgba(248, 190, 52, 0.5);
+}
+
+/* ---- Matrix ---------------------------------------------------------------- */
+
 .mtr-viz-container {
-	display: -webkit-box;
-	display: -ms-flexbox;
 	display: flex;
 	width: 100%;
-	padding: 2em;
-	box-sizing: border-box;
-	justify-content: center;
+	padding: 0 16px 16px;
 	/* Centered while it fits; when it overflows, start at the left edge so every column can
 	   be scrolled to (plain "center" would cut off the left side). */
 	justify-content: safe center;
 }
 
-.mtr-viz-container * {
-	box-sizing: border-box;
-	line-height: 1.2em;
-}
-
 .mtr-tactic-col {
-	-webkit-box-flex: 1;
-	-ms-flex-positive: 1;
-	flex-grow: 1;
-	-ms-flex-preferred-size: 0;
-	flex-basis: 0;
-	margin-right: 1em;
+	flex: 1 1 0;
 	width: 0;
-	max-width: 300px;
-	/* A column is never narrower than its longest header word ("Reconnaissance") and one
-	   full-width cell; below that the matrix scrolls instead of squeezing. */
-	min-width: 6.5rem;
-}
-
-.mtr-tactic-col:has(.mtr-display-name) {
-	min-width: 10rem;
+	min-width: var(--mtr-colmin);
+	max-width: var(--mtr-colmax);
+	margin-right: 3px;
 }
 
 .mtr-tactic-col:last-child {
@@ -63,445 +421,518 @@
 
 .mtr-tactic {
 	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 4px;
+	height: var(--mtr-labh);
+	padding: 8px;
+	border-radius: 6px 6px 0 0;
+	background: var(--mtr-panel);
+	cursor: pointer;
+	transition: background-color 200ms ease, opacity 220ms ease;
+}
+
+.mtr-tactic:hover,
+.mtr-tactic:focus-visible {
+	background: var(--mtr-surface);
+}
+
+.mtr-tactic:focus-visible {
+	outline-offset: -2px;
+}
+
+.mtr-tactic.mtr-match {
+	box-shadow: inset 0 0 0 2px var(--mtr-accent);
+}
+
+.mtr-tactic.mtr-tactic-selected {
+	box-shadow: inset 0 0 0 2px var(--mtr-text);
 }
 
 .mtr-tactic-title {
-	font-size: var(--mtr-font-small);
-	color: var(--mtr-text-black);
-	height: 2.5em;
+	height: 30px;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 15px;
+	text-align: left;
+	overflow: hidden;
 	display: -webkit-box;
-	display: -ms-flexbox;
-	display: flex;
-	-webkit-box-pack: center;
-	-ms-flex-pack: center;
-	justify-content: center;
-	-webkit-box-align: center;
-	-ms-flex-align: center;
-	align-items: center;
-	text-align: center;
-	cursor: pointer;
-	/* A long tactic name wraps inside its column instead of running into the next one. */
-	overflow-wrap: anywhere;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
+	/* Soft hyphens mark the break points of known names; hyphens: auto copes with others. */
+	hyphens: auto;
+	-webkit-hyphens: auto;
+	overflow-wrap: normal;
 	min-width: 0;
 }
 
-.dark .mtr-tactic-title {
-	color: var(--mtr-text-white);
+.mtr-tactic-fig {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 4px;
+}
+
+.mtr-fig-pct {
+	font-size: 15px;
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+}
+
+.mtr-fig-count {
+	font-family: var(--mtr-mono);
+	font-size: 10px;
+	color: var(--mtr-muted);
 }
 
 .mtr-meter-container {
 	width: 100%;
-	height: 10px;
-	border-radius: 5px;
-	margin: .5em 0;
+	height: 8px;
+	border-radius: 999px;
+	background: var(--mtr-surface);
 	overflow: hidden;
-	-webkit-transition: var(--mtr-transition-short);
-	transition: var(--mtr-transition-short);
-	z-index: 20;
+	transition: height 220ms var(--mtr-ease);
 }
 
-.mtr-tactic .mtr-meter-container {
-	background: var(--mtr-bg-gray-light);
-	position: absolute;
+.mtr-viz.dark .mtr-meter-container {
+	background: rgba(0, 0, 0, 0.4);
 }
 
-.dark .mtr-tactic .mtr-meter-container {
-	background: var(--mtr-bg-gray-med);
-}
-
-.mtr-meter-container.dark {
-	border: 1px solid var(--mtr-bg-gray-med);
-}
-
-.mtr-technique-tooltip .mtr-meter-container {
-	background: var(--mtr-bg-gray-med);
-    position: relative;
+.mtr-tactic:hover .mtr-meter-container,
+.mtr-tactic:focus-visible .mtr-meter-container {
+	height: 12px;
 }
 
 .mtr-meter-fill {
 	height: 100%;
+	width: 0;
+	border-radius: 999px;
+	transition: width 700ms var(--mtr-ease), background-color 450ms ease;
 }
 
-.mtr-tactic .mtr-meter-fill {
-    -webkit-transition: var(--mtr-transition-short);
-	transition: var(--mtr-transition-short);
-}
-
-.mtr-technique-tooltip .mtr-meter-fill {
-    width: 0%;
-	-webkit-transition: var(--mtr-transition-long);
-	transition: var(--mtr-transition-long);
-}
-
-.mtr-tactic:hover .mtr-meter-fill {
-	width: 100% !important;
-}
-
-.mtr-tactic:hover .grid-wrapper {
-	grid-template-rows: 1fr;
-}
-
+/* The details of a tactic: a card below its header, on hover or keyboard focus. */
 .grid-wrapper {
-	display: grid;
-	grid-template-rows: 0fr;
-	transition: var(--mtr-transition-short);
+	display: none;
 	position: absolute;
-	z-index: 21;
-	width: 100%;
-	transition-delay: 50ms;
-	margin: 0.5em 0;
+	top: calc(100% + 6px);
+	left: 0;
+	z-index: 60;
+	width: 220px;
+}
+
+.mtr-tactic:hover .grid-wrapper,
+.mtr-tactic:focus-within .grid-wrapper {
+	display: block;
 }
 
 .mtr-stats-container {
-	color: var(--mtr-text-white);
-	width: 100%;
-	box-sizing: content-box;
-	display: -webkit-box;
-	display: -ms-flexbox;
-	display: flex;
-	-ms-flex-wrap: wrap;
-	flex-wrap: wrap;
-	overflow: hidden;
-	border-radius: 5px;
+	padding: 4px 0;
+	border: 1px solid var(--mtr-border);
+	border-radius: 8px;
+	background: var(--mtr-tip);
+	color: var(--mtr-text);
+	box-shadow: var(--mtr-shadow);
+	cursor: default;
 }
 
 .mtr-stat {
-	width: 100%;
-	background: red;
-	padding: .7em;
-	border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-}
-
-.mtr-stat:last-child {
-	border: none;
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 12px;
+	padding: 6px 12px;
 }
 
 .mtr-stats-label {
-	font-size: var(--mtr-font-small);
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 11px;
+	color: var(--mtr-muted);
 }
 
 .mtr-stats-val {
-	font-size: var(--mtr-font-large);
+	font-size: 13px;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+	text-align: right;
 }
 
 .mtr-technique-col {
-	display: -webkit-box;
-	display: -ms-flexbox;
-	display: flex;
-	-ms-flex-wrap: wrap;
-	flex-wrap: wrap;
-	-webkit-box-pack: start;
-	-ms-flex-pack: start;
-	justify-content: flex-start;
-	margin-top: 1.8em;
-	-webkit-transition: var(--mtr-transition-short);
-	transition: var(--mtr-transition-short)
-}
-
-.mtr-tactic-col:hover .mtr-technique-container {
-	opacity: .25;
-}
-
-.mtr-tactic-col:hover .mtr-technique-container:hover, 
-.mtr-tactic-col:hover .mtr-technique-container:has(.defocused),
-.mtr-tactic-col:hover .mtr-technique-container:has(.focused) {
-	opacity: 1;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(var(--mtr-tw), 1fr));
+	gap: 0;
+	align-content: start;
+	border-radius: 0 0 6px 6px;
+	overflow: hidden;
 }
 
 .mtr-technique-container {
-	position: relative;
-	-webkit-box-flex: 1;
-	-ms-flex-positive: 1;
-	flex-grow: 1;
-	z-index: 1;
-	-webkit-transition: var(--mtr-transition-short);
-	transition: var(--mtr-transition-short);
+	height: var(--mtr-th);
+	min-width: 0;
 }
 
-.mtr-technique, .mtr-sub-technique {
-	position: relative;
-	background: var(--mtr-bg-gray-light);
-	cursor: pointer;
-	font-family: "Splunk Platform Mono", Inconsolata, Consolas, "Droid Sans Mono", Monaco, "Courier New", Courier, monospace;
-	color: var(--mtr-text-black);
-	padding: 0.5em;
+.mtr-technique-container.mtr-gone {
+	display: none;
 }
 
 .mtr-technique {
-	font-size: var(--mtr-font-xsmall);
-	-webkit-transition: var(--mtr-transition-short);
-	transition: var(--mtr-transition-short);
-	z-index: 2;
-}
-
-.mtr-sub-technique {
-	font-size: var(--mtr-font-xxsmall);
-}
-
-.dark .mtr-technique, .dark .mtr-sub-technique {
-	background: var(--mtr-bg-gray-med);
-	color: var(--mtr-text-white);
-}
-
-/* Cell width limits: an ID needs little room; a name needs more, and neither stretches
-   without bound. */
-.mtr-technique-container.mtr-display-id {
-	-ms-flex-preferred-size: 0;
-	flex-basis: 0;
-	min-width: 4rem;
-	max-width: 6.5rem;
-}
-
-.mtr-technique-container.mtr-display-name {
-	-ms-flex-preferred-size: auto;
-	flex-basis: auto;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 	width: 100%;
-	min-width: 10rem;
-	max-width: 16rem;
+	height: 100%;
+	padding: 0 3px;
+	overflow: hidden;
+	cursor: pointer;
+	font-family: var(--mtr-mono);
+	font-size: 10.5px;
+	line-height: 13px;
+	/* Cells with no value: a neutral fill with faint hatching. A value sets the whole
+	   background (colors and no hatching) from the script. */
+	background-color: var(--mtr-surface);
+	background-image: repeating-linear-gradient(135deg, transparent 0 4px, var(--mtr-hatch) 4px 5px);
+	color: var(--mtr-nodata-text);
+	transition: box-shadow 140ms var(--mtr-ease), opacity 220ms ease;
 }
 
-.mtr-sub-technique-container.mtr-display-name {
-	width: 90%;
+.mtr-display-name .mtr-technique {
+	align-items: flex-start;
+	padding: 0 7px;
+	gap: 1px;
 }
 
-.mtr-technique > span,
-.mtr-sub-technique > span {
-	text-align: center;
+.mtr-cell-id {
 	display: block;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-}
-
-.mtr-placeholder {
-	visibility: hidden;
-	pointer-events: none;
-}
-
-.mtr-technique.mtr-display-name > span {
-	overflow: hidden;
-	text-overflow: ellipsis;
+	max-width: 100%;
+	font-weight: 600;
 	white-space: nowrap;
 }
 
-.mtr-technique-container:hover {
-	-webkit-transform: scale(1.2) translateY(-.5em);
-	transform: scale(1.2) translateY(-.5em);
-	box-shadow: 0px 7px 30px rgba(0, 0, 0, .8);
-	z-index: 30;
-	opacity: 1;
+.mtr-cell-name {
+	display: block;
+	max-width: 100%;
+	font-family: var(--mtr-font);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.mtr-technique:hover,
+.mtr-technique:focus-visible {
+	outline: none;
+	box-shadow: inset 0 0 0 2px var(--mtr-text);
+	z-index: 3;
+}
+
+.mtr-technique.mtr-selected {
+	box-shadow: inset 0 0 0 2px var(--mtr-panel), inset 0 0 0 4px var(--mtr-text);
+	z-index: 4;
 }
 
 .mtr-technique.focused {
-	-webkit-transform: translateY(-.5em);
-	transform: translateY(-.5em);
-	box-shadow: 0px 7px 15px rgba(0, 0, 0, 0.15);
-	z-index: 30;
-	opacity: 1;
+	box-shadow: inset 0 0 0 2px var(--mtr-accent);
+	z-index: 2;
+}
+
+.mtr-technique.mtr-current {
+	box-shadow: inset 0 0 0 3px var(--mtr-accent), 0 0 0 2px var(--mtr-panel);
+	z-index: 5;
 }
 
 .mtr-technique.defocused {
-	opacity: 0.15;
+	opacity: 0.12;
 }
 
-.mtr-technique-container:has(.defocused) {
-	pointer-events: none;
-}
-
-.mtr-sub-technique-container {
-	position: absolute;
-	z-index: 1;
-	display: none;
-	right: 0;
-	box-shadow: 0px 7px 30px rgba(0, 0, 0, .8);
-}
-
-.mtr-technique-container:hover .mtr-sub-technique-container {
-	display: block;
-}
-
-.mtr-technique-tooltip {
-	position: absolute;
-	z-index: 100;
-	background: var(--mtr-bg-black);
-	padding: 1em;
-	width: 300px;
-	color: var(--mtr-text-white);
-	font-size: var(--mtr-font-xsmall);
-	overflow-wrap: break-word;
-	top: 0;
-    margin: 0;
-}
-
-.mtr-technique-tooltip .mtr-name {
-	font-size: var(--mtr-font-small);
-}
-
-.mtr-technique-tooltip .mtr-val {
-	font-size: var(--mtr-font-medium);
-}
-
-.mtr-technique-tooltip .mtr-desc {
-	font-size: var(--mtr-font-xsmall);
-}
-
-.mtr-technique-tooltip .mtr-ref {
-	font-size: var(--mtr-font-xxsmall);
-	margin-top: .5em;
-}
-
-.mtr-technique-tooltip p {
-	color: var(--mtr-text-white);
-}
-
-.mtr-technique-tooltip-right {
-	left: 100%;
-}
-
-.mtr-technique-tooltip-left {
-	right: 100%;
-}
-
-.mtr-technique-tooltip .more-content {
-    display: none;
-}
-
-.dashboard-row .dashboard-panel .panel-body .mtr-desc p {
-	padding: 0;
-	margin: 0;
-	margin-top: .5em;
-}
-
-.mtr-legend {
-	width: 500px;
-	left: 50%;
-	position: absolute;
-	-webkit-transform: translateX(-50%);
-	transform: translateX(-50%);
-	overflow-x: hidden;
-}
-
-.mtr-legend-title {
-	font-size: var(--mtr-font-small);
-}
-
-.mtr-legend-meter-container {
-	width: 100%;
-	height: 10px;
-	border-radius: 5px;
-	position: relative;
-	overflow: hidden;
-}
-
-.mtr-legend-meter {
-	width: 100%;
-	height: 100%;
-}
-
-.mtr-legend-cursor {
-	width: 20%;
-    height: 12px;
-	box-sizing: border-box;
-	border-radius: 5px;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-	box-shadow: 0px 0px 0px 1000px rgba(0,0,0,0.5), 0px 0px 20px 0px rgba(0,0,0,0.4);
-}
-
-.mtr-legend-val {
-	display: -webkit-box;
-	display: -ms-flexbox;
-	display: flex;
-	-webkit-box-pack: justify;
-	-ms-flex-pack: justify;
-	justify-content: space-between;
-	font-size: var(--mtr-font-xsmall);
-	color: var(--mtr-text-black);
-}
-
-.dark .mtr-legend-val {
-	color: var(--mtr-text-white);
-}
-
-.mtr-technique.mtr-rolled-up > span {
+.mtr-technique.mtr-rolled-up .mtr-cell-id {
 	text-decoration: underline dotted;
 	text-underline-offset: 2px;
 }
 
-.mtr-technique-tooltip .mtr-rollup-note {
-	opacity: 0.8;
+.mtr-hl {
+	font-weight: 800;
+	text-decoration: underline;
+	text-decoration-thickness: 2px;
+	text-underline-offset: 2px;
 }
 
-.mtr-status-legend {
+/* A small corner marker: this technique has sub-techniques with values (see the tooltip). */
+.mtr-subdot {
+	display: none;
+	position: absolute;
+	top: 0;
+	right: 0;
+	border-top: 8px solid currentColor;
+	border-left: 8px solid transparent;
+	opacity: 0.3;
+}
+
+.mtr-technique.mtr-has-subs .mtr-subdot {
+	display: block;
+}
+
+/* Sub-technique cells only carry data: the tooltip lists them. */
+.mtr-sub-technique-container {
+	display: none;
+}
+
+/* ---- Tooltip ---------------------------------------------------------------- */
+
+.mtr-technique-tooltip {
+	position: absolute;
+	z-index: 100;
+	width: 310px;
+	max-height: 440px;
+	overflow: auto;
 	display: flex;
-	flex-wrap: wrap;
-	gap: 0.3rem 1rem;
+	flex-direction: column;
+	gap: 8px;
+	padding: 14px 14px 12px;
+	border-radius: 12px;
+	border: 1px solid var(--mtr-border);
+	background: var(--mtr-tip);
+	color: var(--mtr-text);
+	box-shadow: var(--mtr-shadow);
+	font-size: 12px;
+	line-height: 18px;
+	text-align: left;
+	animation: mtr-pop 140ms var(--mtr-ease) both;
 }
 
-.mtr-status-item {
+.mtr-technique-tooltip.mtr-instant {
+	animation: none;
+}
+
+.mtr-technique-tooltip.mtr-pinned {
+	border-color: var(--mtr-accent);
+}
+
+.mtr-tooltip-head {
 	display: flex;
 	align-items: center;
-	gap: 0.4rem;
-	font-size: var(--mtr-font-xsmall);
-	color: var(--mtr-text-black);
+	gap: 8px;
 }
 
-.dark .mtr-status-item {
-	color: var(--mtr-text-white);
+.mtr-technique-tooltip .mtr-id {
+	font-family: var(--mtr-mono);
+	font-size: 11px;
+	font-weight: 600;
+	padding: 3px 7px;
+	border-radius: 6px;
+	background: var(--mtr-code);
 }
 
-.mtr-status-swatch {
-	display: inline-block;
-	width: 0.9rem;
-	height: 0.9rem;
+.mtr-tooltip-tactic {
+	flex: 1;
+	font-size: 11.5px;
+	color: var(--mtr-muted);
+	text-align: right;
+}
+
+.mtr-tooltip-close {
+	width: 24px;
+	height: 24px;
+	border: 0;
+	border-radius: 6px;
+	background: transparent;
+	color: var(--mtr-muted);
+	cursor: pointer;
+}
+
+.mtr-tooltip-close:hover {
+	background: var(--mtr-surface);
+}
+
+.mtr-technique-tooltip .mtr-name {
+	font-size: 15px;
+	font-weight: 600;
+	line-height: 1.3;
+}
+
+.mtr-technique-tooltip .mtr-desc {
+	font-size: 12.5px;
+	line-height: 1.45;
+}
+
+.mtr-technique-tooltip .mtr-desc p {
+	padding: 0;
+	margin: 0;
+	margin-top: 0.5em;
+}
+
+.mtr-technique-tooltip .mtr-desc p:first-child {
+	margin-top: 0;
+}
+
+.mtr-also {
+	font-size: 12px;
+	color: var(--mtr-accent);
+}
+
+.mtr-value-row {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 8px;
+}
+
+.mtr-technique-tooltip .mtr-label {
+	font-size: 12px;
+	color: var(--mtr-muted);
+}
+
+.mtr-technique-tooltip .mtr-val {
+	font-size: 20px;
+	font-weight: 650;
+	line-height: 24px;
+	font-variant-numeric: tabular-nums;
+}
+
+.mtr-technique-tooltip .mtr-meter-container {
+	height: 6px;
 	border-radius: 3px;
-	border: 1px solid rgba(128, 128, 128, 0.5);
+	background: var(--mtr-surface);
 }
 
-.mtr-status-count {
-	opacity: 0.7;
+.mtr-technique-tooltip .mtr-meter-fill {
+	border-radius: 3px;
+	transition: none;
+}
+
+.mtr-standing {
+	font-size: 11.5px;
+	color: var(--mtr-muted);
+}
+
+.mtr-technique-tooltip .mtr-rollup-note {
+	margin: 4px 0 0;
+	opacity: 0.8;
 }
 
 .mtr-technique-tooltip .mtr-status {
 	display: flex;
 	align-items: center;
-	gap: 0.4rem;
-	margin: 0.25rem 0;
+	gap: 6px;
 }
 
-.mtr-toolbar {
-	margin-top: 1rem;
-	text-align: center;
+.mtr-subs-list {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	padding-top: 6px;
+	border-top: 1px solid var(--mtr-border);
 }
 
-.mtr-export-button {
-	cursor: pointer;
-	font: inherit;
-	color: inherit;
-	padding: 0.3rem 0.9rem;
-	border-radius: 4px;
-	border: 1px solid rgba(128, 128, 128, 0.6);
+.mtr-subs-title {
+	margin-bottom: 2px;
+	font-size: 11.5px;
+	color: var(--mtr-muted);
+}
+
+.mtr-sub-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: calc(100% + 8px);
+	margin: 0 -4px;
+	padding: 3px 4px;
+	border: 0;
+	border-radius: 6px;
 	background: transparent;
+	font-size: 12px;
+	text-align: left;
+	cursor: pointer;
 }
 
-.mtr-export-button:hover {
-	background: rgba(128, 128, 128, 0.2);
+.mtr-sub-row:hover {
+	background: var(--mtr-surface);
 }
 
-.mtr-notice {
-	margin-top: 0.5rem;
-	text-align: center;
-	font-size: var(--mtr-font-xsmall);
-	opacity: 0.8;
+.mtr-sub-id {
+	flex: none;
+	width: 34px;
+	font-family: var(--mtr-mono);
+	font-size: 10.5px;
+	color: var(--mtr-muted);
 }
 
-/* Tooltip paragraphs. The same reset exists above for classic dashboards; this one does
-   not depend on their page structure, so it also applies inside Dashboard Studio. */
-.mtr-technique-tooltip .mtr-desc p {
-	padding: 0;
-	margin: 0;
-	margin-top: 0.5em;
+.mtr-sub-name {
+	flex: 1;
+	min-width: 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.mtr-sub-bar {
+	flex: none;
+	width: 46px;
+	height: 6px;
+	border-radius: 3px;
+	background: var(--mtr-surface);
+	overflow: hidden;
+}
+
+.mtr-sub-bar i {
+	display: block;
+	width: 0;
+	height: 100%;
+}
+
+.mtr-sub-val {
+	flex: none;
+	min-width: 26px;
+	text-align: right;
+	font-family: var(--mtr-mono);
+	font-size: 10.5px;
+	font-weight: 600;
+}
+
+.mtr-technique-tooltip .mtr-ref {
+	padding-top: 8px;
+	border-top: 1px solid var(--mtr-border);
+	font-family: var(--mtr-mono);
+	font-size: 11px;
+	word-break: break-all;
+}
+
+.mtr-technique-tooltip a,
+.mtr-technique-tooltip .more-link {
+	color: var(--mtr-accent);
+	text-decoration: none;
+}
+
+.mtr-technique-tooltip .more-content {
+	display: none;
+}
+
+/* ---- Motion ---------------------------------------------------------------- */
+
+.mtr-viz.mtr-enter .mtr-technique-container {
+	animation: mtr-fade 500ms ease backwards;
+}
+
+@keyframes mtr-fade {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@keyframes mtr-pop {
+	from { opacity: 0; transform: translateY(4px) scale(0.98); }
+	to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.mtr-viz *,
+	.mtr-viz *::before,
+	.mtr-viz *::after {
+		animation: none !important;
+		transition: none !important;
+	}
 }
 
 /* Shown instead of a download where the browser blocks downloads (Dashboard Studio). */
@@ -529,7 +960,7 @@
 
 .mtr-export-note {
 	margin: 0 0 0.5rem;
-	font-size: var(--mtr-font-small);
+	font-size: 13px;
 }
 
 .mtr-export-text {
@@ -537,7 +968,7 @@
 	width: 100%;
 	height: 12rem;
 	font-family: monospace;
-	font-size: var(--mtr-font-xsmall);
+	font-size: 11px;
 }
 
 .mtr-export-actions {

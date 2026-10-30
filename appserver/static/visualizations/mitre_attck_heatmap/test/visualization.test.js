@@ -37,46 +37,61 @@ describe('several instances on one page (audit P2-2)', () => {
         defocused: viz.el.querySelectorAll('.defocused').length,
         tooltips: viz.el.querySelectorAll('.mtr-technique-tooltip').length
     });
+    const band = (viz, index) => viz.el.querySelector('.mtr-band[data-band="' + index + '"]');
 
     test('focus changes in one visualization do not touch another', () => {
         const a = render(Viz, loadFixture('typical.json'));
         const b = render(Viz, loadFixture('typical.json'));
-        a._setAnimationClass(0, 10);
+        $(band(a, 0)).trigger('mouseenter');
         expect(states(a).defocused).toBeGreaterThan(0);
         expect(states(b)).toEqual({ focused: 0, defocused: 0, tooltips: 0 });
     });
 
-    test('leaving the legend clears focus only in its own visualization', () => {
+    test('leaving a band clears focus only in its own visualization', () => {
         const a = render(Viz, loadFixture('typical.json'));
         const b = render(Viz, loadFixture('typical.json'));
-        a._setAnimationClass(0, 10);
-        b._setAnimationClass(0, 10);
-        $(a.el.querySelector('.mtr-legend')).trigger('mouseenter').trigger('mouseleave');
+        $(band(a, 0)).trigger('mouseenter');
+        $(band(b, 0)).trigger('mouseenter');
+        $(band(a, 0)).trigger('mouseleave');
         expect(states(a)).toMatchObject({ focused: 0, defocused: 0 });
         expect(states(b).defocused).toBeGreaterThan(0);
     });
 
     test('closing a tooltip does not remove the tooltip of another visualization', () => {
-        const a = render(Viz, loadFixture('typical.json'));
-        const b = render(Viz, loadFixture('typical.json'));
-        const cell = viz => viz.el.querySelector('.mtr-technique[data-id="T1059"]');
-        $(cell(a)).trigger('mouseenter');
-        $(cell(b)).trigger('mouseenter');
-        $(cell(a)).trigger('mouseleave');
-        expect(states(a).tooltips).toBe(0);
-        expect(states(b).tooltips).toBe(1);
+        jest.useFakeTimers();
+        try {
+            const a = render(Viz, loadFixture('typical.json'));
+            const b = render(Viz, loadFixture('typical.json'));
+            const cell = viz => viz.el.querySelector('.mtr-technique[data-id="T1059"]');
+            $(cell(a)).trigger('mouseenter');
+            $(cell(b)).trigger('mouseenter');
+            $(cell(a)).trigger('mouseleave');
+            jest.advanceTimersByTime(500);
+            expect(states(a).tooltips).toBe(0);
+            expect(states(b).tooltips).toBe(1);
+        } finally {
+            jest.useRealTimers();
+        }
     });
 });
 
 describe('legend scale (audit P2-5)', () => {
-    const labels = viz => Array.from(viz.el.querySelectorAll('.mtr-legend-val span')).map(s => s.textContent);
+    const edges = viz => Array.from(viz.el.querySelectorAll('.mtr-band-col:not(.mtr-band-col-nodata) > .mtr-band-edge:not(.mtr-band-edge-end)')).map(s => s.textContent)
+        .concat(Array.from(viz.el.querySelectorAll('.mtr-band-edge-end')).map(s => s.textContent));
 
-    test('labels run from the lower bound through the midpoint to the upper bound', () => {
-        expect(labels(render(Viz, loadFixture('single-row.json'), { startVal: '50', endVal: '150' }))).toEqual(['50', '100', '150']);
+    test('five even bands run from the lower bound to the upper bound', () => {
+        expect(edges(render(Viz, loadFixture('single-row.json'), { startVal: '50', endVal: '150' }))).toEqual(['50', '70', '90', '110', '130', '150']);
     });
 
-    test('default labels are 0, 50, 100', () => {
-        expect(labels(render(Viz, loadFixture('single-row.json')))).toEqual(['0', '50', '100']);
+    test('default edges are 0 to 100 in steps of 20', () => {
+        expect(edges(render(Viz, loadFixture('single-row.json')))).toEqual(['0', '20', '40', '60', '80', '100']);
+    });
+
+    test('there is a band per color, and a separate entry for techniques with no data', () => {
+        const viz = render(Viz, loadFixture('typical.json'));
+        expect(viz.el.querySelectorAll('.mtr-band:not(.mtr-nodata-swatch)').length).toBe(5);
+        expect(viz.el.querySelectorAll('.mtr-nodata-swatch').length).toBe(1);
+        expect(render(Viz, loadFixture('typical.json'), { colorBands: '9' }).el.querySelectorAll('.mtr-band:not(.mtr-nodata-swatch)').length).toBe(9);
     });
 });
 
@@ -104,7 +119,7 @@ describe('hide null (audit P2-3)', () => {
     test('counts the kept technique as having no value in the tactic stats', () => {
         const viz = render(Viz, data, { hideNull: 'yes' });
         const execution = viz.el.querySelector('.mtr-tactic-col[data-name="Execution"]');
-        expect(execution.querySelector('.mtr-count .mtr-stats-val').textContent).toBe('0 (0%)');
+        expect(execution.querySelector('.mtr-count .mtr-stats-val').textContent).toBe('0 of 1 (0%)');
     });
 
     test('is unchanged when hide null is off', () => {
@@ -150,7 +165,7 @@ describe('status-based coloring (feature 5)', () => {
         expect(color(viz, 'T1566')).toBe('rgb(241, 129, 63)');
         expect(color(viz, 'T1059.001')).toBe('rgb(217, 63, 60)');
         expect(cell(viz, 'T1059').getAttribute('data-status')).toBe('Covered');
-        expect(cell(viz, 'T1059').style.color).toBe('rgb(255, 255, 255)');
+        expect(cell(viz, 'T1059').style.color).toBe('rgb(14, 17, 20)');
     });
 
     test('unlisted statuses use the default color', () => {
@@ -179,7 +194,7 @@ describe('status-based coloring (feature 5)', () => {
         const viz = render(Viz, data, {});
         expect(viz.el.querySelectorAll('[data-status]').length).toBe(0);
         expect(viz.el.querySelector('.mtr-legend-status')).toBeNull();
-        expect(viz.el.querySelectorAll('.mtr-legend-meter').length).toBe(1);
+        expect(viz.el.querySelectorAll('.mtr-legend-bands').length).toBe(1);
     });
 
     test('with a status field but no color list every status uses the default color', () => {
@@ -194,17 +209,18 @@ describe('status-based coloring (feature 5)', () => {
 
         test('replaces the gradient with one swatch per status, in list order, with counts', () => {
             const viz = render(Viz, data, options);
-            expect(viz.el.querySelector('.mtr-legend-meter')).toBeNull();
+            expect(viz.el.querySelector('.mtr-legend-bands')).toBeNull();
             expect(items(viz)).toEqual([['gap', '2'], ['covered', '1'], ['partial', '1'], ['Mystery', '1']]);
             expect(viz.el.querySelector('.mtr-legend-title').textContent).toBe('state');
         });
 
-        test('hovering a swatch highlights the cells with that status', () => {
+        test('hovering a swatch dims the cells with another status', () => {
             const viz = render(Viz, data, options);
             const gap = viz.el.querySelector('.mtr-status-item[data-status-key="gap"]');
             $(gap).trigger('mouseenter');
-            const focused = Array.from(viz.el.querySelectorAll('.mtr-technique.focused')).map(c => c.getAttribute('data-id'));
-            expect(new Set(focused)).toEqual(new Set(['T1003']));
+            const dimmed = Array.from(viz.el.querySelectorAll('.mtr-technique.defocused')).map(c => c.getAttribute('data-id'));
+            expect(dimmed).toContain('T1059');
+            expect(dimmed).not.toContain('T1003');
             $(gap).trigger('mouseleave');
             expect(viz.el.querySelectorAll('.focused, .defocused').length).toBe(0);
         });
@@ -239,7 +255,8 @@ describe('status-based coloring (feature 5)', () => {
         $(cell(viz, 'T1059')).trigger('click');
         expect(viz.drilldowns[0].data).toMatchObject({ mtr_technique_status: 'Covered' });
         expect(viz.drilldowns[0].data).not.toHaveProperty('mtr_sub-technique_status');
-        $(cell(viz, 'T1059.001')).trigger('click');
+        // A sub-technique is clicked in the technique's tooltip.
+        $(viz.el.querySelector('.mtr-sub-row')).trigger('click');
         expect(viz.drilldowns[1].data).toMatchObject({ 'mtr_sub-technique_status': 'gap', mtr_technique_status: 'Covered' });
     });
 
@@ -268,13 +285,11 @@ describe('status-based coloring (feature 5)', () => {
         expect(color(viz, 'T1059')).toBe('rgb(217, 63, 60)');
     });
 
-    test('automatic bounds and the animation do nothing in status mode', () => {
-        const spy = jest.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 1);
-        const viz = render(Viz, data, Object.assign({ scaleMode: 'auto', animate: 'yes' }, options));
-        expect(spy).not.toHaveBeenCalled();
-        expect(viz.animate).toBe(false);
+    test('automatic bounds and bands do nothing in status mode', () => {
+        const viz = render(Viz, data, Object.assign({ scaleMode: 'auto' }, options));
         expect(viz.el.querySelector('.mtr-legend-status')).not.toBeNull();
-        spy.mockRestore();
+        expect(viz.el.querySelector('.mtr-legend-bands')).toBeNull();
+        expect(viz.el.querySelectorAll('[data-band]').length).toBe(0);
     });
 });
 
@@ -282,48 +297,66 @@ describe('automatic color bounds (feature 3)', () => {
     const fields = [{ name: 'id' }, { name: 'count' }, { name: 'description' }];
     const rows = [['T1059', '10', ''], ['T1566', '50', ''], ['T1003', '90', ''], ['T9999', '5000', 'unknown id']];
     const data = { fields, rows };
-    const labels = viz => Array.from(viz.el.querySelectorAll('.mtr-legend-val span')).map(s => s.textContent);
-    const background = (viz, id) => viz.el.querySelector('.mtr-technique[data-id="' + id + '"]').style.background;
+    // The lowest and highest edge of the legend.
+    const range = viz => [viz.el.querySelector('.mtr-band-col:not(.mtr-band-col-nodata) .mtr-band-edge').textContent, viz.el.querySelector('.mtr-band-edge-end').textContent];
+    const band = (viz, id) => viz.el.querySelector('.mtr-technique[data-id="' + id + '"]').getAttribute('data-band');
     const colors = { startColor: '#000000', midColor: '#808080', endColor: '#ffffff' };
 
     test('the legend runs from zero to the highest value, ignoring ids that are not in the matrix', () => {
-        expect(labels(render(Viz, data, { scaleMode: 'auto' }))).toEqual(['0', '45', '90']);
+        expect(range(render(Viz, data, { scaleMode: 'auto' }))).toEqual(['0', '90']);
     });
 
     test('the lowest value can be the lower bound', () => {
-        expect(labels(render(Viz, data, { scaleMode: 'auto', autoLowerBound: 'min' }))).toEqual(['10', '50', '90']);
+        expect(range(render(Viz, data, { scaleMode: 'auto', autoLowerBound: 'min' }))).toEqual(['10', '90']);
     });
 
-    test('cells are colored against the computed bounds', () => {
+    test('cells fall in bands of the computed range: the highest value is in the top band', () => {
         const viz = render(Viz, data, Object.assign({ scaleMode: 'auto' }, colors));
-        expect(background(viz, 'T1003')).toBe('rgb(255, 255, 255)');
-        expect(background(viz, 'T1059')).toBe(render(Viz, { fields, rows: [['T1059', '10', '']] }, Object.assign({ startVal: '0', endVal: '90' }, colors)).el.querySelector('.mtr-technique[data-id="T1059"]').style.background);
+        expect(band(viz, 'T1003')).toBe('4');
+        expect(Number(band(viz, 'T1059'))).toBeLessThan(Number(band(viz, 'T1003')));
+        expect(Number(band(viz, 'T1059'))).toBeLessThanOrEqual(Number(band(viz, 'T1566')));
+        const top = viz.el.querySelector('.mtr-band[data-band="4"]').style.background;
+        expect(viz.el.querySelector('.mtr-technique[data-id="T1003"]').style.background).toBe(top);
     });
 
     test('a single value uses the full range, so it is not stuck at the start color', () => {
         const viz = render(Viz, loadFixture('single-row.json'), Object.assign({ scaleMode: 'auto' }, colors));
-        expect(labels(viz)).toEqual(['0', '21', '42']);
-        expect(background(viz, 'T1059')).toBe('rgb(255, 255, 255)');
+        expect(range(viz)).toEqual(['0', '42']);
+        expect(band(viz, 'T1059')).toBe('4');
     });
 
     test('without usable values the manual bounds are used', () => {
         const none = { fields, rows: [['T1059', 'n/a', ''], ['T9999', '7', '']] };
-        expect(labels(render(Viz, none, { scaleMode: 'auto', startVal: '20', endVal: '40' }))).toEqual(['20', '30', '40']);
+        expect(range(render(Viz, none, { scaleMode: 'auto', startVal: '20', endVal: '40' }))).toEqual(['20', '40']);
     });
 
-    test('the tactic header meters use the computed bounds', () => {
+    test('the tactic header gauge fills to the share of techniques with a value, in the color of their average', () => {
         const viz = render(Viz, { fields, rows: [['T1059', '10', ''], ['T1203', '10', '']] }, { scaleMode: 'auto' });
-        // The Execution mean is 10 against bounds [0, 10], so the meter is full.
-        expect(viz.el.querySelector('.mtr-tactic-col[data-name="Execution"] .mtr-meter-fill').style.width).toBe('100%');
+        const column = viz.el.querySelector('.mtr-tactic-col[data-name="Execution"]');
+        const total = column.querySelectorAll('.mtr-technique').length;
+        const coverage = Math.round(2 / total * 100);
+        expect(column.querySelector('.mtr-fig-pct').textContent).toBe(coverage + '%');
+        expect(column.querySelector('.mtr-fig-count').textContent).toBe('2/' + total);
+        // The Execution mean is 10 against bounds [0, 10]: the top band's color.
+        expect(column.querySelector('.mtr-meter-fill').style.background).toBe(viz.el.querySelector('.mtr-band[data-band="4"]').style.background);
     });
 
     test('values from roll-up count toward the bounds', () => {
         const viz = render(Viz, { fields, rows: [['T1059.001', '30', ''], ['T1059.003', '30', ''], ['T1566', '40', '']] }, { scaleMode: 'auto', rollup: 'sum' });
-        expect(labels(viz)).toEqual(['0', '30', '60']);
+        expect(range(viz)).toEqual(['0', '60']);
     });
 
     test('manual mode ignores the data', () => {
-        expect(labels(render(Viz, data, { scaleMode: 'manual', startVal: '0', endVal: '100' }))).toEqual(['0', '50', '100']);
+        expect(range(render(Viz, data, { scaleMode: 'manual', startVal: '0', endVal: '100' }))).toEqual(['0', '100']);
+    });
+
+    test('bands follow the data when the bounds come from it, and are even when set by hand', () => {
+        const skewed = { fields, rows: [['T1059', '1', ''], ['T1566', '2', ''], ['T1003', '3', ''], ['T1078', '4', ''], ['T1110', '1000', '']] };
+        const edgesOf = viz => Array.from(viz.el.querySelectorAll('.mtr-band-col:not(.mtr-band-col-nodata) > .mtr-band-edge:not(.mtr-band-edge-end)')).map(e => Number(e.textContent));
+        const manual = edgesOf(render(Viz, skewed, { scaleMode: 'manual', startVal: '0', endVal: '1000' }));
+        const auto = edgesOf(render(Viz, skewed, { scaleMode: 'auto' }));
+        expect(manual).toEqual([0, 200, 400, 600, 800]);
+        expect(auto[1]).toBeLessThan(10);
     });
 });
 
@@ -370,8 +403,8 @@ describe('sub-technique roll-up (feature 4)', () => {
             const viz = render(Viz, data, options);
             return viz.el.querySelector('.mtr-tactic-col[data-name="Execution"] .mtr-count .mtr-stats-val').textContent;
         };
-        expect(stats({})).toBe('0 (0%)');
-        expect(stats({ rollup: 'sum' })).toMatch(/^1 \(/);
+        expect(stats({})).toMatch(/^0 of \d+ \(0%\)$/);
+        expect(stats({ rollup: 'sum' })).toMatch(/^1 of \d+ \(/);
     });
 
     test('hide null keeps the rolled-up technique and its sub-techniques', () => {
@@ -479,9 +512,9 @@ describe('globals', () => {
 });
 
 describe('formatData', () => {
-    test('returns false for an empty result set', () => {
+    test('marks an empty result set, so that updateView can say so', () => {
         const viz = createViz(Viz);
-        expect(viz.formatData(loadFixture('empty.json'))).toBe(false);
+        expect(viz.formatData(loadFixture('empty.json'))).toMatchObject({ empty: true, rows: [] });
     });
 
     test('rejects results with fewer than 2 fields', () => {
@@ -498,11 +531,33 @@ describe('formatData', () => {
 });
 
 describe('updateView', () => {
-    test('empty results leave the previous render in place (audit P2-4)', () => {
+    test('empty results replace the previous render with a message (audit P2-4)', () => {
         const viz = render(Viz, loadFixture('single-row.json'));
-        const before = viz.el.innerHTML;
         viz.updateView(viz.formatData(loadFixture('empty.json')), buildConfig());
-        expect(viz.el.innerHTML).toBe(before);
+        expect(viz.el.querySelector('.mtr-viz-container')).toBeNull();
+        expect(viz.el.querySelector('.mtr-message b').textContent).toBe('No results');
+        expect(viz.el.querySelector('.mtr-message').getAttribute('role')).toBe('status');
+    });
+
+    test('results with no id in the matrix say so, and name the ids that did not match', () => {
+        const data = { fields: [{ name: 'id' }, { name: 'count' }], rows: [['1059', '3'], ['Phishing', '4'], ['TA0001', '5'], ['T0000', '6']] };
+        const viz = render(Viz, data);
+        const message = viz.el.querySelector('.mtr-message');
+        expect(message.querySelector('b').textContent).toBe('None of the 4 result ids matched this matrix');
+        expect(message.textContent).toContain('Unmatched ids: 1059, Phishing, TA0001');
+        expect(message.textContent).not.toContain('T0000');
+    });
+
+    test('results with no usable value say what a row needs', () => {
+        const viz = render(Viz, { fields: [{ name: 'id' }, { name: 'count' }], rows: [['T1059', 'n/a'], ['T1566', '']] });
+        expect(viz.el.querySelector('.mtr-message b').textContent).toBe('No usable rows');
+        expect(viz.el.querySelector('.mtr-message').textContent).toContain('numeric value');
+    });
+
+    test('some matching ids are enough: the matrix is drawn without a message', () => {
+        const viz = render(Viz, { fields: [{ name: 'id' }, { name: 'count' }], rows: [['T1059', '3'], ['nonsense', '4']] });
+        expect(viz.el.querySelector('.mtr-message')).toBeNull();
+        expect(viz.el.querySelector('.mtr-viz-container')).not.toBeNull();
     });
 
     test('re-rendering replaces the previous output', () => {
@@ -515,7 +570,7 @@ describe('updateView', () => {
     test('applies the current Splunk theme as the root class', () => {
         vizUtils.setTheme('dark');
         const viz = render(Viz, loadFixture('single-row.json'));
-        expect(viz.el.className).toBe('dark');
+        expect(viz.el.className).toBe('dark mtr-viz mtr-display-id');
     });
 
     test('colors cells along the configured gradient', () => {
@@ -523,10 +578,12 @@ describe('updateView', () => {
             startColor: '#000000', midColor: '#808080', endColor: '#ffffff', startVal: '0', endVal: '100'
         });
         const cell = id => viz.el.querySelector(`.mtr-technique[data-id="${id}"]`);
-        expect(cell('T1566').style.background).toBe('rgb(255, 255, 255)');
-        expect(cell('T1003').style.background).toBe('rgb(0, 0, 0)');
+        const bandColor = index => viz.el.querySelector(`.mtr-band[data-band="${index}"]`).style.background;
+        // 100 is in the top band and 0 in the bottom one, each in its band's color.
+        expect(cell('T1566').style.background).toBe(bandColor(4));
+        expect(cell('T1003').style.background).toBe(bandColor(0));
         expect(cell('T1003').style.color).toBe('rgb(255, 255, 255)');
-        expect(cell('T1566').style.color).toBe('rgb(0, 0, 0)');
+        expect(cell('T1566').style.color).toBe('rgb(14, 17, 20)');
     });
 
     test('clones a multi-tactic technique into every tactic column', () => {
@@ -545,7 +602,8 @@ describe('updateView', () => {
 
     test('escapes HTML in result values', () => {
         const viz = render(Viz, loadFixture('typical.json'));
-        expect(viz.el.querySelector('b')).toBeNull();
+        $(viz.el.querySelector('.mtr-technique[data-id="T1486"]')).trigger('mouseenter');
+        expect(viz.el.querySelector('.mtr-technique-tooltip b')).toBeNull();
         expect(viz.el.querySelector('.mtr-technique[data-id="T1486"]').getAttribute('data-desc'))
             .toBe('&lt;b&gt;HTML&lt;/b&gt; &amp; &quot;quotes&quot; must be escaped');
     });
@@ -566,7 +624,8 @@ describe('updateView', () => {
         const viz = render(Viz, loadFixture('single-row.json'), { startVal: '<b>1</b>', endVal: '<i>2</i>' });
         expect(viz.el.querySelector('.mtr-legend b, .mtr-legend i')).toBeNull();
         // Not numbers, so the defaults are used.
-        expect(Array.from(viz.el.querySelectorAll('.mtr-legend-val span')).map(s => s.textContent)).toEqual(['0', '50', '100']);
+        expect(viz.el.querySelector('.mtr-band-col .mtr-band-edge').textContent).toBe('0');
+        expect(viz.el.querySelector('.mtr-band-edge-end').textContent).toBe('100');
     });
 
     test('ignores columns beyond the third', () => {
@@ -629,7 +688,9 @@ describe('drilldown', () => {
 
     test('sub-technique click also sends its parent technique', () => {
         const viz = render(Viz, loadFixture('typical.json'));
-        clickOn(viz, '.mtr-sub-technique[data-id="T1059.001"]');
+        // Sub-techniques are listed in the technique's tooltip; the highest value comes first.
+        $(viz.el.querySelector('.mtr-technique[data-id="T1059"]')).trigger('mouseenter');
+        $(viz.el.querySelector('.mtr-sub-row')).trigger('click');
         expect(viz.drilldowns).toHaveLength(1);
         expect(viz.drilldowns[0].data).toMatchObject({
             'mtr_sub-technique_id': 'T1059.001',
@@ -670,7 +731,10 @@ describe('drilldown payloads (also as Dashboard Studio sees them)', () => {
     const clicks = {
         'a tactic': viz => $(viz.el.querySelector('.mtr-tactic-title')).trigger('click'),
         'a technique': viz => $(viz.el.querySelector('.mtr-technique[data-value]')).trigger('click'),
-        'a sub-technique': viz => $(viz.el.querySelector('.mtr-sub-technique[data-value]')).trigger('click')
+        'a sub-technique': viz => {
+            $(viz.el.querySelector('.mtr-technique[data-id="T1059"]')).trigger('mouseenter');
+            $(viz.el.querySelector('.mtr-sub-row')).trigger('click');
+        }
     };
 
     test.each(Object.keys(clicks))('clicking %s sends only values that exist', label => {
@@ -752,16 +816,25 @@ describe('tooltip', () => {
         const viz = render(Viz, loadFixture('typical.json'));
         hover(viz, '.mtr-technique[data-id="T1190"]');
         const tooltip = viz.el.querySelector('.mtr-technique-tooltip');
-        expect(tooltip.querySelector('.mtr-val').textContent).toBe('');
-        expect(tooltip.querySelector('.mtr-label').textContent).toBe('');
+        expect(tooltip.querySelector('.mtr-val').textContent).toBe('No data');
+        expect(tooltip.querySelector('.mtr-meter-container').style.display).toBe('none');
+        expect(tooltip.querySelector('.mtr-band-line')).toBeNull();
     });
 
     test('is removed on mouse leave', () => {
         const viz = render(Viz, loadFixture('typical.json'));
         const cell = viz.el.querySelector('.mtr-technique[data-id="T1059"]');
-        $(cell).trigger('mouseenter');
-        $(cell).trigger('mouseleave');
-        expect(viz.el.querySelector('.mtr-technique-tooltip')).toBeNull();
+        jest.useFakeTimers();
+        try {
+            $(cell).trigger('mouseenter');
+            $(cell).trigger('mouseleave');
+            // It lingers a moment, so the pointer can move onto it.
+            expect(viz.el.querySelector('.mtr-technique-tooltip')).not.toBeNull();
+            jest.advanceTimersByTime(500);
+            expect(viz.el.querySelector('.mtr-technique-tooltip')).toBeNull();
+        } finally {
+            jest.useRealTimers();
+        }
     });
 });
 
@@ -808,45 +881,60 @@ describe('animation', () => {
         window.requestAnimationFrame.mockRestore();
     });
 
-    test('sweeps focus from the lower bound upward each frame', () => {
-        const viz = render(Viz, loadFixture('typical.json'), { animate: 'yes', duration: '1' });
-        expect(frames).toHaveLength(1);
-        frames.shift()();
-        // First window covers [0, stepSize + 10% of the range].
-        const focused = Array.from(viz.el.querySelectorAll('.mtr-technique.focused')).map(el => el.getAttribute('data-id'));
-        expect(new Set(focused)).toEqual(new Set(['T1003']));
-        expect(frames).toHaveLength(1);
+    const fill = (viz, name) => viz.el.querySelector('.mtr-tactic-col[data-name="' + name + '"] .mtr-meter-fill');
+
+    test('the first render fades in and fills the gauges after a frame; the sweep of old is gone', () => {
+        const viz = render(Viz, loadFixture('typical.json'), { animate: 'yes' });
+        expect(viz.el.classList.contains('mtr-enter')).toBe(true);
+        expect(fill(viz, 'Execution').style.width).toBe('0%');
+        frames.forEach(frame => frame(1000));
+        expect(fill(viz, 'Execution').style.width).not.toBe('0%');
+        expect(viz.el.querySelectorAll('.focused, .defocused').length).toBe(0);
     });
 
-    test('re-rendering does not stack animation loops (audit P1-4)', () => {
-        // Track which scheduled frames are still pending, honoring cancelAnimationFrame.
+    test('the percentages count up to their final value', () => {
+        const viz = render(Viz, loadFixture('typical.json'), { animate: 'yes' });
+        const column = '.mtr-tactic-col[data-name="Execution"]';
+        const pct = () => viz.el.querySelector(column + ' .mtr-fig-pct').textContent;
+        const final = Math.round(viz.el.querySelectorAll(column + ' .mtr-technique[data-value]').length / viz.el.querySelectorAll(column + ' .mtr-technique').length * 100) + '%';
+        let now = 0;
+        let guard = 0;
+        while (frames.length && guard++ < 50) {
+            const frame = frames.shift();
+            frame(now);
+            now += 1000;
+        }
+        expect(pct()).toBe(final);
+    });
+
+    test('later renders (a refresh of the search) do not fade or count up again', () => {
+        const viz = render(Viz, loadFixture('typical.json'), { animate: 'yes' });
+        frames.length = 0;
+        viz.updateView(viz.formatData(loadFixture('typical.json')), buildConfig({ animate: 'yes' }));
+        expect(viz.el.classList.contains('mtr-enter')).toBe(false);
+        expect(fill(viz, 'Execution').style.width).not.toBe('0%');
+        expect(frames).toHaveLength(0);
+    });
+
+    test('with animate off nothing is animated', () => {
+        const viz = render(Viz, loadFixture('typical.json'), { animate: 'no' });
+        expect(viz.el.classList.contains('mtr-enter')).toBe(false);
+        expect(frames).toHaveLength(0);
+        expect(fill(viz, 'Execution').style.width).not.toBe('0%');
+    });
+
+    test('re-rendering during the count-up stops the old count (audit P1-4)', () => {
         const pending = new Map();
         let nextId = 1;
         window.requestAnimationFrame.mockImplementation(cb => { pending.set(nextId, cb); return nextId++; });
         jest.spyOn(window, 'cancelAnimationFrame').mockImplementation(id => pending.delete(id));
-
         const viz = render(Viz, loadFixture('typical.json'), { animate: 'yes' });
+        const before = pending.size;
         for (let i = 0; i < 3; i++) {
             viz.updateView(viz.formatData(loadFixture('typical.json')), buildConfig({ animate: 'yes' }));
         }
-        expect(pending.size).toBe(1);
-
-        // Each frame schedules exactly one successor, so the loop count stays at 1.
-        for (let i = 0; i < 5; i++) {
-            const callbacks = Array.from(pending.entries());
-            pending.clear();
-            callbacks.forEach(([, cb]) => cb());
-            expect(pending.size).toBe(1);
-        }
+        expect(pending.size).toBeLessThanOrEqual(before);
         window.cancelAnimationFrame.mockRestore();
-    });
-
-    test('stops scheduling frames once animate is cleared', () => {
-        const viz = render(Viz, loadFixture('typical.json'), { animate: 'yes' });
-        viz.animate = false;
-        frames.shift()();
-        expect(frames).toHaveLength(0);
-        expect(viz.el.querySelectorAll('.focused, .defocused').length).toBe(0);
     });
 });
 

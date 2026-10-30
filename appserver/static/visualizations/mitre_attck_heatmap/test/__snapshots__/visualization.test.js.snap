@@ -3,38 +3,42 @@
 exports[`render snapshots empty.json with defaults 1`] = `
 {
   "hasSearchBar": false,
-  "htmlLength": 0,
-  "htmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "htmlLength": 163,
+  "htmlSha256": "0922173345d7232dcd2c563ca037329303ecdc18db566efdbad42dc2e03202d7",
   "legend": null,
   "tactics": [],
-  "theme": "",
+  "theme": "light mtr-viz",
 }
 `;
 
 exports[`render snapshots large.js with defaults 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 427981,
-  "htmlSha256": "0b61771c341d7106b1f368774bed49c78e5e4da33b93a514d2d49de99d197f6f",
+  "htmlLength": 436506,
+  "htmlSha256": "0ca87c589f2da23867fd5c0e26e16c488664e8f3fce564f527eb6f76b67d3162",
   "legend": {
     "labels": [
       "0",
-      "50",
+      "20",
+      "40",
+      "60",
+      "80",
       "100",
+      "No data",
     ],
     "title": "count",
   },
   "tactics": [
     {
       "firstTechniques": [
-        "T1590",
-        "T1681",
-        "T1595",
+        "T1594",
+        "T1598",
+        "T1589",
       ],
       "id": "TA0043",
       "stats": [
         "905",
-        "12 (100%)",
+        "12 of 12 (100%)",
         "75",
       ],
       "subTechniques": 34,
@@ -44,14 +48,14 @@ exports[`render snapshots large.js with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1586",
-        "T1650",
-        "T1587",
+        "T1585",
+        "T1584",
+        "T1588",
       ],
       "id": "TA0042",
       "stats": [
         "534",
-        "9 (100%)",
+        "9 of 9 (100%)",
         "59",
       ],
       "subTechniques": 42,
@@ -61,14 +65,14 @@ exports[`render snapshots large.js with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1200",
-        "T1190",
-        "T1091",
+        "T1189",
+        "T1199",
+        "T1078",
       ],
       "id": "TA0001",
       "stats": [
         "997",
-        "11 (100%)",
+        "11 of 11 (100%)",
         "91",
       ],
       "subTechniques": 11,
@@ -78,14 +82,14 @@ exports[`render snapshots large.js with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1127",
-        "T1677",
-        "T1106",
+        "T1698",
+        "T1610",
+        "T1203",
       ],
       "id": "TA0002",
       "stats": [
         "1,381",
-        "22 (100%)",
+        "22 of 22 (100%)",
         "63",
       ],
       "subTechniques": 44,
@@ -95,14 +99,14 @@ exports[`render snapshots large.js with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1671",
-        "T1098",
-        "T1053",
+        "T1037",
+        "T1542",
+        "T1554",
       ],
       "id": "TA0003",
       "stats": [
         "1,835",
-        "22 (100%)",
+        "22 of 22 (100%)",
         "83",
       ],
       "subTechniques": 91,
@@ -112,14 +116,14 @@ exports[`render snapshots large.js with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1484",
-        "T1098",
-        "T1611",
+        "T1134",
+        "T1037",
+        "T1548",
       ],
       "id": "TA0004",
       "stats": [
         "966",
-        "13 (100%)",
+        "13 of 13 (100%)",
         "74",
       ],
       "subTechniques": 83,
@@ -129,14 +133,14 @@ exports[`render snapshots large.js with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1127",
-        "T1497",
-        "T1221",
+        "T1134",
+        "T1535",
+        "T1140",
       ],
       "id": "TA0005",
       "stats": [
         "2,586",
-        "31 (100%)",
+        "31 of 31 (100%)",
         "83",
       ],
       "subTechniques": 120,
@@ -146,14 +150,14 @@ exports[`render snapshots large.js with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1685",
-        "T1484",
-        "T1666",
+        "T1689",
+        "T1578",
+        "T1112",
       ],
       "id": "TA0112",
       "stats": [
         "1,242",
-        "18 (100%)",
+        "18 of 18 (100%)",
         "69",
       ],
       "subTechniques": 39,
@@ -163,14 +167,14 @@ exports[`render snapshots large.js with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1555",
-        "T1606",
-        "T1110",
+        "T1621",
+        "T1558",
+        "T1649",
       ],
       "id": "TA0006",
       "stats": [
         "1,509",
-        "18 (100%)",
+        "18 of 18 (100%)",
         "84",
       ],
       "subTechniques": 50,
@@ -180,14 +184,14 @@ exports[`render snapshots large.js with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1518",
-        "T1120",
-        "T1497",
+        "T1046",
+        "T1057",
+        "T1614",
       ],
       "id": "TA0007",
       "stats": [
         "2,281",
-        "34 (100%)",
+        "34 of 34 (100%)",
         "67",
       ],
       "subTechniques": 15,
@@ -197,14 +201,14 @@ exports[`render snapshots large.js with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1080",
-        "T1550",
-        "T1021",
+        "T1210",
+        "T1563",
+        "T1534",
       ],
       "id": "TA0008",
       "stats": [
         "654",
-        "9 (100%)",
+        "9 of 9 (100%)",
         "73",
       ],
       "subTechniques": 14,
@@ -214,14 +218,14 @@ exports[`render snapshots large.js with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1113",
-        "T1039",
-        "T1530",
+        "T1602",
+        "T1119",
+        "T1125",
       ],
       "id": "TA0009",
       "stats": [
         "1,284",
-        "17 (100%)",
+        "17 of 17 (100%)",
         "76",
       ],
       "subTechniques": 24,
@@ -231,14 +235,14 @@ exports[`render snapshots large.js with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1572",
-        "T1001",
-        "T1568",
+        "T1095",
+        "T1665",
+        "T1571",
       ],
       "id": "TA0011",
       "stats": [
         "1,201",
-        "18 (100%)",
+        "18 of 18 (100%)",
         "67",
       ],
       "subTechniques": 27,
@@ -248,14 +252,14 @@ exports[`render snapshots large.js with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1020",
-        "T1537",
-        "T1030",
+        "T1029",
+        "T1052",
+        "T1567",
       ],
       "id": "TA0010",
       "stats": [
         "850",
-        "10 (100%)",
+        "10 of 10 (100%)",
         "85",
       ],
       "subTechniques": 10,
@@ -265,14 +269,14 @@ exports[`render snapshots large.js with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1490",
-        "T1498",
-        "T1491",
+        "T1529",
+        "T1489",
+        "T1496",
       ],
       "id": "TA0040",
       "stats": [
         "1,091",
-        "15 (100%)",
+        "15 of 15 (100%)",
         "73",
       ],
       "subTechniques": 18,
@@ -281,34 +285,38 @@ exports[`render snapshots large.js with defaults 1`] = `
       "withValue": 15,
     },
   ],
-  "theme": "light",
+  "theme": "light mtr-viz mtr-display-id",
 }
 `;
 
 exports[`render snapshots large.js with display name 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 444374,
-  "htmlSha256": "95f6bc3c51017fb867775245fd34399f1bc25877c848b081342cf6855ab02e88",
+  "htmlLength": 452068,
+  "htmlSha256": "e7a65ce0d70c84069cea8585dc378582bd1d27e5605084808fc64e012341f0d5",
   "legend": {
     "labels": [
       "0",
-      "50",
+      "20",
+      "40",
+      "60",
+      "80",
       "100",
+      "No data",
     ],
     "title": "count",
   },
   "tactics": [
     {
       "firstTechniques": [
-        "T1590",
-        "T1681",
-        "T1595",
+        "T1594",
+        "T1598",
+        "T1589",
       ],
       "id": "TA0043",
       "stats": [
         "905",
-        "12 (100%)",
+        "12 of 12 (100%)",
         "75",
       ],
       "subTechniques": 34,
@@ -318,14 +326,14 @@ exports[`render snapshots large.js with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1586",
-        "T1650",
-        "T1587",
+        "T1585",
+        "T1584",
+        "T1588",
       ],
       "id": "TA0042",
       "stats": [
         "534",
-        "9 (100%)",
+        "9 of 9 (100%)",
         "59",
       ],
       "subTechniques": 42,
@@ -335,14 +343,14 @@ exports[`render snapshots large.js with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1200",
-        "T1190",
-        "T1091",
+        "T1189",
+        "T1199",
+        "T1078",
       ],
       "id": "TA0001",
       "stats": [
         "997",
-        "11 (100%)",
+        "11 of 11 (100%)",
         "91",
       ],
       "subTechniques": 11,
@@ -352,14 +360,14 @@ exports[`render snapshots large.js with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1127",
-        "T1677",
-        "T1106",
+        "T1698",
+        "T1610",
+        "T1203",
       ],
       "id": "TA0002",
       "stats": [
         "1,381",
-        "22 (100%)",
+        "22 of 22 (100%)",
         "63",
       ],
       "subTechniques": 44,
@@ -369,14 +377,14 @@ exports[`render snapshots large.js with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1671",
-        "T1098",
-        "T1053",
+        "T1037",
+        "T1542",
+        "T1554",
       ],
       "id": "TA0003",
       "stats": [
         "1,835",
-        "22 (100%)",
+        "22 of 22 (100%)",
         "83",
       ],
       "subTechniques": 91,
@@ -386,14 +394,14 @@ exports[`render snapshots large.js with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1484",
-        "T1098",
-        "T1611",
+        "T1134",
+        "T1037",
+        "T1548",
       ],
       "id": "TA0004",
       "stats": [
         "966",
-        "13 (100%)",
+        "13 of 13 (100%)",
         "74",
       ],
       "subTechniques": 83,
@@ -403,14 +411,14 @@ exports[`render snapshots large.js with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1127",
-        "T1497",
-        "T1221",
+        "T1134",
+        "T1535",
+        "T1140",
       ],
       "id": "TA0005",
       "stats": [
         "2,586",
-        "31 (100%)",
+        "31 of 31 (100%)",
         "83",
       ],
       "subTechniques": 120,
@@ -420,14 +428,14 @@ exports[`render snapshots large.js with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1685",
-        "T1484",
-        "T1666",
+        "T1689",
+        "T1578",
+        "T1112",
       ],
       "id": "TA0112",
       "stats": [
         "1,242",
-        "18 (100%)",
+        "18 of 18 (100%)",
         "69",
       ],
       "subTechniques": 39,
@@ -437,14 +445,14 @@ exports[`render snapshots large.js with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1555",
-        "T1606",
-        "T1110",
+        "T1621",
+        "T1558",
+        "T1649",
       ],
       "id": "TA0006",
       "stats": [
         "1,509",
-        "18 (100%)",
+        "18 of 18 (100%)",
         "84",
       ],
       "subTechniques": 50,
@@ -454,14 +462,14 @@ exports[`render snapshots large.js with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1518",
-        "T1120",
-        "T1497",
+        "T1046",
+        "T1057",
+        "T1614",
       ],
       "id": "TA0007",
       "stats": [
         "2,281",
-        "34 (100%)",
+        "34 of 34 (100%)",
         "67",
       ],
       "subTechniques": 15,
@@ -471,14 +479,14 @@ exports[`render snapshots large.js with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1080",
-        "T1550",
-        "T1021",
+        "T1210",
+        "T1563",
+        "T1534",
       ],
       "id": "TA0008",
       "stats": [
         "654",
-        "9 (100%)",
+        "9 of 9 (100%)",
         "73",
       ],
       "subTechniques": 14,
@@ -488,14 +496,14 @@ exports[`render snapshots large.js with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1113",
-        "T1039",
-        "T1530",
+        "T1602",
+        "T1119",
+        "T1125",
       ],
       "id": "TA0009",
       "stats": [
         "1,284",
-        "17 (100%)",
+        "17 of 17 (100%)",
         "76",
       ],
       "subTechniques": 24,
@@ -505,14 +513,14 @@ exports[`render snapshots large.js with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1572",
-        "T1001",
-        "T1568",
+        "T1095",
+        "T1665",
+        "T1571",
       ],
       "id": "TA0011",
       "stats": [
         "1,201",
-        "18 (100%)",
+        "18 of 18 (100%)",
         "67",
       ],
       "subTechniques": 27,
@@ -522,14 +530,14 @@ exports[`render snapshots large.js with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1020",
-        "T1537",
-        "T1030",
+        "T1029",
+        "T1052",
+        "T1567",
       ],
       "id": "TA0010",
       "stats": [
         "850",
-        "10 (100%)",
+        "10 of 10 (100%)",
         "85",
       ],
       "subTechniques": 10,
@@ -539,14 +547,14 @@ exports[`render snapshots large.js with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1490",
-        "T1498",
-        "T1491",
+        "T1529",
+        "T1489",
+        "T1496",
       ],
       "id": "TA0040",
       "stats": [
         "1,091",
-        "15 (100%)",
+        "15 of 15 (100%)",
         "73",
       ],
       "subTechniques": 18,
@@ -555,34 +563,38 @@ exports[`render snapshots large.js with display name 1`] = `
       "withValue": 15,
     },
   ],
-  "theme": "light",
+  "theme": "light mtr-viz mtr-display-name",
 }
 `;
 
 exports[`render snapshots large.js with hide null 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 427981,
-  "htmlSha256": "0b61771c341d7106b1f368774bed49c78e5e4da33b93a514d2d49de99d197f6f",
+  "htmlLength": 436506,
+  "htmlSha256": "0ca87c589f2da23867fd5c0e26e16c488664e8f3fce564f527eb6f76b67d3162",
   "legend": {
     "labels": [
       "0",
-      "50",
+      "20",
+      "40",
+      "60",
+      "80",
       "100",
+      "No data",
     ],
     "title": "count",
   },
   "tactics": [
     {
       "firstTechniques": [
-        "T1590",
-        "T1681",
-        "T1595",
+        "T1594",
+        "T1598",
+        "T1589",
       ],
       "id": "TA0043",
       "stats": [
         "905",
-        "12 (100%)",
+        "12 of 12 (100%)",
         "75",
       ],
       "subTechniques": 34,
@@ -592,14 +604,14 @@ exports[`render snapshots large.js with hide null 1`] = `
     },
     {
       "firstTechniques": [
-        "T1586",
-        "T1650",
-        "T1587",
+        "T1585",
+        "T1584",
+        "T1588",
       ],
       "id": "TA0042",
       "stats": [
         "534",
-        "9 (100%)",
+        "9 of 9 (100%)",
         "59",
       ],
       "subTechniques": 42,
@@ -609,14 +621,14 @@ exports[`render snapshots large.js with hide null 1`] = `
     },
     {
       "firstTechniques": [
-        "T1200",
-        "T1190",
-        "T1091",
+        "T1189",
+        "T1199",
+        "T1078",
       ],
       "id": "TA0001",
       "stats": [
         "997",
-        "11 (100%)",
+        "11 of 11 (100%)",
         "91",
       ],
       "subTechniques": 11,
@@ -626,14 +638,14 @@ exports[`render snapshots large.js with hide null 1`] = `
     },
     {
       "firstTechniques": [
-        "T1127",
-        "T1677",
-        "T1106",
+        "T1698",
+        "T1610",
+        "T1203",
       ],
       "id": "TA0002",
       "stats": [
         "1,381",
-        "22 (100%)",
+        "22 of 22 (100%)",
         "63",
       ],
       "subTechniques": 44,
@@ -643,14 +655,14 @@ exports[`render snapshots large.js with hide null 1`] = `
     },
     {
       "firstTechniques": [
-        "T1671",
-        "T1098",
-        "T1053",
+        "T1037",
+        "T1542",
+        "T1554",
       ],
       "id": "TA0003",
       "stats": [
         "1,835",
-        "22 (100%)",
+        "22 of 22 (100%)",
         "83",
       ],
       "subTechniques": 91,
@@ -660,14 +672,14 @@ exports[`render snapshots large.js with hide null 1`] = `
     },
     {
       "firstTechniques": [
-        "T1484",
-        "T1098",
-        "T1611",
+        "T1134",
+        "T1037",
+        "T1548",
       ],
       "id": "TA0004",
       "stats": [
         "966",
-        "13 (100%)",
+        "13 of 13 (100%)",
         "74",
       ],
       "subTechniques": 83,
@@ -677,14 +689,14 @@ exports[`render snapshots large.js with hide null 1`] = `
     },
     {
       "firstTechniques": [
-        "T1127",
-        "T1497",
-        "T1221",
+        "T1134",
+        "T1535",
+        "T1140",
       ],
       "id": "TA0005",
       "stats": [
         "2,586",
-        "31 (100%)",
+        "31 of 31 (100%)",
         "83",
       ],
       "subTechniques": 120,
@@ -694,14 +706,14 @@ exports[`render snapshots large.js with hide null 1`] = `
     },
     {
       "firstTechniques": [
-        "T1685",
-        "T1484",
-        "T1666",
+        "T1689",
+        "T1578",
+        "T1112",
       ],
       "id": "TA0112",
       "stats": [
         "1,242",
-        "18 (100%)",
+        "18 of 18 (100%)",
         "69",
       ],
       "subTechniques": 39,
@@ -711,14 +723,14 @@ exports[`render snapshots large.js with hide null 1`] = `
     },
     {
       "firstTechniques": [
-        "T1555",
-        "T1606",
-        "T1110",
+        "T1621",
+        "T1558",
+        "T1649",
       ],
       "id": "TA0006",
       "stats": [
         "1,509",
-        "18 (100%)",
+        "18 of 18 (100%)",
         "84",
       ],
       "subTechniques": 50,
@@ -728,14 +740,14 @@ exports[`render snapshots large.js with hide null 1`] = `
     },
     {
       "firstTechniques": [
-        "T1518",
-        "T1120",
-        "T1497",
+        "T1046",
+        "T1057",
+        "T1614",
       ],
       "id": "TA0007",
       "stats": [
         "2,281",
-        "34 (100%)",
+        "34 of 34 (100%)",
         "67",
       ],
       "subTechniques": 15,
@@ -745,14 +757,14 @@ exports[`render snapshots large.js with hide null 1`] = `
     },
     {
       "firstTechniques": [
-        "T1080",
-        "T1550",
-        "T1021",
+        "T1210",
+        "T1563",
+        "T1534",
       ],
       "id": "TA0008",
       "stats": [
         "654",
-        "9 (100%)",
+        "9 of 9 (100%)",
         "73",
       ],
       "subTechniques": 14,
@@ -762,14 +774,14 @@ exports[`render snapshots large.js with hide null 1`] = `
     },
     {
       "firstTechniques": [
-        "T1113",
-        "T1039",
-        "T1530",
+        "T1602",
+        "T1119",
+        "T1125",
       ],
       "id": "TA0009",
       "stats": [
         "1,284",
-        "17 (100%)",
+        "17 of 17 (100%)",
         "76",
       ],
       "subTechniques": 24,
@@ -779,14 +791,14 @@ exports[`render snapshots large.js with hide null 1`] = `
     },
     {
       "firstTechniques": [
-        "T1572",
-        "T1001",
-        "T1568",
+        "T1095",
+        "T1665",
+        "T1571",
       ],
       "id": "TA0011",
       "stats": [
         "1,201",
-        "18 (100%)",
+        "18 of 18 (100%)",
         "67",
       ],
       "subTechniques": 27,
@@ -796,14 +808,14 @@ exports[`render snapshots large.js with hide null 1`] = `
     },
     {
       "firstTechniques": [
-        "T1020",
-        "T1537",
-        "T1030",
+        "T1029",
+        "T1052",
+        "T1567",
       ],
       "id": "TA0010",
       "stats": [
         "850",
-        "10 (100%)",
+        "10 of 10 (100%)",
         "85",
       ],
       "subTechniques": 10,
@@ -813,14 +825,14 @@ exports[`render snapshots large.js with hide null 1`] = `
     },
     {
       "firstTechniques": [
-        "T1490",
-        "T1498",
-        "T1491",
+        "T1529",
+        "T1489",
+        "T1496",
       ],
       "id": "TA0040",
       "stats": [
         "1,091",
-        "15 (100%)",
+        "15 of 15 (100%)",
         "73",
       ],
       "subTechniques": 18,
@@ -829,20 +841,24 @@ exports[`render snapshots large.js with hide null 1`] = `
       "withValue": 15,
     },
   ],
-  "theme": "light",
+  "theme": "light mtr-viz mtr-display-id",
 }
 `;
 
 exports[`render snapshots large.js with sort by id desc 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 427981,
-  "htmlSha256": "0dfeb9d45653a13d5b0dce9c8b57b445b850f665b513fff812e2a7e4efc68eaa",
+  "htmlLength": 436506,
+  "htmlSha256": "bb3cc1d59d3cf15b73704195f1611b215a1df5e3f6bb3b440809dd5cf7238be6",
   "legend": {
     "labels": [
       "0",
-      "50",
+      "20",
+      "40",
+      "60",
+      "80",
       "100",
+      "No data",
     ],
     "title": "count",
   },
@@ -856,7 +872,7 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       "id": "TA0043",
       "stats": [
         "905",
-        "12 (100%)",
+        "12 of 12 (100%)",
         "75",
       ],
       "subTechniques": 34,
@@ -873,7 +889,7 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       "id": "TA0042",
       "stats": [
         "534",
-        "9 (100%)",
+        "9 of 9 (100%)",
         "59",
       ],
       "subTechniques": 42,
@@ -890,7 +906,7 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       "id": "TA0001",
       "stats": [
         "997",
-        "11 (100%)",
+        "11 of 11 (100%)",
         "91",
       ],
       "subTechniques": 11,
@@ -907,7 +923,7 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       "id": "TA0002",
       "stats": [
         "1,381",
-        "22 (100%)",
+        "22 of 22 (100%)",
         "63",
       ],
       "subTechniques": 44,
@@ -924,7 +940,7 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       "id": "TA0003",
       "stats": [
         "1,835",
-        "22 (100%)",
+        "22 of 22 (100%)",
         "83",
       ],
       "subTechniques": 91,
@@ -941,7 +957,7 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       "id": "TA0004",
       "stats": [
         "966",
-        "13 (100%)",
+        "13 of 13 (100%)",
         "74",
       ],
       "subTechniques": 83,
@@ -958,7 +974,7 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       "id": "TA0005",
       "stats": [
         "2,586",
-        "31 (100%)",
+        "31 of 31 (100%)",
         "83",
       ],
       "subTechniques": 120,
@@ -975,7 +991,7 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       "id": "TA0112",
       "stats": [
         "1,242",
-        "18 (100%)",
+        "18 of 18 (100%)",
         "69",
       ],
       "subTechniques": 39,
@@ -992,7 +1008,7 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       "id": "TA0006",
       "stats": [
         "1,509",
-        "18 (100%)",
+        "18 of 18 (100%)",
         "84",
       ],
       "subTechniques": 50,
@@ -1009,7 +1025,7 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       "id": "TA0007",
       "stats": [
         "2,281",
-        "34 (100%)",
+        "34 of 34 (100%)",
         "67",
       ],
       "subTechniques": 15,
@@ -1026,7 +1042,7 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       "id": "TA0008",
       "stats": [
         "654",
-        "9 (100%)",
+        "9 of 9 (100%)",
         "73",
       ],
       "subTechniques": 14,
@@ -1043,7 +1059,7 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       "id": "TA0009",
       "stats": [
         "1,284",
-        "17 (100%)",
+        "17 of 17 (100%)",
         "76",
       ],
       "subTechniques": 24,
@@ -1060,7 +1076,7 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       "id": "TA0011",
       "stats": [
         "1,201",
-        "18 (100%)",
+        "18 of 18 (100%)",
         "67",
       ],
       "subTechniques": 27,
@@ -1077,7 +1093,7 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       "id": "TA0010",
       "stats": [
         "850",
-        "10 (100%)",
+        "10 of 10 (100%)",
         "85",
       ],
       "subTechniques": 10,
@@ -1094,7 +1110,7 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       "id": "TA0040",
       "stats": [
         "1,091",
-        "15 (100%)",
+        "15 of 15 (100%)",
         "73",
       ],
       "subTechniques": 18,
@@ -1103,35 +1119,39 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       "withValue": 15,
     },
   ],
-  "theme": "light",
+  "theme": "light mtr-viz mtr-display-id",
 }
 `;
 
 exports[`render snapshots single-row.json with defaults 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 312366,
-  "htmlSha256": "f738ea809ad32bfc6492fc0a2c795e3f7d38b2600f283e1e237244db884890f2",
+  "htmlLength": 306851,
+  "htmlSha256": "4f914f4b999a5de8530b23ce1806f2bdc8984a23ae045c04125bd956b6b3f1c1",
   "legend": {
     "labels": [
       "0",
-      "50",
+      "20",
+      "40",
+      "60",
+      "80",
       "100",
+      "No data",
     ],
     "title": "count",
   },
   "tactics": [
     {
       "firstTechniques": [
-        "T1682",
-        "T1681",
-        "T1598",
+        "T1589",
+        "T1590",
+        "T1591",
       ],
       "id": "TA0043",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 12 (0%)",
+        "—",
       ],
       "subTechniques": 34,
       "techniques": 12,
@@ -1140,15 +1160,15 @@ exports[`render snapshots single-row.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1683",
-        "T1650",
-        "T1608",
+        "T1583",
+        "T1584",
+        "T1585",
       ],
       "id": "TA0042",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 9 (0%)",
+        "—",
       ],
       "subTechniques": 42,
       "techniques": 9,
@@ -1157,15 +1177,15 @@ exports[`render snapshots single-row.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1669",
-        "T1659",
-        "T1566",
+        "T1078",
+        "T1091",
+        "T1133",
       ],
       "id": "TA0001",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 11 (0%)",
+        "—",
       ],
       "subTechniques": 11,
       "techniques": 11,
@@ -1174,14 +1194,14 @@ exports[`render snapshots single-row.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1699",
-        "T1698",
-        "T1677",
+        "T1059",
+        "T1047",
+        "T1053",
       ],
       "id": "TA0002",
       "stats": [
         "42",
-        "1 (5%)",
+        "1 of 22 (5%)",
         "42",
       ],
       "subTechniques": 44,
@@ -1191,15 +1211,15 @@ exports[`render snapshots single-row.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1671",
-        "T1668",
-        "T1653",
+        "T1037",
+        "T1053",
+        "T1078",
       ],
       "id": "TA0003",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 22 (0%)",
+        "—",
       ],
       "subTechniques": 91,
       "techniques": 22,
@@ -1208,15 +1228,15 @@ exports[`render snapshots single-row.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1611",
-        "T1548",
-        "T1547",
+        "T1037",
+        "T1053",
+        "T1055",
       ],
       "id": "TA0004",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 13 (0%)",
+        "—",
       ],
       "subTechniques": 83,
       "techniques": 13,
@@ -1225,15 +1245,15 @@ exports[`render snapshots single-row.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1696",
-        "T1684",
-        "T1679",
+        "T1006",
+        "T1014",
+        "T1027",
       ],
       "id": "TA0005",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 31 (0%)",
+        "—",
       ],
       "subTechniques": 120,
       "techniques": 31,
@@ -1242,15 +1262,15 @@ exports[`render snapshots single-row.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1690",
-        "T1689",
-        "T1688",
+        "T1112",
+        "T1207",
+        "T1222",
       ],
       "id": "TA0112",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 18 (0%)",
+        "—",
       ],
       "subTechniques": 39,
       "techniques": 18,
@@ -1259,15 +1279,15 @@ exports[`render snapshots single-row.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1697",
-        "T1649",
-        "T1621",
+        "T1003",
+        "T1040",
+        "T1056",
       ],
       "id": "TA0006",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 18 (0%)",
+        "—",
       ],
       "subTechniques": 50,
       "techniques": 18,
@@ -1276,15 +1296,15 @@ exports[`render snapshots single-row.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1680",
-        "T1673",
-        "T1654",
+        "T1007",
+        "T1010",
+        "T1012",
       ],
       "id": "TA0007",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 34 (0%)",
+        "—",
       ],
       "subTechniques": 15,
       "techniques": 34,
@@ -1293,15 +1313,15 @@ exports[`render snapshots single-row.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1570",
-        "T1563",
-        "T1550",
+        "T1021",
+        "T1072",
+        "T1080",
       ],
       "id": "TA0008",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 9 (0%)",
+        "—",
       ],
       "subTechniques": 14,
       "techniques": 9,
@@ -1310,15 +1330,15 @@ exports[`render snapshots single-row.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1602",
-        "T1560",
-        "T1557",
+        "T1005",
+        "T1025",
+        "T1039",
       ],
       "id": "TA0009",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 17 (0%)",
+        "—",
       ],
       "subTechniques": 24,
       "techniques": 17,
@@ -1327,15 +1347,15 @@ exports[`render snapshots single-row.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1665",
-        "T1659",
-        "T1573",
+        "T1001",
+        "T1008",
+        "T1071",
       ],
       "id": "TA0011",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 18 (0%)",
+        "—",
       ],
       "subTechniques": 27,
       "techniques": 18,
@@ -1344,15 +1364,15 @@ exports[`render snapshots single-row.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1700",
-        "T1567",
-        "T1537",
+        "T1011",
+        "T1020",
+        "T1029",
       ],
       "id": "TA0010",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 10 (0%)",
+        "—",
       ],
       "subTechniques": 10,
       "techniques": 10,
@@ -1361,15 +1381,15 @@ exports[`render snapshots single-row.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1667",
-        "T1657",
-        "T1565",
+        "T1485",
+        "T1486",
+        "T1489",
       ],
       "id": "TA0040",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 15 (0%)",
+        "—",
       ],
       "subTechniques": 18,
       "techniques": 15,
@@ -1377,35 +1397,39 @@ exports[`render snapshots single-row.json with defaults 1`] = `
       "withValue": 0,
     },
   ],
-  "theme": "light",
+  "theme": "light mtr-viz mtr-display-id",
 }
 `;
 
 exports[`render snapshots typical.json with custom scale and legend 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 314967,
-  "htmlSha256": "54b93b6ef5c4d4f5137eb16c142791153c1f7b00bd42f4ba6e881b4554a0a774",
+  "htmlLength": 310187,
+  "htmlSha256": "f3883d476cd006301ebf40e2650a4cef23e0d04fd5721aef5893dc2734ffaf7b",
   "legend": {
     "labels": [
       "50",
-      "100",
+      "70",
+      "90",
+      "110",
+      "130",
       "150",
+      "No data",
     ],
     "title": "Alerts <per> "day"",
   },
   "tactics": [
     {
       "firstTechniques": [
-        "T1682",
-        "T1681",
-        "T1598",
+        "T1589",
+        "T1590",
+        "T1591",
       ],
       "id": "TA0043",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 12 (0%)",
+        "—",
       ],
       "subTechniques": 34,
       "techniques": 12,
@@ -1414,15 +1438,15 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
     },
     {
       "firstTechniques": [
-        "T1683",
-        "T1650",
-        "T1608",
+        "T1583",
+        "T1584",
+        "T1585",
       ],
       "id": "TA0042",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 9 (0%)",
+        "—",
       ],
       "subTechniques": 42,
       "techniques": 9,
@@ -1431,14 +1455,14 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
     },
     {
       "firstTechniques": [
-        "T1669",
-        "T1659",
-        "T1200",
+        "T1566",
+        "T1078",
+        "T1091",
       ],
       "id": "TA0001",
       "stats": [
         "165",
-        "2 (18%)",
+        "2 of 11 (18%)",
         "83",
       ],
       "subTechniques": 11,
@@ -1448,14 +1472,14 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
     },
     {
       "firstTechniques": [
-        "T1699",
-        "T1698",
-        "T1677",
+        "T1059",
+        "T1047",
+        "T1053",
       ],
       "id": "TA0002",
       "stats": [
         "42",
-        "1 (5%)",
+        "1 of 22 (5%)",
         "42",
       ],
       "subTechniques": 44,
@@ -1465,14 +1489,14 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
     },
     {
       "firstTechniques": [
-        "T1671",
-        "T1668",
-        "T1653",
+        "T1078",
+        "T1037",
+        "T1053",
       ],
       "id": "TA0003",
       "stats": [
         "65",
-        "1 (5%)",
+        "1 of 22 (5%)",
         "65",
       ],
       "subTechniques": 91,
@@ -1482,14 +1506,14 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
     },
     {
       "firstTechniques": [
-        "T1611",
-        "T1548",
-        "T1547",
+        "T1078",
+        "T1037",
+        "T1053",
       ],
       "id": "TA0004",
       "stats": [
         "65",
-        "1 (8%)",
+        "1 of 13 (8%)",
         "65",
       ],
       "subTechniques": 83,
@@ -1499,14 +1523,14 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
     },
     {
       "firstTechniques": [
-        "T1696",
-        "T1684",
-        "T1679",
+        "T1078",
+        "T1006",
+        "T1014",
       ],
       "id": "TA0005",
       "stats": [
         "65",
-        "1 (3%)",
+        "1 of 31 (3%)",
         "65",
       ],
       "subTechniques": 120,
@@ -1516,15 +1540,15 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
     },
     {
       "firstTechniques": [
-        "T1690",
-        "T1689",
-        "T1688",
+        "T1112",
+        "T1207",
+        "T1222",
       ],
       "id": "TA0112",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 18 (0%)",
+        "—",
       ],
       "subTechniques": 39,
       "techniques": 18,
@@ -1533,14 +1557,14 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
     },
     {
       "firstTechniques": [
-        "T1697",
-        "T1649",
-        "T1621",
+        "T1110",
+        "T1003",
+        "T1040",
       ],
       "id": "TA0006",
       "stats": [
         "12.5",
-        "2 (11%)",
+        "2 of 18 (11%)",
         "6",
       ],
       "subTechniques": 50,
@@ -1550,15 +1574,15 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
     },
     {
       "firstTechniques": [
-        "T1680",
-        "T1673",
-        "T1654",
+        "T1007",
+        "T1010",
+        "T1012",
       ],
       "id": "TA0007",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 34 (0%)",
+        "—",
       ],
       "subTechniques": 15,
       "techniques": 34,
@@ -1567,14 +1591,14 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
     },
     {
       "firstTechniques": [
-        "T1021",
-        "T1570",
-        "T1563",
+        "T1072",
+        "T1080",
+        "T1091",
       ],
       "id": "TA0008",
       "stats": [
         "-5",
-        "1 (11%)",
+        "1 of 9 (11%)",
         "-5",
       ],
       "subTechniques": 14,
@@ -1584,15 +1608,15 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
     },
     {
       "firstTechniques": [
-        "T1602",
-        "T1560",
-        "T1557",
+        "T1005",
+        "T1025",
+        "T1039",
       ],
       "id": "TA0009",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 17 (0%)",
+        "—",
       ],
       "subTechniques": 24,
       "techniques": 17,
@@ -1601,14 +1625,14 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
     },
     {
       "firstTechniques": [
-        "T1665",
-        "T1659",
-        "T1573",
+        "T1105",
+        "T1001",
+        "T1008",
       ],
       "id": "TA0011",
       "stats": [
         "33",
-        "1 (6%)",
+        "1 of 18 (6%)",
         "33",
       ],
       "subTechniques": 27,
@@ -1618,15 +1642,15 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
     },
     {
       "firstTechniques": [
-        "T1700",
-        "T1567",
-        "T1537",
+        "T1011",
+        "T1020",
+        "T1029",
       ],
       "id": "TA0010",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 10 (0%)",
+        "—",
       ],
       "subTechniques": 10,
       "techniques": 10,
@@ -1635,14 +1659,14 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
     },
     {
       "firstTechniques": [
-        "T1667",
-        "T1657",
-        "T1565",
+        "T1486",
+        "T1485",
+        "T1489",
       ],
       "id": "TA0040",
       "stats": [
         "77",
-        "1 (7%)",
+        "1 of 15 (7%)",
         "77",
       ],
       "subTechniques": 18,
@@ -1651,20 +1675,24 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
       "withValue": 1,
     },
   ],
-  "theme": "light",
+  "theme": "light mtr-viz mtr-display-id",
 }
 `;
 
 exports[`render snapshots typical.json with d3fend 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 85124,
-  "htmlSha256": "46db8930c1b5effc9fd319f9a30e806960f74095f06d9b215a3f335208f5cb3d",
+  "htmlLength": 85635,
+  "htmlSha256": "252fdba2bdb783f2e562ced1f272336612398ad196c2823fb71d7c551061f0f8",
   "legend": {
     "labels": [
       "0",
-      "50",
+      "20",
+      "40",
+      "60",
+      "80",
       "100",
+      "No data",
     ],
     "title": "Detection Count",
   },
@@ -1676,8 +1704,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-AI",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -1691,8 +1719,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-NM",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -1706,8 +1734,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-OAM",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -1721,8 +1749,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-SYSM",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -1736,8 +1764,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-AH",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -1751,8 +1779,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-CH",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -1766,8 +1794,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-MH",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -1776,14 +1804,14 @@ exports[`render snapshots typical.json with d3fend 1`] = `
     },
     {
       "firstTechniques": [
-        "D3-EAL",
         "D3-PH",
+        "D3-EAL",
       ],
       "id": "D3-PH",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 2 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 2,
@@ -1797,8 +1825,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-FA",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -1812,8 +1840,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-ID",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -1827,8 +1855,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-MA",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -1842,8 +1870,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-NTA",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -1857,8 +1885,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-PM",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -1872,8 +1900,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-PA",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -1887,8 +1915,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-UBA",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -1902,8 +1930,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-EI",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -1917,8 +1945,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-NI",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -1932,8 +1960,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-DE",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -1947,8 +1975,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-DO",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -1962,8 +1990,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-CE",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -1977,8 +2005,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-PE",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -1992,8 +2020,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-RA",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -2007,8 +2035,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-RO",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -2022,8 +2050,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-APA",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -2037,8 +2065,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-AMED",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -2052,8 +2080,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-AA",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -2067,8 +2095,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-PHAM",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -2082,8 +2110,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-OE",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -2097,8 +2125,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-CF",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 1 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 1,
@@ -2110,8 +2138,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "id": "D3-SCH",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 0 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 0,
@@ -2119,35 +2147,39 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "withValue": 0,
     },
   ],
-  "theme": "light",
+  "theme": "light mtr-viz mtr-display-id",
 }
 `;
 
 exports[`render snapshots typical.json with defaults 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 314977,
-  "htmlSha256": "6b92f522fa2bb4ae3925b40780cd353e45412168485be3339c0e8f8b7aa82809",
+  "htmlLength": 310249,
+  "htmlSha256": "4cfe3d39c347d97d4401d84dea6ae2e03bbf46ba6b9b8895f5a94b0d530fe1ea",
   "legend": {
     "labels": [
       "0",
-      "50",
+      "20",
+      "40",
+      "60",
+      "80",
       "100",
+      "No data",
     ],
     "title": "Detection Count",
   },
   "tactics": [
     {
       "firstTechniques": [
-        "T1682",
-        "T1681",
-        "T1598",
+        "T1589",
+        "T1590",
+        "T1591",
       ],
       "id": "TA0043",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 12 (0%)",
+        "—",
       ],
       "subTechniques": 34,
       "techniques": 12,
@@ -2156,15 +2188,15 @@ exports[`render snapshots typical.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1683",
-        "T1650",
-        "T1608",
+        "T1583",
+        "T1584",
+        "T1585",
       ],
       "id": "TA0042",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 9 (0%)",
+        "—",
       ],
       "subTechniques": 42,
       "techniques": 9,
@@ -2173,14 +2205,14 @@ exports[`render snapshots typical.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1669",
-        "T1659",
-        "T1200",
+        "T1566",
+        "T1078",
+        "T1091",
       ],
       "id": "TA0001",
       "stats": [
         "165",
-        "2 (18%)",
+        "2 of 11 (18%)",
         "83",
       ],
       "subTechniques": 11,
@@ -2190,14 +2222,14 @@ exports[`render snapshots typical.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1699",
-        "T1698",
-        "T1677",
+        "T1059",
+        "T1047",
+        "T1053",
       ],
       "id": "TA0002",
       "stats": [
         "42",
-        "1 (5%)",
+        "1 of 22 (5%)",
         "42",
       ],
       "subTechniques": 44,
@@ -2207,14 +2239,14 @@ exports[`render snapshots typical.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1671",
-        "T1668",
-        "T1653",
+        "T1078",
+        "T1037",
+        "T1053",
       ],
       "id": "TA0003",
       "stats": [
         "65",
-        "1 (5%)",
+        "1 of 22 (5%)",
         "65",
       ],
       "subTechniques": 91,
@@ -2224,14 +2256,14 @@ exports[`render snapshots typical.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1611",
-        "T1548",
-        "T1547",
+        "T1078",
+        "T1037",
+        "T1053",
       ],
       "id": "TA0004",
       "stats": [
         "65",
-        "1 (8%)",
+        "1 of 13 (8%)",
         "65",
       ],
       "subTechniques": 83,
@@ -2241,14 +2273,14 @@ exports[`render snapshots typical.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1696",
-        "T1684",
-        "T1679",
+        "T1078",
+        "T1006",
+        "T1014",
       ],
       "id": "TA0005",
       "stats": [
         "65",
-        "1 (3%)",
+        "1 of 31 (3%)",
         "65",
       ],
       "subTechniques": 120,
@@ -2258,15 +2290,15 @@ exports[`render snapshots typical.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1690",
-        "T1689",
-        "T1688",
+        "T1112",
+        "T1207",
+        "T1222",
       ],
       "id": "TA0112",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 18 (0%)",
+        "—",
       ],
       "subTechniques": 39,
       "techniques": 18,
@@ -2275,14 +2307,14 @@ exports[`render snapshots typical.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1697",
-        "T1649",
-        "T1621",
+        "T1110",
+        "T1003",
+        "T1040",
       ],
       "id": "TA0006",
       "stats": [
         "12.5",
-        "2 (11%)",
+        "2 of 18 (11%)",
         "6",
       ],
       "subTechniques": 50,
@@ -2292,15 +2324,15 @@ exports[`render snapshots typical.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1680",
-        "T1673",
-        "T1654",
+        "T1007",
+        "T1010",
+        "T1012",
       ],
       "id": "TA0007",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 34 (0%)",
+        "—",
       ],
       "subTechniques": 15,
       "techniques": 34,
@@ -2309,14 +2341,14 @@ exports[`render snapshots typical.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1021",
-        "T1570",
-        "T1563",
+        "T1072",
+        "T1080",
+        "T1091",
       ],
       "id": "TA0008",
       "stats": [
         "-5",
-        "1 (11%)",
+        "1 of 9 (11%)",
         "-5",
       ],
       "subTechniques": 14,
@@ -2326,15 +2358,15 @@ exports[`render snapshots typical.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1602",
-        "T1560",
-        "T1557",
+        "T1005",
+        "T1025",
+        "T1039",
       ],
       "id": "TA0009",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 17 (0%)",
+        "—",
       ],
       "subTechniques": 24,
       "techniques": 17,
@@ -2343,14 +2375,14 @@ exports[`render snapshots typical.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1665",
-        "T1659",
-        "T1573",
+        "T1105",
+        "T1001",
+        "T1008",
       ],
       "id": "TA0011",
       "stats": [
         "33",
-        "1 (6%)",
+        "1 of 18 (6%)",
         "33",
       ],
       "subTechniques": 27,
@@ -2360,15 +2392,15 @@ exports[`render snapshots typical.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1700",
-        "T1567",
-        "T1537",
+        "T1011",
+        "T1020",
+        "T1029",
       ],
       "id": "TA0010",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 10 (0%)",
+        "—",
       ],
       "subTechniques": 10,
       "techniques": 10,
@@ -2377,14 +2409,14 @@ exports[`render snapshots typical.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1667",
-        "T1657",
-        "T1565",
+        "T1486",
+        "T1485",
+        "T1489",
       ],
       "id": "TA0040",
       "stats": [
         "77",
-        "1 (7%)",
+        "1 of 15 (7%)",
         "77",
       ],
       "subTechniques": 18,
@@ -2393,35 +2425,39 @@ exports[`render snapshots typical.json with defaults 1`] = `
       "withValue": 1,
     },
   ],
-  "theme": "light",
+  "theme": "light mtr-viz mtr-display-id",
 }
 `;
 
 exports[`render snapshots typical.json with display name 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 331370,
-  "htmlSha256": "da1054d3e26e990fbcbaa54302e00f50d697973523e59480925a08d77746eea8",
+  "htmlLength": 325811,
+  "htmlSha256": "1f2d68dec13442a59e95fe15db1130f8411ed4152bad8b93796674489b254571",
   "legend": {
     "labels": [
       "0",
-      "50",
+      "20",
+      "40",
+      "60",
+      "80",
       "100",
+      "No data",
     ],
     "title": "Detection Count",
   },
   "tactics": [
     {
       "firstTechniques": [
-        "T1682",
-        "T1681",
-        "T1598",
+        "T1589",
+        "T1590",
+        "T1591",
       ],
       "id": "TA0043",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 12 (0%)",
+        "—",
       ],
       "subTechniques": 34,
       "techniques": 12,
@@ -2430,15 +2466,15 @@ exports[`render snapshots typical.json with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1683",
-        "T1650",
-        "T1608",
+        "T1583",
+        "T1584",
+        "T1585",
       ],
       "id": "TA0042",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 9 (0%)",
+        "—",
       ],
       "subTechniques": 42,
       "techniques": 9,
@@ -2447,14 +2483,14 @@ exports[`render snapshots typical.json with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1669",
-        "T1659",
-        "T1200",
+        "T1566",
+        "T1078",
+        "T1091",
       ],
       "id": "TA0001",
       "stats": [
         "165",
-        "2 (18%)",
+        "2 of 11 (18%)",
         "83",
       ],
       "subTechniques": 11,
@@ -2464,14 +2500,14 @@ exports[`render snapshots typical.json with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1699",
-        "T1698",
-        "T1677",
+        "T1059",
+        "T1047",
+        "T1053",
       ],
       "id": "TA0002",
       "stats": [
         "42",
-        "1 (5%)",
+        "1 of 22 (5%)",
         "42",
       ],
       "subTechniques": 44,
@@ -2481,14 +2517,14 @@ exports[`render snapshots typical.json with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1671",
-        "T1668",
-        "T1653",
+        "T1078",
+        "T1037",
+        "T1053",
       ],
       "id": "TA0003",
       "stats": [
         "65",
-        "1 (5%)",
+        "1 of 22 (5%)",
         "65",
       ],
       "subTechniques": 91,
@@ -2498,14 +2534,14 @@ exports[`render snapshots typical.json with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1611",
-        "T1548",
-        "T1547",
+        "T1078",
+        "T1037",
+        "T1053",
       ],
       "id": "TA0004",
       "stats": [
         "65",
-        "1 (8%)",
+        "1 of 13 (8%)",
         "65",
       ],
       "subTechniques": 83,
@@ -2515,14 +2551,14 @@ exports[`render snapshots typical.json with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1696",
-        "T1684",
-        "T1679",
+        "T1078",
+        "T1006",
+        "T1014",
       ],
       "id": "TA0005",
       "stats": [
         "65",
-        "1 (3%)",
+        "1 of 31 (3%)",
         "65",
       ],
       "subTechniques": 120,
@@ -2532,15 +2568,15 @@ exports[`render snapshots typical.json with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1690",
-        "T1689",
-        "T1688",
+        "T1112",
+        "T1207",
+        "T1222",
       ],
       "id": "TA0112",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 18 (0%)",
+        "—",
       ],
       "subTechniques": 39,
       "techniques": 18,
@@ -2549,14 +2585,14 @@ exports[`render snapshots typical.json with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1697",
-        "T1649",
-        "T1621",
+        "T1110",
+        "T1003",
+        "T1040",
       ],
       "id": "TA0006",
       "stats": [
         "12.5",
-        "2 (11%)",
+        "2 of 18 (11%)",
         "6",
       ],
       "subTechniques": 50,
@@ -2566,15 +2602,15 @@ exports[`render snapshots typical.json with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1680",
-        "T1673",
-        "T1654",
+        "T1007",
+        "T1010",
+        "T1012",
       ],
       "id": "TA0007",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 34 (0%)",
+        "—",
       ],
       "subTechniques": 15,
       "techniques": 34,
@@ -2583,14 +2619,14 @@ exports[`render snapshots typical.json with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1021",
-        "T1570",
-        "T1563",
+        "T1072",
+        "T1080",
+        "T1091",
       ],
       "id": "TA0008",
       "stats": [
         "-5",
-        "1 (11%)",
+        "1 of 9 (11%)",
         "-5",
       ],
       "subTechniques": 14,
@@ -2600,15 +2636,15 @@ exports[`render snapshots typical.json with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1602",
-        "T1560",
-        "T1557",
+        "T1005",
+        "T1025",
+        "T1039",
       ],
       "id": "TA0009",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 17 (0%)",
+        "—",
       ],
       "subTechniques": 24,
       "techniques": 17,
@@ -2617,14 +2653,14 @@ exports[`render snapshots typical.json with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1665",
-        "T1659",
-        "T1573",
+        "T1105",
+        "T1001",
+        "T1008",
       ],
       "id": "TA0011",
       "stats": [
         "33",
-        "1 (6%)",
+        "1 of 18 (6%)",
         "33",
       ],
       "subTechniques": 27,
@@ -2634,15 +2670,15 @@ exports[`render snapshots typical.json with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1700",
-        "T1567",
-        "T1537",
+        "T1011",
+        "T1020",
+        "T1029",
       ],
       "id": "TA0010",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 10 (0%)",
+        "—",
       ],
       "subTechniques": 10,
       "techniques": 10,
@@ -2651,14 +2687,14 @@ exports[`render snapshots typical.json with display name 1`] = `
     },
     {
       "firstTechniques": [
-        "T1667",
-        "T1657",
-        "T1565",
+        "T1486",
+        "T1485",
+        "T1489",
       ],
       "id": "TA0040",
       "stats": [
         "77",
-        "1 (7%)",
+        "1 of 15 (7%)",
         "77",
       ],
       "subTechniques": 18,
@@ -2667,20 +2703,24 @@ exports[`render snapshots typical.json with display name 1`] = `
       "withValue": 1,
     },
   ],
-  "theme": "light",
+  "theme": "light mtr-viz mtr-display-name",
 }
 `;
 
 exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 91020,
-  "htmlSha256": "a019ea5709cbc72aab87fd1561c96a1af7c901d2dff81e25ced6ac0cf834c6fc",
+  "htmlLength": 97039,
+  "htmlSha256": "c4f4832f5e41a66fecb55753d3da3b4638c4255b9f8ef755e228000ec9b967c8",
   "legend": {
     "labels": [
       "0",
-      "50",
+      "20",
+      "40",
+      "60",
+      "80",
       "100",
+      "No data",
     ],
     "title": "Detection Count",
   },
@@ -2690,8 +2730,8 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
       "id": "TA0043",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 0 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 0,
@@ -2703,8 +2743,8 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
       "id": "TA0042",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 0 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 0,
@@ -2713,14 +2753,14 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
     },
     {
       "firstTechniques": [
-        "T1199",
-        "T1195",
+        "T1566",
+        "T1078",
         "T1190",
       ],
       "id": "TA0001",
       "stats": [
         "165",
-        "2 (40%)",
+        "2 of 5 (40%)",
         "83",
       ],
       "subTechniques": 3,
@@ -2730,14 +2770,14 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
     },
     {
       "firstTechniques": [
-        "T1699",
-        "T1698",
-        "T1677",
+        "T1059",
+        "T1072",
+        "T1204",
       ],
       "id": "TA0002",
       "stats": [
         "42",
-        "1 (13%)",
+        "1 of 8 (13%)",
         "42",
       ],
       "subTechniques": 2,
@@ -2747,14 +2787,14 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
     },
     {
       "firstTechniques": [
-        "T1671",
-        "T1556",
-        "T1546",
+        "T1078",
+        "T1098",
+        "T1136",
       ],
       "id": "TA0003",
       "stats": [
         "65",
-        "1 (14%)",
+        "1 of 7 (14%)",
         "65",
       ],
       "subTechniques": 9,
@@ -2764,14 +2804,14 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
     },
     {
       "firstTechniques": [
-        "T1548",
-        "T1546",
+        "T1078",
         "T1098",
+        "T1546",
       ],
       "id": "TA0004",
       "stats": [
         "65",
-        "1 (25%)",
+        "1 of 4 (25%)",
         "65",
       ],
       "subTechniques": 6,
@@ -2781,14 +2821,14 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
     },
     {
       "firstTechniques": [
-        "T1696",
-        "T1684",
+        "T1078",
+        "T1211",
         "T1535",
       ],
       "id": "TA0005",
       "stats": [
         "65",
-        "1 (20%)",
+        "1 of 5 (20%)",
         "65",
       ],
       "subTechniques": 5,
@@ -2798,15 +2838,15 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
     },
     {
       "firstTechniques": [
-        "T1687",
-        "T1685",
+        "T1556",
+        "T1578",
         "T1666",
       ],
       "id": "TA0112",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 5 (0%)",
+        "—",
       ],
       "subTechniques": 10,
       "techniques": 5,
@@ -2815,14 +2855,14 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
     },
     {
       "firstTechniques": [
-        "T1697",
-        "T1621",
-        "T1606",
+        "T1110",
+        "T1040",
+        "T1528",
       ],
       "id": "TA0006",
       "stats": [
         "12.5",
-        "1 (10%)",
+        "1 of 10 (10%)",
         "13",
       ],
       "subTechniques": 12,
@@ -2832,15 +2872,15 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
     },
     {
       "firstTechniques": [
-        "T1680",
-        "T1654",
-        "T1619",
+        "T1040",
+        "T1046",
+        "T1049",
       ],
       "id": "TA0007",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 15 (0%)",
+        "—",
       ],
       "subTechniques": 3,
       "techniques": 15,
@@ -2849,14 +2889,14 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
     },
     {
       "firstTechniques": [
-        "T1021",
-        "T1550",
+        "T1072",
+        "T1080",
         "T1534",
       ],
       "id": "TA0008",
       "stats": [
         "-5",
-        "1 (20%)",
+        "1 of 5 (20%)",
         "-5",
       ],
       "subTechniques": 4,
@@ -2866,15 +2906,15 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
     },
     {
       "firstTechniques": [
-        "T1530",
-        "T1213",
+        "T1074",
         "T1119",
+        "T1213",
       ],
       "id": "TA0009",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 4 (0%)",
+        "—",
       ],
       "subTechniques": 6,
       "techniques": 4,
@@ -2886,8 +2926,8 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
       "id": "TA0011",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 0 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 0,
@@ -2896,15 +2936,15 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
     },
     {
       "firstTechniques": [
-        "T1700",
-        "T1567",
+        "T1048",
         "T1537",
+        "T1567",
       ],
       "id": "TA0010",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 4 (0%)",
+        "—",
       ],
       "subTechniques": 1,
       "techniques": 4,
@@ -2913,14 +2953,14 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
     },
     {
       "firstTechniques": [
-        "T1657",
-        "T1531",
-        "T1499",
+        "T1486",
+        "T1485",
+        "T1489",
       ],
       "id": "TA0040",
       "stats": [
         "77",
-        "1 (10%)",
+        "1 of 10 (10%)",
         "77",
       ],
       "subTechniques": 11,
@@ -2929,20 +2969,24 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
       "withValue": 1,
     },
   ],
-  "theme": "light",
+  "theme": "light mtr-viz mtr-display-id",
 }
 `;
 
 exports[`render snapshots typical.json with enterprise windows 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 233966,
-  "htmlSha256": "bffd7cbad24b8fd3d6bfc60757ab63777afca016a785bf9f5b8d1cbd7e6a9498",
+  "htmlLength": 236558,
+  "htmlSha256": "ab4d747f487ab7ca9184474a4b76f1e6408eea85056226ac636a81a565ddbb91",
   "legend": {
     "labels": [
       "0",
-      "50",
+      "20",
+      "40",
+      "60",
+      "80",
       "100",
+      "No data",
     ],
     "title": "Detection Count",
   },
@@ -2952,8 +2996,8 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
       "id": "TA0043",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 0 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 0,
@@ -2965,8 +3009,8 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
       "id": "TA0042",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 0 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 0,
@@ -2975,14 +3019,14 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
     },
     {
       "firstTechniques": [
-        "T1669",
-        "T1659",
-        "T1200",
+        "T1566",
+        "T1078",
+        "T1091",
       ],
       "id": "TA0001",
       "stats": [
         "165",
-        "2 (18%)",
+        "2 of 11 (18%)",
         "83",
       ],
       "subTechniques": 10,
@@ -2992,14 +3036,14 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
     },
     {
       "firstTechniques": [
-        "T1699",
-        "T1698",
-        "T1674",
+        "T1059",
+        "T1047",
+        "T1053",
       ],
       "id": "TA0002",
       "stats": [
         "42",
-        "1 (6%)",
+        "1 of 16 (6%)",
         "42",
       ],
       "subTechniques": 29,
@@ -3009,14 +3053,14 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
     },
     {
       "firstTechniques": [
-        "T1668",
-        "T1653",
-        "T1556",
+        "T1078",
+        "T1037",
+        "T1053",
       ],
       "id": "TA0003",
       "stats": [
         "65",
-        "1 (5%)",
+        "1 of 20 (5%)",
         "65",
       ],
       "subTechniques": 60,
@@ -3026,14 +3070,14 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
     },
     {
       "firstTechniques": [
-        "T1611",
-        "T1548",
-        "T1547",
+        "T1078",
+        "T1037",
+        "T1053",
       ],
       "id": "TA0004",
       "stats": [
         "65",
-        "1 (8%)",
+        "1 of 13 (8%)",
         "65",
       ],
       "subTechniques": 51,
@@ -3043,14 +3087,14 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
     },
     {
       "firstTechniques": [
-        "T1684",
-        "T1679",
-        "T1678",
+        "T1078",
+        "T1006",
+        "T1014",
       ],
       "id": "TA0005",
       "stats": [
         "65",
-        "1 (4%)",
+        "1 of 28 (4%)",
         "65",
       ],
       "subTechniques": 104,
@@ -3060,15 +3104,15 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
     },
     {
       "firstTechniques": [
-        "T1690",
-        "T1689",
-        "T1688",
+        "T1112",
+        "T1207",
+        "T1222",
       ],
       "id": "TA0112",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 12 (0%)",
+        "—",
       ],
       "subTechniques": 19,
       "techniques": 12,
@@ -3077,14 +3121,14 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
     },
     {
       "firstTechniques": [
-        "T1649",
-        "T1621",
-        "T1606",
+        "T1110",
+        "T1003",
+        "T1040",
       ],
       "id": "TA0006",
       "stats": [
         "12.5",
-        "2 (13%)",
+        "2 of 16 (13%)",
         "6",
       ],
       "subTechniques": 37,
@@ -3094,15 +3138,15 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
     },
     {
       "firstTechniques": [
-        "T1680",
-        "T1673",
-        "T1654",
+        "T1007",
+        "T1010",
+        "T1012",
       ],
       "id": "TA0007",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 29 (0%)",
+        "—",
       ],
       "subTechniques": 13,
       "techniques": 29,
@@ -3111,14 +3155,14 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
     },
     {
       "firstTechniques": [
-        "T1021",
-        "T1570",
-        "T1563",
+        "T1072",
+        "T1080",
+        "T1091",
       ],
       "id": "TA0008",
       "stats": [
         "-5",
-        "1 (11%)",
+        "1 of 9 (11%)",
         "-5",
       ],
       "subTechniques": 9,
@@ -3128,15 +3172,15 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
     },
     {
       "firstTechniques": [
-        "T1560",
-        "T1557",
-        "T1213",
+        "T1005",
+        "T1025",
+        "T1039",
       ],
       "id": "TA0009",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 15 (0%)",
+        "—",
       ],
       "subTechniques": 17,
       "techniques": 15,
@@ -3145,14 +3189,14 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
     },
     {
       "firstTechniques": [
-        "T1665",
-        "T1659",
-        "T1573",
+        "T1105",
+        "T1001",
+        "T1008",
       ],
       "id": "TA0011",
       "stats": [
         "33",
-        "1 (6%)",
+        "1 of 18 (6%)",
         "33",
       ],
       "subTechniques": 27,
@@ -3162,15 +3206,15 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
     },
     {
       "firstTechniques": [
-        "T1700",
-        "T1567",
-        "T1052",
+        "T1011",
+        "T1020",
+        "T1029",
       ],
       "id": "TA0010",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 9 (0%)",
+        "—",
       ],
       "subTechniques": 9,
       "techniques": 9,
@@ -3179,14 +3223,14 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
     },
     {
       "firstTechniques": [
-        "T1667",
-        "T1657",
-        "T1565",
+        "T1486",
+        "T1485",
+        "T1489",
       ],
       "id": "TA0040",
       "stats": [
         "77",
-        "1 (7%)",
+        "1 of 15 (7%)",
         "77",
       ],
       "subTechniques": 15,
@@ -3195,33 +3239,37 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
       "withValue": 1,
     },
   ],
-  "theme": "light",
+  "theme": "light mtr-viz mtr-display-id",
 }
 `;
 
 exports[`render snapshots typical.json with hide null 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 33265,
-  "htmlSha256": "532b90a3d56d63aeaf77cb55a21bb2020d8a4d2fad62c6119d56b7321d3dc3d0",
+  "htmlLength": 33442,
+  "htmlSha256": "f275ffa65a68bbc432be492e88d697cc4972e5ed4abd60a1d029bd944366f5e6",
   "legend": {
     "labels": [
       "0",
-      "50",
+      "20",
+      "40",
+      "60",
+      "80",
       "100",
+      "No data",
     ],
     "title": "Detection Count",
   },
   "tactics": [
     {
       "firstTechniques": [
-        "T1078",
         "T1566",
+        "T1078",
       ],
       "id": "TA0001",
       "stats": [
         "165",
-        "2 (100%)",
+        "2 of 2 (100%)",
         "83",
       ],
       "subTechniques": 2,
@@ -3236,7 +3284,7 @@ exports[`render snapshots typical.json with hide null 1`] = `
       "id": "TA0002",
       "stats": [
         "42",
-        "1 (100%)",
+        "1 of 1 (100%)",
         "42",
       ],
       "subTechniques": 2,
@@ -3251,7 +3299,7 @@ exports[`render snapshots typical.json with hide null 1`] = `
       "id": "TA0003",
       "stats": [
         "65",
-        "1 (100%)",
+        "1 of 1 (100%)",
         "65",
       ],
       "subTechniques": 1,
@@ -3266,7 +3314,7 @@ exports[`render snapshots typical.json with hide null 1`] = `
       "id": "TA0004",
       "stats": [
         "65",
-        "1 (100%)",
+        "1 of 1 (100%)",
         "65",
       ],
       "subTechniques": 1,
@@ -3281,7 +3329,7 @@ exports[`render snapshots typical.json with hide null 1`] = `
       "id": "TA0005",
       "stats": [
         "65",
-        "1 (100%)",
+        "1 of 1 (100%)",
         "65",
       ],
       "subTechniques": 1,
@@ -3291,13 +3339,13 @@ exports[`render snapshots typical.json with hide null 1`] = `
     },
     {
       "firstTechniques": [
-        "T1003",
         "T1110",
+        "T1003",
       ],
       "id": "TA0006",
       "stats": [
         "12.5",
-        "2 (100%)",
+        "2 of 2 (100%)",
         "6",
       ],
       "subTechniques": 0,
@@ -3312,7 +3360,7 @@ exports[`render snapshots typical.json with hide null 1`] = `
       "id": "TA0008",
       "stats": [
         "-5",
-        "1 (100%)",
+        "1 of 1 (100%)",
         "-5",
       ],
       "subTechniques": 0,
@@ -3327,7 +3375,7 @@ exports[`render snapshots typical.json with hide null 1`] = `
       "id": "TA0011",
       "stats": [
         "33",
-        "1 (100%)",
+        "1 of 1 (100%)",
         "33",
       ],
       "subTechniques": 0,
@@ -3342,7 +3390,7 @@ exports[`render snapshots typical.json with hide null 1`] = `
       "id": "TA0040",
       "stats": [
         "77",
-        "1 (100%)",
+        "1 of 1 (100%)",
         "77",
       ],
       "subTechniques": 0,
@@ -3351,35 +3399,39 @@ exports[`render snapshots typical.json with hide null 1`] = `
       "withValue": 1,
     },
   ],
-  "theme": "light",
+  "theme": "light mtr-viz mtr-display-id",
 }
 `;
 
 exports[`render snapshots typical.json with ics 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 73806,
-  "htmlSha256": "8e9b53f215a60b767a623a285f3cbeb239bd723e24d39cff26ec9e355f7943f0",
+  "htmlLength": 83154,
+  "htmlSha256": "3b26f1d2315ce6906f23db68cb9cf59a0cb94c81100251b4b4596fb4c7b4c22b",
   "legend": {
     "labels": [
       "0",
-      "50",
+      "20",
+      "40",
+      "60",
+      "80",
       "100",
+      "No data",
     ],
     "title": "Detection Count",
   },
   "tactics": [
     {
       "firstTechniques": [
-        "T0886",
-        "T0883",
-        "T0866",
+        "T0817",
+        "T0819",
+        "T0822",
       ],
       "id": "TA0108",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 12 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 12,
@@ -3388,15 +3440,15 @@ exports[`render snapshots typical.json with ics 1`] = `
     },
     {
       "firstTechniques": [
-        "T1701",
-        "T0895",
-        "T0874",
+        "T0821",
+        "T0823",
+        "T0834",
       ],
       "id": "TA0104",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 9 (0%)",
+        "—",
       ],
       "subTechniques": 6,
       "techniques": 9,
@@ -3405,15 +3457,15 @@ exports[`render snapshots typical.json with ics 1`] = `
     },
     {
       "firstTechniques": [
-        "T1694",
-        "T1693",
+        "T0859",
+        "T0873",
         "T0889",
       ],
       "id": "TA0110",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 5 (0%)",
+        "—",
       ],
       "subTechniques": 5,
       "techniques": 5,
@@ -3422,14 +3474,14 @@ exports[`render snapshots typical.json with ics 1`] = `
     },
     {
       "firstTechniques": [
-        "T0890",
         "T0874",
+        "T0890",
       ],
       "id": "TA0111",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 2 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 2,
@@ -3438,15 +3490,15 @@ exports[`render snapshots typical.json with ics 1`] = `
     },
     {
       "firstTechniques": [
-        "T1692",
-        "T0894",
-        "T0872",
+        "T0820",
+        "T0849",
+        "T0851",
       ],
       "id": "TA0103",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 7 (0%)",
+        "—",
       ],
       "subTechniques": 2,
       "techniques": 7,
@@ -3455,15 +3507,15 @@ exports[`render snapshots typical.json with ics 1`] = `
     },
     {
       "firstTechniques": [
-        "T0888",
-        "T0887",
+        "T0840",
+        "T0842",
         "T0846",
       ],
       "id": "TA0102",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 5 (0%)",
+        "—",
       ],
       "subTechniques": 3,
       "techniques": 5,
@@ -3472,15 +3524,15 @@ exports[`render snapshots typical.json with ics 1`] = `
     },
     {
       "firstTechniques": [
-        "T1694",
-        "T0886",
-        "T0867",
+        "T0843",
+        "T0859",
+        "T0866",
       ],
       "id": "TA0109",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 6 (0%)",
+        "—",
       ],
       "subTechniques": 5,
       "techniques": 6,
@@ -3489,15 +3541,15 @@ exports[`render snapshots typical.json with ics 1`] = `
     },
     {
       "firstTechniques": [
-        "T0893",
-        "T0887",
-        "T0877",
+        "T0801",
+        "T0802",
+        "T0811",
       ],
       "id": "TA0100",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 11 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 11,
@@ -3506,15 +3558,15 @@ exports[`render snapshots typical.json with ics 1`] = `
     },
     {
       "firstTechniques": [
-        "T0885",
-        "T0884",
         "T0869",
+        "T0884",
+        "T0885",
       ],
       "id": "TA0101",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 3 (0%)",
+        "—",
       ],
       "subTechniques": 2,
       "techniques": 3,
@@ -3523,15 +3575,15 @@ exports[`render snapshots typical.json with ics 1`] = `
     },
     {
       "firstTechniques": [
-        "T1695",
-        "T1693",
-        "T1691",
+        "T0800",
+        "T0809",
+        "T0814",
       ],
       "id": "TA0107",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 13 (0%)",
+        "—",
       ],
       "subTechniques": 7,
       "techniques": 13,
@@ -3540,15 +3592,15 @@ exports[`render snapshots typical.json with ics 1`] = `
     },
     {
       "firstTechniques": [
-        "T1693",
-        "T1692",
+        "T0806",
         "T0836",
+        "T1692",
       ],
       "id": "TA0106",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 4 (0%)",
+        "—",
       ],
       "subTechniques": 4,
       "techniques": 4,
@@ -3557,15 +3609,15 @@ exports[`render snapshots typical.json with ics 1`] = `
     },
     {
       "firstTechniques": [
-        "T0882",
-        "T0880",
-        "T0879",
+        "T0813",
+        "T0815",
+        "T0826",
       ],
       "id": "TA0105",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 12 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 12,
@@ -3573,35 +3625,39 @@ exports[`render snapshots typical.json with ics 1`] = `
       "withValue": 0,
     },
   ],
-  "theme": "light",
+  "theme": "light mtr-viz mtr-display-id",
 }
 `;
 
 exports[`render snapshots typical.json with mobile android 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 80102,
-  "htmlSha256": "ce1f64f9652b35b455a5f63cb621adf3304c4fd22d80f4b2a81b722813a85cc3",
+  "htmlLength": 88757,
+  "htmlSha256": "4bd94ebea5721ca3f8be0c718c2c2b811fb9cc16b97c30db6e3939a871b0bc7f",
   "legend": {
     "labels": [
       "0",
-      "50",
+      "20",
+      "40",
+      "60",
+      "80",
       "100",
+      "No data",
     ],
     "title": "Detection Count",
   },
   "tactics": [
     {
       "firstTechniques": [
-        "T1664",
-        "T1661",
-        "T1660",
+        "T1451",
+        "T1456",
+        "T1458",
       ],
       "id": "TA0027",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 9 (0%)",
+        "—",
       ],
       "subTechniques": 3,
       "techniques": 9,
@@ -3610,15 +3666,15 @@ exports[`render snapshots typical.json with mobile android 1`] = `
     },
     {
       "firstTechniques": [
-        "T1658",
-        "T1623",
+        "T1575",
         "T1603",
+        "T1623",
       ],
       "id": "TA0041",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 4 (0%)",
+        "—",
       ],
       "subTechniques": 1,
       "techniques": 4,
@@ -3627,15 +3683,15 @@ exports[`render snapshots typical.json with mobile android 1`] = `
     },
     {
       "firstTechniques": [
-        "T1676",
-        "T1645",
-        "T1625",
+        "T1398",
+        "T1541",
+        "T1577",
       ],
       "id": "TA0028",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 8 (0%)",
+        "—",
       ],
       "subTechniques": 2,
       "techniques": 8,
@@ -3644,15 +3700,15 @@ exports[`render snapshots typical.json with mobile android 1`] = `
     },
     {
       "firstTechniques": [
-        "T1631",
-        "T1626",
         "T1404",
+        "T1626",
+        "T1631",
       ],
       "id": "TA0029",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 3 (0%)",
+        "—",
       ],
       "subTechniques": 2,
       "techniques": 3,
@@ -3661,15 +3717,15 @@ exports[`render snapshots typical.json with mobile android 1`] = `
     },
     {
       "firstTechniques": [
-        "T1670",
-        "T1661",
-        "T1655",
+        "T1406",
+        "T1407",
+        "T1516",
       ],
       "id": "TA0030",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 17 (0%)",
+        "—",
       ],
       "subTechniques": 16,
       "techniques": 17,
@@ -3678,15 +3734,15 @@ exports[`render snapshots typical.json with mobile android 1`] = `
     },
     {
       "firstTechniques": [
-        "T1635",
-        "T1517",
+        "T1414",
+        "T1417",
         "T1453",
       ],
       "id": "TA0031",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 5 (0%)",
+        "—",
       ],
       "subTechniques": 3,
       "techniques": 5,
@@ -3695,15 +3751,15 @@ exports[`render snapshots typical.json with mobile android 1`] = `
     },
     {
       "firstTechniques": [
-        "T1430",
-        "T1426",
-        "T1424",
+        "T1418",
+        "T1420",
+        "T1421",
       ],
       "id": "TA0032",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 8 (0%)",
+        "—",
       ],
       "subTechniques": 5,
       "techniques": 8,
@@ -3712,14 +3768,14 @@ exports[`render snapshots typical.json with mobile android 1`] = `
     },
     {
       "firstTechniques": [
-        "T1458",
         "T1428",
+        "T1458",
       ],
       "id": "TA0033",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 2 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 2,
@@ -3728,15 +3784,15 @@ exports[`render snapshots typical.json with mobile android 1`] = `
     },
     {
       "firstTechniques": [
-        "T1676",
-        "T1638",
-        "T1636",
+        "T1409",
+        "T1414",
+        "T1417",
       ],
       "id": "TA0035",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 15 (0%)",
+        "—",
       ],
       "subTechniques": 9,
       "techniques": 15,
@@ -3745,15 +3801,15 @@ exports[`render snapshots typical.json with mobile android 1`] = `
     },
     {
       "firstTechniques": [
-        "T1663",
-        "T1644",
-        "T1637",
+        "T1437",
+        "T1481",
+        "T1509",
       ],
       "id": "TA0037",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 9 (0%)",
+        "—",
       ],
       "subTechniques": 8,
       "techniques": 9,
@@ -3762,14 +3818,14 @@ exports[`render snapshots typical.json with mobile android 1`] = `
     },
     {
       "firstTechniques": [
-        "T1646",
         "T1639",
+        "T1646",
       ],
       "id": "TA0036",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 2 (0%)",
+        "—",
       ],
       "subTechniques": 1,
       "techniques": 2,
@@ -3778,15 +3834,15 @@ exports[`render snapshots typical.json with mobile android 1`] = `
     },
     {
       "firstTechniques": [
-        "T1662",
-        "T1643",
-        "T1642",
+        "T1464",
+        "T1471",
+        "T1516",
       ],
       "id": "TA0034",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 10 (0%)",
+        "—",
       ],
       "subTechniques": 1,
       "techniques": 10,
@@ -3794,35 +3850,39 @@ exports[`render snapshots typical.json with mobile android 1`] = `
       "withValue": 0,
     },
   ],
-  "theme": "light",
+  "theme": "light mtr-viz mtr-display-id",
 }
 `;
 
 exports[`render snapshots typical.json with no sub-techniques 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 141215,
-  "htmlSha256": "2cc4c760748a2ba94bf81501ad91ce23f0ef4b1f91c7572009f565c0ddf43860",
+  "htmlLength": 174456,
+  "htmlSha256": "544bb05af31532406c86a2d9d03afc120306b1ab6a8f2f408f8e61787c1a3282",
   "legend": {
     "labels": [
       "0",
-      "50",
+      "20",
+      "40",
+      "60",
+      "80",
       "100",
+      "No data",
     ],
     "title": "Detection Count",
   },
   "tactics": [
     {
       "firstTechniques": [
-        "T1682",
-        "T1681",
-        "T1598",
+        "T1589",
+        "T1590",
+        "T1591",
       ],
       "id": "TA0043",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 12 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 12,
@@ -3831,15 +3891,15 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
     },
     {
       "firstTechniques": [
-        "T1683",
-        "T1650",
-        "T1608",
+        "T1583",
+        "T1584",
+        "T1585",
       ],
       "id": "TA0042",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 9 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 9,
@@ -3848,14 +3908,14 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
     },
     {
       "firstTechniques": [
-        "T1669",
-        "T1659",
-        "T1200",
+        "T1566",
+        "T1078",
+        "T1091",
       ],
       "id": "TA0001",
       "stats": [
         "165",
-        "2 (18%)",
+        "2 of 11 (18%)",
         "83",
       ],
       "subTechniques": 0,
@@ -3865,14 +3925,14 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
     },
     {
       "firstTechniques": [
-        "T1699",
-        "T1698",
-        "T1677",
+        "T1059",
+        "T1047",
+        "T1053",
       ],
       "id": "TA0002",
       "stats": [
         "42",
-        "1 (5%)",
+        "1 of 22 (5%)",
         "42",
       ],
       "subTechniques": 0,
@@ -3882,14 +3942,14 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
     },
     {
       "firstTechniques": [
-        "T1671",
-        "T1668",
-        "T1653",
+        "T1078",
+        "T1037",
+        "T1053",
       ],
       "id": "TA0003",
       "stats": [
         "65",
-        "1 (5%)",
+        "1 of 22 (5%)",
         "65",
       ],
       "subTechniques": 0,
@@ -3899,14 +3959,14 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
     },
     {
       "firstTechniques": [
-        "T1611",
-        "T1548",
-        "T1547",
+        "T1078",
+        "T1037",
+        "T1053",
       ],
       "id": "TA0004",
       "stats": [
         "65",
-        "1 (8%)",
+        "1 of 13 (8%)",
         "65",
       ],
       "subTechniques": 0,
@@ -3916,14 +3976,14 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
     },
     {
       "firstTechniques": [
-        "T1696",
-        "T1684",
-        "T1679",
+        "T1078",
+        "T1006",
+        "T1014",
       ],
       "id": "TA0005",
       "stats": [
         "65",
-        "1 (3%)",
+        "1 of 31 (3%)",
         "65",
       ],
       "subTechniques": 0,
@@ -3933,15 +3993,15 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
     },
     {
       "firstTechniques": [
-        "T1690",
-        "T1689",
-        "T1688",
+        "T1112",
+        "T1207",
+        "T1222",
       ],
       "id": "TA0112",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 18 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 18,
@@ -3950,14 +4010,14 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
     },
     {
       "firstTechniques": [
-        "T1697",
-        "T1649",
-        "T1621",
+        "T1110",
+        "T1003",
+        "T1040",
       ],
       "id": "TA0006",
       "stats": [
         "12.5",
-        "2 (11%)",
+        "2 of 18 (11%)",
         "6",
       ],
       "subTechniques": 0,
@@ -3967,15 +4027,15 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
     },
     {
       "firstTechniques": [
-        "T1680",
-        "T1673",
-        "T1654",
+        "T1007",
+        "T1010",
+        "T1012",
       ],
       "id": "TA0007",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 34 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 34,
@@ -3984,14 +4044,14 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
     },
     {
       "firstTechniques": [
-        "T1021",
-        "T1570",
-        "T1563",
+        "T1072",
+        "T1080",
+        "T1091",
       ],
       "id": "TA0008",
       "stats": [
         "-5",
-        "1 (11%)",
+        "1 of 9 (11%)",
         "-5",
       ],
       "subTechniques": 0,
@@ -4001,15 +4061,15 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
     },
     {
       "firstTechniques": [
-        "T1602",
-        "T1560",
-        "T1557",
+        "T1005",
+        "T1025",
+        "T1039",
       ],
       "id": "TA0009",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 17 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 17,
@@ -4018,14 +4078,14 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
     },
     {
       "firstTechniques": [
-        "T1665",
-        "T1659",
-        "T1573",
+        "T1105",
+        "T1001",
+        "T1008",
       ],
       "id": "TA0011",
       "stats": [
         "33",
-        "1 (6%)",
+        "1 of 18 (6%)",
         "33",
       ],
       "subTechniques": 0,
@@ -4035,15 +4095,15 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
     },
     {
       "firstTechniques": [
-        "T1700",
-        "T1567",
-        "T1537",
+        "T1011",
+        "T1020",
+        "T1029",
       ],
       "id": "TA0010",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 10 (0%)",
+        "—",
       ],
       "subTechniques": 0,
       "techniques": 10,
@@ -4052,14 +4112,14 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
     },
     {
       "firstTechniques": [
-        "T1667",
-        "T1657",
-        "T1565",
+        "T1486",
+        "T1485",
+        "T1489",
       ],
       "id": "TA0040",
       "stats": [
         "77",
-        "1 (7%)",
+        "1 of 15 (7%)",
         "77",
       ],
       "subTechniques": 0,
@@ -4068,35 +4128,39 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
       "withValue": 1,
     },
   ],
-  "theme": "light",
+  "theme": "light mtr-viz mtr-display-id",
 }
 `;
 
 exports[`render snapshots typical.json with search bar off 1`] = `
 {
   "hasSearchBar": false,
-  "htmlLength": 314695,
-  "htmlSha256": "f7896219e7f133709eee50c8aecb2419b3ded77a3a505849690b88b9b88103c8",
+  "htmlLength": 309063,
+  "htmlSha256": "0e0a23e1ce101d7c6cc7d3e642335f377ba7ecb3f107544cc3881855b59cff6c",
   "legend": {
     "labels": [
       "0",
-      "50",
+      "20",
+      "40",
+      "60",
+      "80",
       "100",
+      "No data",
     ],
     "title": "Detection Count",
   },
   "tactics": [
     {
       "firstTechniques": [
-        "T1682",
-        "T1681",
-        "T1598",
+        "T1589",
+        "T1590",
+        "T1591",
       ],
       "id": "TA0043",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 12 (0%)",
+        "—",
       ],
       "subTechniques": 34,
       "techniques": 12,
@@ -4105,15 +4169,15 @@ exports[`render snapshots typical.json with search bar off 1`] = `
     },
     {
       "firstTechniques": [
-        "T1683",
-        "T1650",
-        "T1608",
+        "T1583",
+        "T1584",
+        "T1585",
       ],
       "id": "TA0042",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 9 (0%)",
+        "—",
       ],
       "subTechniques": 42,
       "techniques": 9,
@@ -4122,14 +4186,14 @@ exports[`render snapshots typical.json with search bar off 1`] = `
     },
     {
       "firstTechniques": [
-        "T1669",
-        "T1659",
-        "T1200",
+        "T1566",
+        "T1078",
+        "T1091",
       ],
       "id": "TA0001",
       "stats": [
         "165",
-        "2 (18%)",
+        "2 of 11 (18%)",
         "83",
       ],
       "subTechniques": 11,
@@ -4139,14 +4203,14 @@ exports[`render snapshots typical.json with search bar off 1`] = `
     },
     {
       "firstTechniques": [
-        "T1699",
-        "T1698",
-        "T1677",
+        "T1059",
+        "T1047",
+        "T1053",
       ],
       "id": "TA0002",
       "stats": [
         "42",
-        "1 (5%)",
+        "1 of 22 (5%)",
         "42",
       ],
       "subTechniques": 44,
@@ -4156,14 +4220,14 @@ exports[`render snapshots typical.json with search bar off 1`] = `
     },
     {
       "firstTechniques": [
-        "T1671",
-        "T1668",
-        "T1653",
+        "T1078",
+        "T1037",
+        "T1053",
       ],
       "id": "TA0003",
       "stats": [
         "65",
-        "1 (5%)",
+        "1 of 22 (5%)",
         "65",
       ],
       "subTechniques": 91,
@@ -4173,14 +4237,14 @@ exports[`render snapshots typical.json with search bar off 1`] = `
     },
     {
       "firstTechniques": [
-        "T1611",
-        "T1548",
-        "T1547",
+        "T1078",
+        "T1037",
+        "T1053",
       ],
       "id": "TA0004",
       "stats": [
         "65",
-        "1 (8%)",
+        "1 of 13 (8%)",
         "65",
       ],
       "subTechniques": 83,
@@ -4190,14 +4254,14 @@ exports[`render snapshots typical.json with search bar off 1`] = `
     },
     {
       "firstTechniques": [
-        "T1696",
-        "T1684",
-        "T1679",
+        "T1078",
+        "T1006",
+        "T1014",
       ],
       "id": "TA0005",
       "stats": [
         "65",
-        "1 (3%)",
+        "1 of 31 (3%)",
         "65",
       ],
       "subTechniques": 120,
@@ -4207,15 +4271,15 @@ exports[`render snapshots typical.json with search bar off 1`] = `
     },
     {
       "firstTechniques": [
-        "T1690",
-        "T1689",
-        "T1688",
+        "T1112",
+        "T1207",
+        "T1222",
       ],
       "id": "TA0112",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 18 (0%)",
+        "—",
       ],
       "subTechniques": 39,
       "techniques": 18,
@@ -4224,14 +4288,14 @@ exports[`render snapshots typical.json with search bar off 1`] = `
     },
     {
       "firstTechniques": [
-        "T1697",
-        "T1649",
-        "T1621",
+        "T1110",
+        "T1003",
+        "T1040",
       ],
       "id": "TA0006",
       "stats": [
         "12.5",
-        "2 (11%)",
+        "2 of 18 (11%)",
         "6",
       ],
       "subTechniques": 50,
@@ -4241,15 +4305,15 @@ exports[`render snapshots typical.json with search bar off 1`] = `
     },
     {
       "firstTechniques": [
-        "T1680",
-        "T1673",
-        "T1654",
+        "T1007",
+        "T1010",
+        "T1012",
       ],
       "id": "TA0007",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 34 (0%)",
+        "—",
       ],
       "subTechniques": 15,
       "techniques": 34,
@@ -4258,14 +4322,14 @@ exports[`render snapshots typical.json with search bar off 1`] = `
     },
     {
       "firstTechniques": [
-        "T1021",
-        "T1570",
-        "T1563",
+        "T1072",
+        "T1080",
+        "T1091",
       ],
       "id": "TA0008",
       "stats": [
         "-5",
-        "1 (11%)",
+        "1 of 9 (11%)",
         "-5",
       ],
       "subTechniques": 14,
@@ -4275,15 +4339,15 @@ exports[`render snapshots typical.json with search bar off 1`] = `
     },
     {
       "firstTechniques": [
-        "T1602",
-        "T1560",
-        "T1557",
+        "T1005",
+        "T1025",
+        "T1039",
       ],
       "id": "TA0009",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 17 (0%)",
+        "—",
       ],
       "subTechniques": 24,
       "techniques": 17,
@@ -4292,14 +4356,14 @@ exports[`render snapshots typical.json with search bar off 1`] = `
     },
     {
       "firstTechniques": [
-        "T1665",
-        "T1659",
-        "T1573",
+        "T1105",
+        "T1001",
+        "T1008",
       ],
       "id": "TA0011",
       "stats": [
         "33",
-        "1 (6%)",
+        "1 of 18 (6%)",
         "33",
       ],
       "subTechniques": 27,
@@ -4309,15 +4373,15 @@ exports[`render snapshots typical.json with search bar off 1`] = `
     },
     {
       "firstTechniques": [
-        "T1700",
-        "T1567",
-        "T1537",
+        "T1011",
+        "T1020",
+        "T1029",
       ],
       "id": "TA0010",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 10 (0%)",
+        "—",
       ],
       "subTechniques": 10,
       "techniques": 10,
@@ -4326,14 +4390,14 @@ exports[`render snapshots typical.json with search bar off 1`] = `
     },
     {
       "firstTechniques": [
-        "T1667",
-        "T1657",
-        "T1565",
+        "T1486",
+        "T1485",
+        "T1489",
       ],
       "id": "TA0040",
       "stats": [
         "77",
-        "1 (7%)",
+        "1 of 15 (7%)",
         "77",
       ],
       "subTechniques": 18,
@@ -4342,20 +4406,24 @@ exports[`render snapshots typical.json with search bar off 1`] = `
       "withValue": 1,
     },
   ],
-  "theme": "light",
+  "theme": "light mtr-viz mtr-display-id",
 }
 `;
 
 exports[`render snapshots typical.json with sort by id desc 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 314977,
-  "htmlSha256": "ed4dc8fa4bcf4f95b1d12d3e8b0113f308d0f9ab30bbcda9cc3f6994e729f5ba",
+  "htmlLength": 310249,
+  "htmlSha256": "a5d4067d0b4635058e357c21a0c22d4a005057e742334846b4ccc08ab8adfaa6",
   "legend": {
     "labels": [
       "0",
-      "50",
+      "20",
+      "40",
+      "60",
+      "80",
       "100",
+      "No data",
     ],
     "title": "Detection Count",
   },
@@ -4369,8 +4437,8 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
       "id": "TA0043",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 12 (0%)",
+        "—",
       ],
       "subTechniques": 34,
       "techniques": 12,
@@ -4386,8 +4454,8 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
       "id": "TA0042",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 9 (0%)",
+        "—",
       ],
       "subTechniques": 42,
       "techniques": 9,
@@ -4403,7 +4471,7 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
       "id": "TA0001",
       "stats": [
         "165",
-        "2 (18%)",
+        "2 of 11 (18%)",
         "83",
       ],
       "subTechniques": 11,
@@ -4420,7 +4488,7 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
       "id": "TA0002",
       "stats": [
         "42",
-        "1 (5%)",
+        "1 of 22 (5%)",
         "42",
       ],
       "subTechniques": 44,
@@ -4437,7 +4505,7 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
       "id": "TA0003",
       "stats": [
         "65",
-        "1 (5%)",
+        "1 of 22 (5%)",
         "65",
       ],
       "subTechniques": 91,
@@ -4454,7 +4522,7 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
       "id": "TA0004",
       "stats": [
         "65",
-        "1 (8%)",
+        "1 of 13 (8%)",
         "65",
       ],
       "subTechniques": 83,
@@ -4471,7 +4539,7 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
       "id": "TA0005",
       "stats": [
         "65",
-        "1 (3%)",
+        "1 of 31 (3%)",
         "65",
       ],
       "subTechniques": 120,
@@ -4488,8 +4556,8 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
       "id": "TA0112",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 18 (0%)",
+        "—",
       ],
       "subTechniques": 39,
       "techniques": 18,
@@ -4505,7 +4573,7 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
       "id": "TA0006",
       "stats": [
         "12.5",
-        "2 (11%)",
+        "2 of 18 (11%)",
         "6",
       ],
       "subTechniques": 50,
@@ -4522,8 +4590,8 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
       "id": "TA0007",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 34 (0%)",
+        "—",
       ],
       "subTechniques": 15,
       "techniques": 34,
@@ -4539,7 +4607,7 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
       "id": "TA0008",
       "stats": [
         "-5",
-        "1 (11%)",
+        "1 of 9 (11%)",
         "-5",
       ],
       "subTechniques": 14,
@@ -4556,8 +4624,8 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
       "id": "TA0009",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 17 (0%)",
+        "—",
       ],
       "subTechniques": 24,
       "techniques": 17,
@@ -4573,7 +4641,7 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
       "id": "TA0011",
       "stats": [
         "33",
-        "1 (6%)",
+        "1 of 18 (6%)",
         "33",
       ],
       "subTechniques": 27,
@@ -4590,8 +4658,8 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
       "id": "TA0010",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 10 (0%)",
+        "—",
       ],
       "subTechniques": 10,
       "techniques": 10,
@@ -4607,7 +4675,7 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
       "id": "TA0040",
       "stats": [
         "77",
-        "1 (7%)",
+        "1 of 15 (7%)",
         "77",
       ],
       "subTechniques": 18,
@@ -4616,20 +4684,24 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
       "withValue": 1,
     },
   ],
-  "theme": "light",
+  "theme": "light mtr-viz mtr-display-id",
 }
 `;
 
 exports[`render snapshots typical.json with sort by name asc 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 314977,
-  "htmlSha256": "6dd40311c01e6ce4820a1c4e278593c801b29baacd4576d4e6af9a1c34fcd2b0",
+  "htmlLength": 310249,
+  "htmlSha256": "83829aeb481df68850c67754122993a2e0ebdcc1fce4508411d4ff23d9e33f65",
   "legend": {
     "labels": [
       "0",
-      "50",
+      "20",
+      "40",
+      "60",
+      "80",
       "100",
+      "No data",
     ],
     "title": "Detection Count",
   },
@@ -4643,8 +4715,8 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
       "id": "TA0043",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 12 (0%)",
+        "—",
       ],
       "subTechniques": 34,
       "techniques": 12,
@@ -4660,8 +4732,8 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
       "id": "TA0042",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 9 (0%)",
+        "—",
       ],
       "subTechniques": 42,
       "techniques": 9,
@@ -4677,7 +4749,7 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
       "id": "TA0001",
       "stats": [
         "165",
-        "2 (18%)",
+        "2 of 11 (18%)",
         "83",
       ],
       "subTechniques": 11,
@@ -4694,7 +4766,7 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
       "id": "TA0002",
       "stats": [
         "42",
-        "1 (5%)",
+        "1 of 22 (5%)",
         "42",
       ],
       "subTechniques": 44,
@@ -4711,7 +4783,7 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
       "id": "TA0003",
       "stats": [
         "65",
-        "1 (5%)",
+        "1 of 22 (5%)",
         "65",
       ],
       "subTechniques": 91,
@@ -4728,7 +4800,7 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
       "id": "TA0004",
       "stats": [
         "65",
-        "1 (8%)",
+        "1 of 13 (8%)",
         "65",
       ],
       "subTechniques": 83,
@@ -4745,7 +4817,7 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
       "id": "TA0005",
       "stats": [
         "65",
-        "1 (3%)",
+        "1 of 31 (3%)",
         "65",
       ],
       "subTechniques": 120,
@@ -4762,8 +4834,8 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
       "id": "TA0112",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 18 (0%)",
+        "—",
       ],
       "subTechniques": 39,
       "techniques": 18,
@@ -4779,7 +4851,7 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
       "id": "TA0006",
       "stats": [
         "12.5",
-        "2 (11%)",
+        "2 of 18 (11%)",
         "6",
       ],
       "subTechniques": 50,
@@ -4796,8 +4868,8 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
       "id": "TA0007",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 34 (0%)",
+        "—",
       ],
       "subTechniques": 15,
       "techniques": 34,
@@ -4813,7 +4885,7 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
       "id": "TA0008",
       "stats": [
         "-5",
-        "1 (11%)",
+        "1 of 9 (11%)",
         "-5",
       ],
       "subTechniques": 14,
@@ -4830,8 +4902,8 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
       "id": "TA0009",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 17 (0%)",
+        "—",
       ],
       "subTechniques": 24,
       "techniques": 17,
@@ -4847,7 +4919,7 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
       "id": "TA0011",
       "stats": [
         "33",
-        "1 (6%)",
+        "1 of 18 (6%)",
         "33",
       ],
       "subTechniques": 27,
@@ -4864,8 +4936,8 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
       "id": "TA0010",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 10 (0%)",
+        "—",
       ],
       "subTechniques": 10,
       "techniques": 10,
@@ -4881,7 +4953,7 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
       "id": "TA0040",
       "stats": [
         "77",
-        "1 (7%)",
+        "1 of 15 (7%)",
         "77",
       ],
       "subTechniques": 18,
@@ -4890,35 +4962,39 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
       "withValue": 1,
     },
   ],
-  "theme": "light",
+  "theme": "light mtr-viz mtr-display-id",
 }
 `;
 
 exports[`render snapshots wide.json with defaults 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 312937,
-  "htmlSha256": "106624b420e4c52953bc03b462954c480c96032bd987413916d18725152f9e30",
+  "htmlLength": 307546,
+  "htmlSha256": "ce2187e30791d0765be5fb70ed2ba6bf4a7fd657985517a79a3e20ae5175533d",
   "legend": {
     "labels": [
       "0",
-      "50",
+      "20",
+      "40",
+      "60",
+      "80",
       "100",
+      "No data",
     ],
     "title": "Alert Count",
   },
   "tactics": [
     {
       "firstTechniques": [
-        "T1682",
-        "T1681",
-        "T1598",
+        "T1589",
+        "T1590",
+        "T1591",
       ],
       "id": "TA0043",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 12 (0%)",
+        "—",
       ],
       "subTechniques": 34,
       "techniques": 12,
@@ -4927,15 +5003,15 @@ exports[`render snapshots wide.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1683",
-        "T1650",
-        "T1608",
+        "T1583",
+        "T1584",
+        "T1585",
       ],
       "id": "TA0042",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 9 (0%)",
+        "—",
       ],
       "subTechniques": 42,
       "techniques": 9,
@@ -4944,15 +5020,15 @@ exports[`render snapshots wide.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1669",
-        "T1659",
-        "T1566",
+        "T1078",
+        "T1091",
+        "T1133",
       ],
       "id": "TA0001",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 11 (0%)",
+        "—",
       ],
       "subTechniques": 11,
       "techniques": 11,
@@ -4961,15 +5037,15 @@ exports[`render snapshots wide.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1699",
-        "T1698",
-        "T1677",
+        "T1047",
+        "T1053",
+        "T1059",
       ],
       "id": "TA0002",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 22 (0%)",
+        "—",
       ],
       "subTechniques": 44,
       "techniques": 22,
@@ -4978,15 +5054,15 @@ exports[`render snapshots wide.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1671",
-        "T1668",
-        "T1653",
+        "T1037",
+        "T1053",
+        "T1078",
       ],
       "id": "TA0003",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 22 (0%)",
+        "—",
       ],
       "subTechniques": 91,
       "techniques": 22,
@@ -4995,15 +5071,15 @@ exports[`render snapshots wide.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1611",
-        "T1548",
-        "T1547",
+        "T1037",
+        "T1053",
+        "T1055",
       ],
       "id": "TA0004",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 13 (0%)",
+        "—",
       ],
       "subTechniques": 83,
       "techniques": 13,
@@ -5012,15 +5088,15 @@ exports[`render snapshots wide.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1696",
-        "T1684",
-        "T1679",
+        "T1006",
+        "T1014",
+        "T1027",
       ],
       "id": "TA0005",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 31 (0%)",
+        "—",
       ],
       "subTechniques": 120,
       "techniques": 31,
@@ -5029,15 +5105,15 @@ exports[`render snapshots wide.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1690",
-        "T1689",
-        "T1688",
+        "T1112",
+        "T1207",
+        "T1222",
       ],
       "id": "TA0112",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 18 (0%)",
+        "—",
       ],
       "subTechniques": 39,
       "techniques": 18,
@@ -5046,15 +5122,15 @@ exports[`render snapshots wide.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1697",
-        "T1649",
-        "T1621",
+        "T1003",
+        "T1040",
+        "T1056",
       ],
       "id": "TA0006",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 18 (0%)",
+        "—",
       ],
       "subTechniques": 50,
       "techniques": 18,
@@ -5063,15 +5139,15 @@ exports[`render snapshots wide.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1680",
-        "T1673",
-        "T1654",
+        "T1007",
+        "T1010",
+        "T1012",
       ],
       "id": "TA0007",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 34 (0%)",
+        "—",
       ],
       "subTechniques": 15,
       "techniques": 34,
@@ -5080,15 +5156,15 @@ exports[`render snapshots wide.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1570",
-        "T1563",
-        "T1550",
+        "T1021",
+        "T1072",
+        "T1080",
       ],
       "id": "TA0008",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 9 (0%)",
+        "—",
       ],
       "subTechniques": 14,
       "techniques": 9,
@@ -5097,15 +5173,15 @@ exports[`render snapshots wide.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1602",
-        "T1560",
-        "T1557",
+        "T1005",
+        "T1025",
+        "T1039",
       ],
       "id": "TA0009",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 17 (0%)",
+        "—",
       ],
       "subTechniques": 24,
       "techniques": 17,
@@ -5114,14 +5190,14 @@ exports[`render snapshots wide.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1665",
-        "T1659",
-        "T1573",
+        "T1071",
+        "T1001",
+        "T1008",
       ],
       "id": "TA0011",
       "stats": [
         "55",
-        "1 (6%)",
+        "1 of 18 (6%)",
         "55",
       ],
       "subTechniques": 27,
@@ -5131,14 +5207,14 @@ exports[`render snapshots wide.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1700",
-        "T1567",
-        "T1537",
+        "T1048",
+        "T1011",
+        "T1020",
       ],
       "id": "TA0010",
       "stats": [
         "90",
-        "1 (10%)",
+        "1 of 10 (10%)",
         "90",
       ],
       "subTechniques": 10,
@@ -5148,15 +5224,15 @@ exports[`render snapshots wide.json with defaults 1`] = `
     },
     {
       "firstTechniques": [
-        "T1667",
-        "T1657",
-        "T1565",
+        "T1485",
+        "T1486",
+        "T1489",
       ],
       "id": "TA0040",
       "stats": [
         "0",
-        "0 (0%)",
-        "0",
+        "0 of 15 (0%)",
+        "—",
       ],
       "subTechniques": 18,
       "techniques": 15,
@@ -5164,6 +5240,6 @@ exports[`render snapshots wide.json with defaults 1`] = `
       "withValue": 0,
     },
   ],
-  "theme": "light",
+  "theme": "light mtr-viz mtr-display-id",
 }
 `;

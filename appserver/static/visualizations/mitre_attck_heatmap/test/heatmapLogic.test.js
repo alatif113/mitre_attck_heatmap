@@ -21,7 +21,8 @@ describe('parseConfig', () => {
         expect(parse({})).toEqual({
             columns: { id: 0, value: 1, description: -1, status: -1 },
             animate: true,
-            duration: 300,
+            palette: 'default',
+            colorBands: 5,
             startColor: '#B63457',
             midColor: '#FCFCBD',
             endColor: '#22908D',
@@ -30,7 +31,7 @@ describe('parseConfig', () => {
             display: 'id',
             legendTitle: 'Detection Count',
             sortKey: 'data-value',
-            sortOrder: 'asc',
+            sortOrder: 'desc',
             hideNull: false,
             showSubTechniques: true,
             showSearchBar: true,
@@ -96,17 +97,17 @@ describe('parseConfig', () => {
     });
 
     test('parses the numeric options as numbers (audit P2-5)', () => {
-        const options = parse(withOptions({ startVal: '10', endVal: '90.5', duration: '5' }));
-        expect(options).toMatchObject({ startVal: 10, endVal: 90.5, duration: 5 });
+        const options = parse(withOptions({ startVal: '10', endVal: '90.5' }));
+        expect(options).toMatchObject({ startVal: 10, endVal: 90.5 });
     });
 
     test.each([
-        ['', 0, 100, 300],
-        ['abc', 0, 100, 300],
-        ['0', 0, 100, 300]
-    ])('falls back to defaults for unusable numeric options (%p)', (raw, startVal, endVal, duration) => {
-        const options = parse(withOptions({ startVal: raw, endVal: raw, duration: raw }));
-        expect(options).toMatchObject({ startVal, endVal: raw === '0' ? 0 : endVal, duration });
+        ['', 0, 100],
+        ['abc', 0, 100],
+        ['0', 0, 0]
+    ])('falls back to defaults for unusable numeric options (%p)', (raw, startVal, endVal) => {
+        const options = parse(withOptions({ startVal: raw, endVal: raw }));
+        expect(options).toMatchObject({ startVal, endVal: raw === '0' ? 0 : 100 });
     });
 
     test('accepts negative bounds', () => {
@@ -289,10 +290,10 @@ describe('status colors (feature 5)', () => {
     });
 
     test('text color is chosen for contrast', () => {
-        expect(logic.readableTextColor('#000000')).toBe('rgb(255,255,255)');
-        expect(logic.readableTextColor('#ffffff')).toBe('rgb(0,0,0)');
-        expect(logic.readableTextColor('#fc0')).toBe('rgb(0,0,0)');
-        expect(logic.readableTextColor('#d93f3c')).toBe('rgb(255,255,255)');
+        expect(logic.readableTextColor('#000000')).toBe('#FFFFFF');
+        expect(logic.readableTextColor('#ffffff')).toBe('#0E1114');
+        expect(logic.readableTextColor('#fc0')).toBe('#0E1114');
+        expect(logic.readableTextColor('#d93f3c')).toBe('#000000');
     });
 
     describe('statusSummary', () => {
@@ -531,16 +532,17 @@ describe('colors', () => {
     describe('getColor', () => {
         const map = logic.buildColorMap('#000000', '#808080', '#ffffff');
 
-        test.each([
-            [0, 'rgb(0,0,0)', 'rgb(255,255,255)'],
-            [25, 'rgb(64,64,64)', 'rgb(255,255,255)'],
-            [50, 'rgb(128,128,128)', 'rgb(255,255,255)'],
-            [75, 'rgb(191,191,191)', 'rgb(0,0,0)'],
-            [100, 'rgb(255,255,255)', 'rgb(0,0,0)']
-        ])('%p%% -> background %s, text %s', (percent, background, foreground) => {
-            const color = logic.getColor(percent, map);
-            expect(color.background).toBe(background);
-            expect(color.foreground).toBe(foreground);
+        test('the stops themselves are returned exactly, with text that contrasts', () => {
+            expect(logic.getColor(0, map)).toMatchObject({ background: 'rgb(0,0,0)', foreground: '#FFFFFF' });
+            expect(logic.getColor(50, map)).toMatchObject({ background: 'rgb(128,128,128)', foreground: '#0E1114' });
+            expect(logic.getColor(100, map)).toMatchObject({ background: 'rgb(255,255,255)', foreground: '#0E1114' });
+        });
+
+        test('grays stay gray and get lighter along the way', () => {
+            const grays = [10, 25, 40, 60, 75, 90].map(p => logic.getColor(p, map).background.match(/\d+/g).map(Number));
+            grays.forEach(([r, g, b]) => { expect(Math.abs(r - g)).toBeLessThanOrEqual(1); expect(Math.abs(g - b)).toBeLessThanOrEqual(1); });
+            const levels = grays.map(c => c[0]);
+            expect(levels).toEqual(levels.slice().sort((a, b) => a - b));
         });
 
         test('reports luminance for the dark-meter check', () => {
@@ -554,34 +556,6 @@ describe('colors', () => {
     });
 });
 
-describe('legend', () => {
-    test('gradient string', () => {
-        expect(logic.legendGradient('#a', '#b', '#c')).toBe('(45deg, #a 0%, #b 50%, #c 100%)');
-    });
-
-    test('labels for default bounds', () => {
-        expect(logic.legendLabels(0, 100)).toEqual([0, 50, 100]);
-    });
-
-    test('middle label is the midpoint when the lower bound is not 0 (audit P2-5)', () => {
-        expect(logic.legendLabels(50, 150)).toEqual([50, 100, 150]);
-        expect(logic.legendLabels(-50, 50)).toEqual([-50, 0, 50]);
-    });
-
-    test('cursor range maps pointer position to a value window', () => {
-        expect(logic.legendCursorRange(250, 100, 500, 0, 100)).toEqual({ left: 200, lower: 40, upper: 60 });
-    });
-
-    test('cursor range ignores pointers outside the legend', () => {
-        expect(logic.legendCursorRange(0, 100, 500, 0, 100)).toBeNull();
-        expect(logic.legendCursorRange(501, 100, 500, 0, 100)).toBeNull();
-        expect(logic.legendCursorRange(500, 100, 500, 0, 100)).not.toBeNull();
-    });
-
-    test('cursor range is offset by the lower bound (audit P2-5)', () => {
-        expect(logic.legendCursorRange(250, 100, 500, 100, 200)).toEqual({ left: 200, lower: 140, upper: 160 });
-    });
-});
 
 describe('tacticStats', () => {
     test('typical column', () => {
@@ -634,13 +608,6 @@ describe('formatDescription', () => {
     });
 });
 
-describe('tooltipSide', () => {
-    test('flips left within 400px of the right edge', () => {
-        expect(logic.tooltipSide(100, 1000)).toBe('right');
-        expect(logic.tooltipSide(600, 1000)).toBe('right');
-        expect(logic.tooltipSide(601, 1000)).toBe('left');
-    });
-});
 
 describe('compareByKey', () => {
     // Wrapped because Array#sort moves bare undefineds to the end without calling the comparator.
@@ -688,49 +655,223 @@ describe('parseValue', () => {
     });
 });
 
-describe('matchesSearch', () => {
-    test('matches id or name substrings case-insensitively', () => {
-        expect(logic.matchesSearch('T1059', 'Command and Scripting Interpreter', 't105')).toBe(true);
-        expect(logic.matchesSearch('T1059', 'Command and Scripting Interpreter', 'scripting')).toBe(true);
-        expect(logic.matchesSearch('T1059', 'Command and Scripting Interpreter', 'phishing')).toBe(false);
+
+
+
+describe('color bands', () => {
+    test('the band count is 3, 5, 7 or 9 and falls back to 5', () => {
+        expect(['3', '5', '7', '9', 7, 9].map(logic.parseBandCount)).toEqual([3, 5, 7, 9, 7, 9]);
+        expect(['0', '4', '10', '', undefined, 'many', null].map(logic.parseBandCount)).toEqual([5, 5, 5, 5, 5, 5, 5]);
     });
 
-    test('tolerates missing attributes (placeholder cells)', () => {
-        expect(logic.matchesSearch(undefined, undefined, 't1')).toBe(false);
+    test('equal edges split the range evenly', () => {
+        expect(logic.computeEdges([], 5, 'equal', 0, 100)).toEqual([0, 20, 40, 60, 80, 100]);
+        expect(logic.computeEdges([], 3, 'equal', 0, 1)).toEqual([0, 0.33, 0.67, 1]);
+    });
+
+    test('quantile edges put about the same number of values in each band', () => {
+        const values = [];
+        for (let i = 1; i <= 100; i++) values.push(i);
+        expect(logic.computeEdges(values, 5, 'quantile', 0, 100)).toEqual([0, 21, 41, 61, 81, 100]);
+    });
+
+    test('quantile edges follow skewed data and keep the bounds as the outer edges', () => {
+        const values = [1, 1, 1, 2, 2, 3, 5, 8, 90, 100];
+        const edges = logic.computeEdges(values, 5, 'quantile', 0, 100);
+        expect(edges[0]).toBe(0);
+        expect(edges[5]).toBe(100);
+        expect(edges[1]).toBeLessThan(5);
+        expect(edges).toEqual(edges.slice().sort((a, b) => a - b));
+    });
+
+    test('quantile edges without values fall back to equal ones, and never run backwards', () => {
+        expect(logic.computeEdges([], 5, 'quantile', 0, 100)).toEqual([0, 20, 40, 60, 80, 100]);
+        const edges = logic.computeEdges([50, 50, 50, 50], 5, 'quantile', 60, 100);
+        expect(edges).toEqual(edges.slice().sort((a, b) => a - b));
+    });
+
+    test('a value belongs to the band whose lower edge it reaches; outside values go to the end bands', () => {
+        const edges = [0, 20, 40, 60, 80, 100];
+        expect([0, 19.9, 20, 39, 40, 99, 100].map(v => logic.bandOf(v, edges))).toEqual([0, 0, 1, 1, 2, 4, 4]);
+        expect([-5, 250].map(v => logic.bandOf(v, edges))).toEqual([0, 4]);
+    });
+
+    test('each band takes the gradient color at the middle of its share', () => {
+        const map = logic.buildColorMap('#000000', '#808080', '#ffffff');
+        const colors = logic.bandColors(map, 5);
+        expect(colors.map(c => c.background)).toEqual([
+            logic.getColor(10, map).background, logic.getColor(30, map).background, logic.getColor(50, map).background,
+            logic.getColor(70, map).background, logic.getColor(90, map).background
+        ]);
+        expect(new Set(colors.map(c => c.background)).size).toBe(5);
+    });
+
+    test('numbers are shown without long fractions', () => {
+        expect([0, 20, 0.5, 1234.5678, 1000].map(logic.formatNumber)).toEqual(['0', '20', '0.5', '1,234.57', '1,000']);
+    });
+
+    test('rank 1 is the highest value, and equal values share a rank', () => {
+        expect(logic.rankOf(90, [90, 50, 50, 10])).toBe(1);
+        expect(logic.rankOf(50, [90, 50, 50, 10])).toBe(2);
+        expect(logic.rankOf(10, [90, 50, 50, 10])).toBe(4);
     });
 });
 
-describe('animation', () => {
-    test('step size spreads the range over duration seconds at 60fps', () => {
-        expect(logic.animationSteps(0, 100, 300)).toEqual({ stepSize: 100 / 300 / 60, stepWidth: 10 });
-        expect(logic.animationSteps('0', '120', '2')).toEqual({ stepSize: 1, stepWidth: 12 });
+describe('palettes', () => {
+    test('unknown palettes are the default', () => {
+        expect(['default', 'risk', 'blues', 'viridis'].map(logic.parsePalette)).toEqual(['default', 'risk', 'blues', 'viridis']);
+        expect(['', 'rainbow', undefined].map(logic.parsePalette)).toEqual(['default', 'default', 'default']);
     });
 
-    test('frames advance then wrap to the lower bound past the upper bound', () => {
-        const steps = { stepSize: 40, stepWidth: 10 };
-        let frame = logic.animationFrame(0, steps, 100, 0);
-        expect(frame).toEqual({ lower: 0, upper: 50, next: 40 });
-        frame = logic.animationFrame(frame.next, steps, 100, 0);
-        frame = logic.animationFrame(frame.next, steps, 100, 0);
-        expect(frame).toEqual({ lower: 80, upper: 130, next: 120 });
-        expect(logic.animationFrame(frame.next, steps, 100, 0).next).toBe(0);
+    test('default uses the three colors, risk uses them the other way round', () => {
+        expect(logic.paletteStops('default', '#111111', '#222222', '#333333')).toEqual(['#111111', '#222222', '#333333']);
+        expect(logic.paletteStops('risk', '#111111', '#222222', '#333333')).toEqual(['#333333', '#222222', '#111111']);
+        expect(logic.paletteStops('viridis', '#111111', '#222222', '#333333')).toHaveLength(5);
+        expect(logic.paletteStops('blues', '#111111', '#222222', '#333333')[0]).toBe('#DCEAF7');
     });
 
-    test('animation starts and restarts at a non-zero lower bound (audit P2-5)', () => {
-        const steps = { stepSize: 40, stepWidth: 10 };
-        expect(logic.animationFrame(50, steps, 150, 50)).toEqual({ lower: 50, upper: 100, next: 90 });
-        expect(logic.animationFrame(160, steps, 150, 50).next).toBe(50);
+    test('a stop map spaces any number of stops evenly', () => {
+        expect(logic.buildStopMap(['#000000', '#ffffff']).map(s => s.pct)).toEqual([0, 100]);
+        expect(logic.buildStopMap(['#000000', '#111111', '#222222', '#333333', '#444444']).map(s => s.pct)).toEqual([0, 25, 50, 75, 100]);
+        const map = logic.buildStopMap(['#000000', '#ff0000', '#ffffff']);
+        expect(logic.getColor(50, map).background).toBe('rgb(255,0,0)');
+    });
+});
+
+describe('text contrast', () => {
+    const channels = rgb => rgb.match(/\d+/g).map(Number);
+    const luminance = ([r, g, b]) => {
+        const f = c => { c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+        return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+    };
+    const hexChannels = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
+    const ratio = (a, b) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+
+    test('every background gets text with at least 4.5:1 contrast', () => {
+        let lowest = Infinity;
+        for (let r = 0; r < 256; r += 15) for (let g = 0; g < 256; g += 15) for (let b = 0; b < 256; b += 15) {
+            const text = hexChannels(logic.textColorOn(r, g, b));
+            lowest = Math.min(lowest, ratio(luminance([r, g, b]), luminance(text)));
+        }
+        expect(lowest).toBeGreaterThanOrEqual(4.5);
     });
 
-    test('inFocusRange is inclusive and ignores missing values', () => {
-        expect(logic.inFocusRange('10', 10, 20)).toBe(true);
-        expect(logic.inFocusRange('20', 10, 20)).toBe(true);
-        expect(logic.inFocusRange('21', 10, 20)).toBe(false);
-        expect(logic.inFocusRange(undefined, 0, 20)).toBe(false);
+    test('light backgrounds get dark text and dark backgrounds white text', () => {
+        expect(logic.textColorOn(255, 255, 255)).toBe('#0E1114');
+        expect(logic.textColorOn(0, 0, 0)).toBe('#FFFFFF');
+        expect(logic.textColorOn(47, 126, 188)).toBe('#000000');
     });
 
-    test('a value of 0 is never focused (audit P2-6)', () => {
-        expect(logic.inFocusRange(0, 0, 10)).toBe(false);
-        expect(logic.inFocusRange('0', 0, 10)).toBe(true);
+    test('getColor uses it for the cell text', () => {
+        const map = logic.buildStopMap(['#000000', '#ffffff']);
+        expect(logic.getColor(0, map).foreground).toBe('#FFFFFF');
+        expect(logic.getColor(100, map).foreground).toBe('#0E1114');
+    });
+});
+
+describe('tactic names and search fields', () => {
+    test('known words get soft hyphens, unknown words stay whole', () => {
+        expect(logic.hyphenateName('Reconnaissance')).toBe('Recon\u00ADnais\u00ADsance');
+        expect(logic.hyphenateName('Command and Control')).toBe('Com\u00ADmand and Con\u00ADtrol');
+        expect(logic.hyphenateName('Frobnication')).toBe('Frobnication');
+        expect(logic.hyphenateName('Reconnaissance').replace(/\u00AD/g, '')).toBe('Reconnaissance');
+    });
+
+    test('search reports which parts of a technique match', () => {
+        const item = { id: 'T1059', name: 'Command and Scripting Interpreter', subNames: ['PowerShell', 'Python'], description: 'Seen in 3 incidents' };
+        expect(logic.searchFields(item, 't1059')).toEqual(['id']);
+        expect(logic.searchFields(item, 'command')).toEqual(['name']);
+        expect(logic.searchFields(item, 'power')).toEqual(['sub-technique']);
+        expect(logic.searchFields(item, 'incidents')).toEqual(['description']);
+        expect(logic.searchFields(item, 'zzz')).toEqual([]);
+        expect(logic.searchFields(item, '')).toEqual([]);
+        expect(logic.searchFields({ id: 'T1', name: 'Python' , subNames: ['python'] }, 'py')).toEqual(['name', 'sub-technique']);
+    });
+});
+
+
+describe('perceptual color interpolation (OKLCH)', () => {
+    const channels = c => c.background.match(/\d+/g).map(Number);
+    const map = logic.buildColorMap('#B63457', '#FCFCBD', '#22908D');
+
+    test('converting to OKLCH and back gives the same color', () => {
+        [[182, 52, 87], [252, 252, 189], [34, 144, 141], [0, 0, 0], [255, 255, 255], [10, 200, 30]].forEach(rgb => {
+            const lch = logic.rgbToOklch(rgb[0], rgb[1], rgb[2]);
+            expect(logic.oklchToRgb(lch[0], lch[1], isNaN(lch[2]) ? 0 : lch[2])).toEqual(rgb);
+        });
+    });
+
+    test('red to cream keeps its chroma: the middle is orange, not the grayish salmon an RGB blend gives', () => {
+        const [r, g, b] = channels(logic.getColor(25, map));
+        const rgbBlend = [0xB6, 0x34, 0x57].map((v, i) => (v + [0xFC, 0xFC, 0xBD][i]) / 2);
+        const chroma = c => logic.rgbToOklch(c[0], c[1], c[2])[1];
+        expect(chroma([r, g, b])).toBeGreaterThan(chroma(rgbBlend) + 0.03);
+    });
+
+    test('lightness never goes backwards between two stops that get lighter', () => {
+        const lightness = [0, 10, 20, 30, 40, 50].map(p => { const c = channels(logic.getColor(p, map)); return logic.rgbToOklch(c[0], c[1], c[2])[0]; });
+        lightness.forEach((l, i) => { if (i) expect(l).toBeGreaterThanOrEqual(lightness[i - 1] - 0.002); });
+    });
+
+    test('hue takes the shorter way round the wheel', () => {
+        const red = logic.rgbToOklch(255, 0, 40), magenta = logic.rgbToOklch(255, 0, 200);
+        const mid = logic.mixOklch(red, magenta, 0.5)[2];
+        const distance = (x, y) => Math.abs(((x - y + 540) % 360) - 180);
+        const arc = distance(red[2], magenta[2]);
+        expect(arc).toBeLessThan(180);
+        expect(distance(mid, red[2])).toBeCloseTo(arc / 2, 3);
+        expect(distance(mid, magenta[2])).toBeCloseTo(arc / 2, 3);
+        const across = logic.mixOklch([0.6, 0.1, 350], [0.6, 0.1, 10], 0.5)[2];
+        expect(across === 0 || across < 1 || across > 359).toBe(true);
+    });
+
+    test('a color with no hue takes the hue of the other', () => {
+        const mixed = logic.mixOklch(logic.rgbToOklch(255, 255, 255), logic.rgbToOklch(255, 0, 0), 0.5);
+        expect(Number.isNaN(mixed[2])).toBe(false);
+        expect(mixed[2]).toBeCloseTo(logic.rgbToOklch(255, 0, 0)[2], 3);
+    });
+
+    test('every color along any palette is a valid screen color', () => {
+        ['default', 'risk', 'blues', 'viridis'].forEach(name => {
+            const stopMap = logic.buildStopMap(logic.paletteStops(name, '#B63457', '#FCFCBD', '#22908D'));
+            for (let p = 0; p <= 100; p += 2) {
+                logic.getColor(p, stopMap).background.match(/\d+/g).map(Number).forEach(c => { expect(c).toBeGreaterThanOrEqual(0); expect(c).toBeLessThanOrEqual(255); });
+            }
+        });
+    });
+});
+
+
+describe('keyboard navigation', () => {
+    // Two columns of three cells; x is the column, y the row.
+    const points = [];
+    const columns = [];
+    [0, 1].forEach(col => [0, 1, 2].forEach(row => { points.push({ x: col * 50, y: row * 28 }); columns.push('c' + col); }));
+
+    test('arrows go to the neighbour in that direction', () => {
+        expect(logic.nextCell(points, 0, 'ArrowDown', columns)).toBe(1);
+        expect(logic.nextCell(points, 1, 'ArrowUp', columns)).toBe(0);
+        expect(logic.nextCell(points, 1, 'ArrowRight', columns)).toBe(4);
+        expect(logic.nextCell(points, 4, 'ArrowLeft', columns)).toBe(1);
+    });
+
+    test('there is nowhere to go past the edge', () => {
+        expect(logic.nextCell(points, 0, 'ArrowUp', columns)).toBe(-1);
+        expect(logic.nextCell(points, 0, 'ArrowLeft', columns)).toBe(-1);
+        expect(logic.nextCell(points, 5, 'ArrowDown', columns)).toBe(-1);
+        expect(logic.nextCell(points, 5, 'ArrowRight', columns)).toBe(-1);
+    });
+
+    test('Home and End go to the first and last cell of the column', () => {
+        expect(logic.nextCell(points, 4, 'Home', columns)).toBe(3);
+        expect(logic.nextCell(points, 3, 'End', columns)).toBe(5);
+    });
+
+    test('moving sideways prefers the cell in the same row', () => {
+        expect(logic.nextCell(points, 2, 'ArrowRight', columns)).toBe(5);
+    });
+
+    test('an unknown cell gives nothing', () => {
+        expect(logic.nextCell(points, 99, 'ArrowDown', columns)).toBe(-1);
     });
 });

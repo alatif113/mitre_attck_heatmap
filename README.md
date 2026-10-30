@@ -30,14 +30,25 @@ The visualization requires at least 2 fields to be present within the search out
 | table id "Detection Count" description
 ```
 
+### Reading the heatmap
+
+- **Bands.** The scale is split into 3, 5, 7 or 9 color bands (*Colors > Color bands*, 5 by default), shown in the legend with their value ranges. Hover a band to dim everything outside it; click it to keep it pinned (click again or press Esc to let go). *No data* in the legend dims every technique that has a value, so the gaps stand out. Colors blend perceptually (OKLCH), and text on every cell has at least 4.5:1 contrast.
+- **Palette.** *Default* and *Risk* use the three colors in the format menu (Risk reverses them: low is good, high is bad); *Sequential blues* and *Viridis* have their own.
+- **Tactics.** Each header shows the share of its techniques that have a value, a count, and a gauge in the color of their average. Hover or focus it for the sum, average, highest technique and sub-technique counts; click it to focus that tactic (and send the drilldown).
+- **Techniques.** Cells with no value are faintly hatched. A small triangle in a cell's corner means some of its sub-techniques have values. Hover a cell, or focus it with the keyboard, for its tooltip: description, value, band and rank, the other tactics it is in, and every sub-technique (click one to drill down on it). Click a cell to pin the tooltip.
+- **Search and filter.** Search matches IDs, names, sub-technique names, descriptions and tactic names. The box shows how many matches there are and where, and Enter (or the arrows) steps through them. *All / With data / Gaps* hides cells accordingly. Press `/` to jump to the search box.
+- **Keyboard.** The matrix is a single tab stop; arrow keys move between cells, Home and End go to the ends of a column, Enter selects, Esc clears.
+- **Refreshing.** Search text, the filter, a pinned band or tactic, a pinned tooltip and the scroll position stay when the search refreshes.
+- **Empty results.** A search with no rows, rows whose IDs are not in the matrix, and rows without values each say so, instead of showing a blank or stale matrix.
+
 ### More than the first three columns
 
 By default the first three columns are the technique ID, the value and the description. These options (format menu) change that:
 
 - **Fields**: name the columns instead of relying on their order. *ID field*, *Value field*, *Description field* and *Status field* take field names (matched exactly, then ignoring case). A name that is not in the results is shown as an error listing the available fields.
-- **Roll up sub-techniques** (*Aggregation*): when the search returns sub-technique IDs such as `T1059.001`, show the sum, max, average or count on the parent technique. *Technique's own value* chooses between keeping a parent's own value or including it in the aggregate. Rolled-up cells have a dotted underline.
-- **Color bounds**: *From data* sets the gradient from the lowest/highest value in the results (starting at 0 unless a value is negative, or at the lowest value if chosen) instead of the two bounds typed below it.
-- **Status colors**: set *Status field* to a text column and list colors as `gap=#d93f3c, partial=#f1813f, covered=#53a051`. Cells then take the color of their status (matched ignoring case; other statuses use *Other status color*), the legend lists each status with a count, and the number only appears in the tooltip. A parent technique without a status takes the first listed status among its sub-techniques when roll-up is on, so list the most important status first. *Sort Key* gains *Status*, in the order listed.
+- **Roll up sub-techniques** (*Scale*): when the search returns sub-technique IDs such as `T1059.001`, show the sum, max, average or count on the parent technique when it has no value of its own. Rolled-up cells have a dotted underline.
+- **Color bounds** (*Scale*): *From data* sets the scale from the lowest and highest value in the results (starting at 0 unless a value is negative) instead of the two bounds typed below it. With bounds from the data the color bands each hold about the same number of techniques; with bounds you set, the bands are even.
+- **Status colors**: set *Status field* to a text column and list colors as `gap=#d93f3c, partial=#f1813f, covered=#53a051`. Cells then take the color of their status (matched ignoring case; other statuses are gray), the legend lists each status with a count, and the number only appears in the tooltip. A parent technique without a status takes the first listed status among its sub-techniques when roll-up is on, so list the most important status first. *Sort by* gains *Status*, in the order listed.
 - **Export button** (*Export*): adds a button that downloads the current data as an [ATT&CK Navigator](https://mitre-attack.github.io/attack-navigator/) layer (format 4.5): values become scores, descriptions become comments, status colors and the legend are kept. Not available for D3FEND.
 
 ### Imported ATT&CK data
@@ -88,6 +99,16 @@ This app is currently unsupported for Internet Explorer. Please report issues to
 ## Change Log
 
 ### Unreleased
+- New look: flat tactic headers with a coverage figure and gauge, connected fixed-height cells, hatching for techniques with no value, and tooltips and a legend in Splunk's light and dark colors
+- Colors are now split into 3, 5, 7 or 9 bands (*Color bands*, 5 by default) with bands that follow the data when the bounds come from it, and blend perceptually; new *Palette* option (Default, Risk, Sequential blues, Viridis)
+- New legend: value bands with a *No data* entry, hover to dim, click to pin
+- New tooltip: description, band and rank, other tactics, and every sub-technique (clickable); sub-technique cells are no longer drawn in a popover
+- Search now shows match counts and where they are, steps through matches, finds sub-technique names, descriptions and tactic names; new *All / With data / Gaps* switch; `/` focuses the search box
+- Keyboard navigation, focusable tactic headers, and a message for no results, ids that do not match the matrix, and rows without values
+- Search text, filter, pinned band/tactic/tooltip and scroll position now survive a refresh
+- Format menu reorganized (Data, Display, Colors, Scale, Export); the legend title is always the value field's name; sub-techniques are listed in the tooltip
+- Changed defaults: *Sort by* Value, *Descending* (was ascending)
+- Removed from the menu (still read if a saved dashboard sets them): *Legend title*, *Other status color*, *Lower bound from data*, *Technique's own value*, the Navigator layer name and version. Removed: *Duration*; *Animate* now fades cells in and counts up the percentages on first load, and the sweeping highlight is gone
 - Updated the bundled data to ATT&CK v20.0
 - Added an optional scripted input and saved search that import newer ATT&CK versions, with *Matrix data* and *ATT&CK version* options
 - Added the Fields options to map result columns by name

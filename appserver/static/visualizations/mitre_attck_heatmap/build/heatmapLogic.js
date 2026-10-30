@@ -9,8 +9,9 @@
 define(function() {
 
     const MIN_PERCENT = 2;
+    const NEAR_BLACK = '#0E1114';
+    const NEAR_BLACK_LUMINANCE = 0.00545;   // relative luminance of #0E1114
     const DESCRIPTION_PREVIEW_CHARS = 256;
-    const TOOLTIP_FLIP_MARGIN = 400;
 
     // Platform names that ATT&CK has since renamed or folded together. Saved
     // dashboards may still hold the old values, so map them to the current
@@ -113,7 +114,8 @@ define(function() {
         return {
             columns: columns,
             animate: vizUtils.normalizeBoolean(get('animate') || 'yes'),
-            duration: Math.max(toNumber(get('duration'), 300), 0) || 300,
+            palette: parsePalette(get('palette')),
+            colorBands: parseBandCount(get('colorBands')),
             startColor: get('startColor') || '#B63457',
             midColor: get('midColor') || '#FCFCBD',
             endColor: get('endColor') || '#22908D',
@@ -123,7 +125,7 @@ define(function() {
             legendTitle: vizUtils.escapeHtml(get('legendTitle')) ||
                 vizUtils.escapeHtml(fields[columns.status >= 0 ? columns.status : columns.value].name),
             sortKey: get('sortKey') || 'data-value',
-            sortOrder: get('sortOrder') || 'asc',
+            sortOrder: get('sortOrder') == 'asc' ? 'asc' : 'desc',
             hideNull: vizUtils.normalizeBoolean(get('hideNull') || 'no'),
             showSubTechniques: vizUtils.normalizeBoolean(get('showSubTechniques') || 'yes'),
             showSearchBar: vizUtils.normalizeBoolean(get('showSearchBar') || 'yes'),
@@ -283,11 +285,22 @@ define(function() {
         return index < 0 ? priority.length : index;
     }
 
+    // Text color for a background given as channels 0-255: white, or near-black, or pure
+    // black when near-black would fall under 4.5:1. Whatever the background, the result
+    // has at least 4.5:1 contrast (the best of black and white always does).
+    function textColorOn(r, g, b) {
+        let channel = c => { c = Number(c) / 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+        let L = 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+        let white = 1.05 / (L + 0.05);
+        let black = (L + 0.05) / 0.05;
+        if (white >= black) return '#FFFFFF';
+        return (L + 0.05) / (NEAR_BLACK_LUMINANCE + 0.05) >= 4.5 ? NEAR_BLACK : '#000000';
+    }
+
     // Black or white text, whichever reads better on a #rgb/#rrggbb background.
     function readableTextColor(hex) {
         let color = hexToRgb(hex);
-        let luminance = (0.299 * color.r + 0.587 * color.g + 0.114 * color.b) / 255;
-        return luminance > 0.65 ? 'rgb(0,0,0)' : 'rgb(255,255,255)';
+        return textColorOn(color.r, color.g, color.b);
     }
 
     // The statuses to show in the legend, with how many cells have each: the
@@ -559,12 +572,98 @@ define(function() {
         return {r: r, g: g, b: b};
     }
 
-    function buildColorMap(startColor, midColor, endColor) {
+    // ---- Perceptual color interpolation ------------------------------------------
+    //
+    // Colors are blended in OKLCH (lightness, chroma, hue), not in RGB: a straight RGB blend
+    // between two strong colors passes through a dull, muddy middle, while OKLCH keeps the
+    // chroma and moves the hue and lightness evenly as the eye sees them.
+
+    function srgbToLinear(c) {
+        c = c / 255;
+        return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    }
+
+    function linearToSrgb(c) {
+        c = c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055;
+        return c * 255;
+    }
+
+    // [r, g, b] (0-255) to [L, C, h] (h in degrees).
+    function rgbToOklch(r, g, b) {
+        let lr = srgbToLinear(r), lg = srgbToLinear(g), lb = srgbToLinear(b);
+        let l = Math.cbrt(0.4122214708 * lr + 0.5363325363 * lg + 0.0514459929 * lb);
+        let m = Math.cbrt(0.2119034982 * lr + 0.6806995451 * lg + 0.1073969566 * lb);
+        let s = Math.cbrt(0.0883024619 * lr + 0.2817188376 * lg + 0.6299787005 * lb);
+        let L = 0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s;
+        let A = 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s;
+        let B = 0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s;
+        let C = Math.sqrt(A * A + B * B);
+        let h = C < 0.0002 ? NaN : (Math.atan2(B, A) * 180 / Math.PI + 360) % 360;
+        return [L, C, h];
+    }
+
+    // [L, C, h] to linear sRGB channels (not clamped).
+    function oklchToLinear(L, C, h) {
+        let A = C * Math.cos(h * Math.PI / 180);
+        let B = C * Math.sin(h * Math.PI / 180);
+        let l = Math.pow(L + 0.3963377774 * A + 0.2158037573 * B, 3);
+        let m = Math.pow(L - 0.1055613458 * A - 0.0638541728 * B, 3);
+        let s = Math.pow(L - 0.0894841775 * A - 1.2914855480 * B, 3);
         return [
-            { pct: 0, color: hexToRgb(startColor) },
-            { pct: 50, color: hexToRgb(midColor) },
-            { pct: 100, color: hexToRgb(endColor) }
+            4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+            -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+            -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s
         ];
+    }
+
+    function inGamut(rgb) {
+        return rgb.every(c => c >= -0.0005 && c <= 1.0005);
+    }
+
+    // [L, C, h] to whole sRGB channels. A color outside what a screen can show loses chroma
+    // (not lightness or hue) until it fits.
+    function oklchToRgb(L, C, h) {
+        let rgb = oklchToLinear(L, C, h);
+        if (!inGamut(rgb)) {
+            let low = 0, high = C;
+            for (let i = 0; i < 20; i++) {
+                let mid = (low + high) / 2;
+                if (inGamut(oklchToLinear(L, mid, h))) low = mid; else high = mid;
+            }
+            rgb = oklchToLinear(L, low, h);
+        }
+        return rgb.map(c => Math.max(0, Math.min(255, Math.round(linearToSrgb(Math.max(0, Math.min(1, c)))))));
+    }
+
+    // The blend of two [L, C, h] colors, t from 0 to 1. Hue takes the shorter way round; a
+    // color with no hue (gray) takes the other color's.
+    function mixOklch(from, to, t) {
+        let h1 = from[2], h2 = to[2];
+        if (isNaN(h1)) h1 = h2;
+        if (isNaN(h2)) h2 = h1;
+        let h = 0;
+        if (!isNaN(h1)) {
+            let delta = ((h2 - h1 + 540) % 360) - 180;
+            h = (h1 + delta * t + 360) % 360;
+        }
+        return [from[0] + (to[0] - from[0]) * t, from[1] + (to[1] - from[1]) * t, h];
+    }
+
+    // A color map of evenly spaced stops, for getColor.
+    function buildStopMap(stops) {
+        return stops.map(function(color, index) {
+            let rgb = hexToRgb(color);
+            let channels = [Number(rgb.r), Number(rgb.g), Number(rgb.b)];
+            return {
+                pct: 100 * index / (stops.length - 1),
+                color: rgb,
+                lch: rgbToOklch(channels[0], channels[1], channels[2])
+            };
+        });
+    }
+
+    function buildColorMap(startColor, midColor, endColor) {
+        return buildStopMap([startColor, midColor, endColor]);
     }
 
     function getColor(percent, colorMap) {
@@ -579,16 +678,19 @@ define(function() {
         let upper = colorMap[i];
         let range = upper.pct - lower.pct;
         let rangePct = (percent - lower.pct) / range;
-        let pctLower = 1 - rangePct;
-        let pctUpper = rangePct;
-        let color = {
-            r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
-            g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
-            b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
-        };
+        let color;
+        if (rangePct <= 0) {
+            color = { r: Number(lower.color.r), g: Number(lower.color.g), b: Number(lower.color.b) };
+        } else if (rangePct >= 1) {
+            color = { r: Number(upper.color.r), g: Number(upper.color.g), b: Number(upper.color.b) };
+        } else {
+            let mixed = mixOklch(lower.lch, upper.lch, rangePct);
+            let rgb = oklchToRgb(mixed[0], mixed[1], mixed[2]);
+            color = { r: rgb[0], g: rgb[1], b: rgb[2] };
+        }
 
         let luminance = ( 0.299 * color.r + 0.587 * color.g + 0.114 * color.b)/255;
-        let foreground = (luminance > 0.65) ? 'rgb(0,0,0)' : 'rgb(255,255,255)';
+        let foreground = textColorOn(color.r, color.g, color.b);
 
         return {
             background: 'rgb(' + [color.r, color.g, color.b].join(',') + ')',
@@ -597,26 +699,160 @@ define(function() {
         }
     }
 
-    function legendGradient(startColor, midColor, endColor) {
-        return '(45deg, ' + startColor + ' 0%, ' + midColor + ' 50%, ' + endColor + ' 100%)';
+    // ---- Color bands -------------------------------------------------------------
+
+    const BAND_COUNTS = [3, 5, 7, 9];
+    const DEFAULT_BANDS = 5;
+
+    // 3, 5, 7 or 9; anything else (including text) is the default.
+    function parseBandCount(raw) {
+        let count = parseInt(raw, 10);
+        return BAND_COUNTS.indexOf(count) >= 0 ? count : DEFAULT_BANDS;
     }
 
-    // Lower, middle and upper labels under the legend bar.
-    function legendLabels(startVal, endVal) {
-        return [startVal, (startVal + endVal)/2, endVal];
+    const PALETTES = ['default', 'risk', 'blues', 'viridis'];
+    const PALETTE_STOPS = {
+        blues: ['#DCEAF7', '#9ECAE1', '#4292C6', '#2171B5', '#08306B'],
+        viridis: ['#440154', '#3B528B', '#21918C', '#5EC962', '#FDE725']
+    };
+
+    function parsePalette(raw) {
+        return PALETTES.indexOf(raw) >= 0 ? raw : 'default';
     }
 
-    // Maps a pointer x-offset over the legend to the cursor position and the
-    // value window it covers. Returns null when the pointer is outside.
-    function legendCursorRange(x, cursorWidth, legendWidth, startVal, endVal) {
-        if (!(x <= legendWidth && x > 0)) return null;
+    // The color stops of a palette: "default" is the three configured colors, "risk"
+    // the same colors the other way round (low is good, high is bad).
+    function paletteStops(palette, startColor, midColor, endColor) {
+        if (palette == 'risk') return [endColor, midColor, startColor];
+        if (PALETTE_STOPS[palette]) return PALETTE_STOPS[palette].slice();
+        return [startColor, midColor, endColor];
+    }
 
-        let left = x - cursorWidth / 2;
-        return {
-            left: left,
-            lower: startVal + left / legendWidth * (endVal - startVal),
-            upper: startVal + (left + cursorWidth) / legendWidth * (endVal - startVal)
-        };
+    function roundTo(value, decimals) {
+        let factor = Math.pow(10, decimals);
+        return Math.round(value * factor) / factor;
+    }
+
+    // The n + 1 edges of n bands. "equal" splits the range evenly (the right choice when
+    // the bounds were set by hand); "quantile" puts about the same number of values in
+    // each band (the right choice for counts, which are mostly small), keeping the
+    // bounds as the outer edges.
+    function computeEdges(values, count, mode, lower, upper) {
+        let edges = [];
+        let numbers = values.filter(Number.isFinite).sort((a, b) => a - b);
+        for (let i = 0; i <= count; i++) {
+            if (i == 0) edges.push(lower);
+            else if (i == count) edges.push(upper);
+            else if (mode == 'quantile' && numbers.length > 0) edges.push(numbers[Math.min(numbers.length - 1, Math.floor(numbers.length * i / count))]);
+            else edges.push(lower + (upper - lower) * i / count);
+        }
+        // Edges never go backwards, whatever the data.
+        for (let i = 1; i <= count; i++) {
+            if (edges[i] < edges[i - 1]) edges[i] = edges[i - 1];
+        }
+        return edges.map(edge => roundTo(edge, 2));
+    }
+
+    // The band (0 to count - 1) a value falls in; values outside the range go to the
+    // first or last band.
+    function bandOf(value, edges) {
+        let count = edges.length - 1;
+        for (let i = count - 1; i > 0; i--) {
+            if (value >= edges[i]) return i;
+        }
+        return 0;
+    }
+
+    // The color of each band: the gradient color at the middle of its share of the range.
+    function bandColors(colorMap, count) {
+        let colors = [];
+        for (let i = 0; i < count; i++) {
+            colors.push(getColor(100 * (i + 0.5) / count, colorMap));
+        }
+        return colors;
+    }
+
+    // "1,234", "0.5": whole numbers keep their digits, long fractions are cut to 2 places.
+    function formatNumber(value) {
+        return roundTo(Number(value), 2).toLocaleString('en-US', { maximumFractionDigits: 2 });
+    }
+
+    // How many values are above this one, plus one (1 is the highest). `sortedDescending`
+    // holds the values of everything that has one.
+    function rankOf(value, sortedDescending) {
+        let above = 0;
+        while (above < sortedDescending.length && sortedDescending[above] > value) above++;
+        return above + 1;
+    }
+
+    // ---- Keyboard ----------------------------------------------------------------
+
+    // The cell to move to for an arrow, Home or End key. `points` are the cells' centers
+    // (x, y), `columns` the tactic column of each. Arrows go to the nearest cell in that
+    // direction (straying sideways costs three times as much as going on); Home and End go
+    // to the first and last cell of the current column. Returns -1 when there is nowhere to go.
+    function nextCell(points, index, key, columns) {
+        if (index < 0 || index >= points.length) return -1;
+        if (key == 'Home' || key == 'End') {
+            let same = [];
+            points.forEach(function(point, i) { if (columns[i] == columns[index]) same.push(i); });
+            return key == 'Home' ? same[0] : same[same.length - 1];
+        }
+        let from = points[index];
+        let best = -1;
+        let bestScore = Infinity;
+        points.forEach(function(point, i) {
+            if (i == index) return;
+            let dx = point.x - from.x;
+            let dy = point.y - from.y;
+            let score = Infinity;
+            if (key == 'ArrowRight' && dx > 2) score = dx + 3 * Math.abs(dy);
+            if (key == 'ArrowLeft' && dx < -2) score = -dx + 3 * Math.abs(dy);
+            if (key == 'ArrowDown' && dy > 2) score = dy + 3 * Math.abs(dx);
+            if (key == 'ArrowUp' && dy < -2) score = -dy + 3 * Math.abs(dx);
+            if (score < bestScore) {
+                bestScore = score;
+                best = i;
+            }
+        });
+        return best;
+    }
+
+    // ---- Tactic names ------------------------------------------------------------
+
+    // Syllable break points for the words in ATT&CK and D3FEND tactic names. Names with
+    // other words keep them whole and the browser's own hyphenation (hyphens: auto) copes.
+    const HYPHENATED = {
+        Reconnaissance: 'Recon\u00ADnais\u00ADsance', Resource: 'Re\u00ADsource', Development: 'Devel\u00ADop\u00ADment',
+        Privilege: 'Priv\u00ADi\u00ADlege', Escalation: 'Es\u00ADca\u00ADla\u00ADtion', Defense: 'De\u00ADfense',
+        Impairment: 'Im\u00ADpair\u00ADment', Credential: 'Cre\u00ADden\u00ADtial', Access: 'Ac\u00ADcess',
+        Lateral: 'Lat\u00ADer\u00ADal', Movement: 'Move\u00ADment', Exfiltration: 'Ex\u00ADfil\u00ADtra\u00ADtion',
+        Persistence: 'Per\u00ADsis\u00ADtence', Discovery: 'Dis\u00ADcov\u00ADery', Collection: 'Col\u00ADlec\u00ADtion',
+        Execution: 'Ex\u00ADe\u00ADcu\u00ADtion', Initial: 'Ini\u00ADtial', Command: 'Com\u00ADmand',
+        Control: 'Con\u00ADtrol', Impact: 'Im\u00ADpact', Evasion: 'E\u00ADva\u00ADsion', Inhibit: 'In\u00ADhib\u00ADit',
+        Response: 'Re\u00ADsponse', Function: 'Func\u00ADtion', Process: 'Proc\u00ADess', Impair: 'Im\u00ADpair',
+        Stealth: 'Stealth', Inventory: 'In\u00ADven\u00ADto\u00ADry', Mapping: 'Map\u00ADping', Hardening: 'Hard\u00ADen\u00ADing',
+        Analysis: 'Anal\u00ADy\u00ADsis', Isolation: 'Iso\u00ADla\u00ADtion', Eviction: 'Evic\u00ADtion', Restore: 'Re\u00ADstore'
+    };
+
+    // A tactic name with soft hyphens at syllable breaks, as text (no markup).
+    function hyphenateName(name) {
+        return String(name).split(' ').map(word => HYPHENATED[word] || word).join(' ');
+    }
+
+    // ---- Search ------------------------------------------------------------------
+
+    // Which parts of a technique a (lower-cased) query matches: its id, name, the names
+    // of its sub-techniques, or its description. An empty list is no match.
+    function searchFields(item, query) {
+        let fields = [];
+        if (!query) return fields;
+        let has = text => String(text == null ? '' : text).toLowerCase().indexOf(query) > -1;
+        if (has(item.id)) fields.push('id');
+        if (has(item.name)) fields.push('name');
+        if ((item.subNames || []).some(has)) fields.push('sub-technique');
+        if (has(item.description)) fields.push('description');
+        return fields;
     }
 
     // Per-tactic totals from the data-value attributes of its techniques
@@ -656,10 +892,6 @@ define(function() {
         return description.split('\\n').join('</p><p>');
     }
 
-    function tooltipSide(offsetLeft, windowWidth) {
-        return (offsetLeft > windowWidth - TOOLTIP_FLIP_MARGIN) ? 'left' : 'right';
-    }
-
     // Comparator over the sort-key attribute of two techniques.
     function compareByKey(key, order, a, b) {
         let flip = (order == 'asc') ? 1 : -1;
@@ -693,33 +925,6 @@ define(function() {
     function parseValue(attr) {
         let value = parseFloat(attr);
         return isNaN(value) ? '' : value;
-    }
-
-    // `query` is expected lower-cased already.
-    function matchesSearch(id, name, query) {
-        id = id?.toLowerCase();
-        name = name?.toLowerCase();
-        return (id?.indexOf(query) > -1 || name?.indexOf(query) > -1);
-    }
-
-    function animationSteps(startVal, endVal, duration) {
-        return {
-            stepSize: (endVal - startVal) / duration / 60,
-            stepWidth: (endVal - startVal) * .1
-        };
-    }
-
-    // The value window to highlight for this frame and where the next frame
-    // starts; wraps back to the lower bound once the window passes the upper bound.
-    function animationFrame(currStep, steps, endVal, startVal) {
-        let lower = currStep;
-        let upper = lower + steps.stepSize + steps.stepWidth;
-        let next = (lower < endVal) ? currStep + steps.stepSize : (startVal || 0);
-        return { lower: lower, upper: upper, next: next };
-    }
-
-    function inFocusRange(value, lower, upper) {
-        return !!(value && value >= lower && value <= upper);
     }
 
     return {
@@ -764,17 +969,28 @@ define(function() {
         hexToRgb: hexToRgb,
         buildColorMap: buildColorMap,
         getColor: getColor,
-        legendGradient: legendGradient,
-        legendLabels: legendLabels,
-        legendCursorRange: legendCursorRange,
         tacticStats: tacticStats,
         formatDescription: formatDescription,
-        tooltipSide: tooltipSide,
         compareByKey: compareByKey,
         parseValue: parseValue,
-        matchesSearch: matchesSearch,
-        animationSteps: animationSteps,
-        animationFrame: animationFrame,
-        inFocusRange: inFocusRange
+        searchFields: searchFields,
+        nextCell: nextCell,
+        BAND_COUNTS: BAND_COUNTS,
+        DEFAULT_BANDS: DEFAULT_BANDS,
+        parseBandCount: parseBandCount,
+        PALETTES: PALETTES,
+        parsePalette: parsePalette,
+        paletteStops: paletteStops,
+        buildStopMap: buildStopMap,
+        rgbToOklch: rgbToOklch,
+        oklchToRgb: oklchToRgb,
+        mixOklch: mixOklch,
+        computeEdges: computeEdges,
+        bandOf: bandOf,
+        bandColors: bandColors,
+        formatNumber: formatNumber,
+        rankOf: rankOf,
+        hyphenateName: hyphenateName,
+        textColorOn: textColorOn
     };
 });

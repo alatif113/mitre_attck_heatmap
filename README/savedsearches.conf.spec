@@ -1,3 +1,5 @@
+display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.palette = <string>
+display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.colorBands = <float>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.startColor = <string>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.midColor = <string>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.endColor = <string>
@@ -27,4 +29,3 @@ display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.rollup = <
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.rollupParent = <string>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar = <string>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.animate = <string>
-display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.duration = <float>

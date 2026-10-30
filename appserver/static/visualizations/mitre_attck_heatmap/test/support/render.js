@@ -34,7 +34,10 @@ function buildConfig(options) {
 function createViz(Viz) {
     const el = document.createElement('div');
     document.body.appendChild(el);
-    return new Viz(el);
+    const viz = new Viz(el);
+    // Tooltips open at once in tests; in a browser the first one waits a moment.
+    viz._tooltipDelay = 0;
+    return viz;
 }
 
 // Runs the same formatData -> updateView sequence Splunk does.
@@ -65,7 +68,7 @@ function summarize(viz) {
         hasSearchBar: !!root.querySelector('.mtr-search-container'),
         legend: root.querySelector('.mtr-legend') ? {
             title: text(root, '.mtr-legend-title'),
-            labels: Array.from(root.querySelectorAll('.mtr-legend-val span')).map(s => s.textContent)
+            labels: Array.from(root.querySelectorAll('.mtr-band-edge')).map(s => s.textContent)
         } : null,
         tactics: Array.from(root.querySelectorAll('.mtr-tactic-col')).map(function(col) {
             const techniques = col.querySelectorAll('.mtr-technique-container' + real + ' > .mtr-technique');

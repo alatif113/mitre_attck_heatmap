@@ -74,6 +74,37 @@ describe('format options are declared everywhere (audit P3-3)', () => {
         expect(confKeys.slice().sort()).toEqual(specKeys.slice().sort());
     });
 
+    // Options that are still read (saved dashboards may set them) but are not in the format menu.
+    const HIDDEN_FROM_MENU = ['legendTitle', 'statusDefaultColor', 'navigatorLayerName', 'navigatorAttackVersion', 'autoLowerBound', 'rollupParent'];
+
+    test('the only options missing from the format menu are the documented ones', () => {
+        const missing = confKeys.filter(key => formatterKeys.indexOf(key) < 0);
+        expect(missing.sort()).toEqual(HIDDEN_FROM_MENU.slice().sort());
+    });
+
+    test('the format menu shows each option\'s savedsearches.conf default', () => {
+        const conf = {};
+        read('default/savedsearches.conf').split('\n').forEach(line => {
+            const m = line.match(/^display\.visualizations\.custom\.\w+\.\w+\.(\w+)\s*=\s?(.*)$/);
+            if (m && !(m[1] in conf)) conf[m[1]] = m[2].trim();
+        });
+        formatter.split('</splunk-control-group>').forEach(group => {
+            const m = group.match(/\{\{VIZ_NAMESPACE\}\}\.(\w+)"\s+value="([^"]*)"/);
+            if (m) expect([m[1], m[2]]).toEqual([m[1], conf[m[1]]]);
+        });
+    });
+
+    test('every control has a help text', () => {
+        formatter.split('<splunk-control-group').slice(1).forEach(group => {
+            expect(group).toMatch(/help="[^"]{8,}"/);
+        });
+    });
+
+    test('there is no legend title, duration or continuous color option in the menu', () => {
+        ['legendTitle', 'duration'].forEach(key => expect(formatterKeys).not.toContain(key));
+        expect(formatter).not.toMatch(/Continuous/);
+    });
+
     test('showSearchBar defaults to yes, as the code and format menu do', () => {
         expect(read('default/savedsearches.conf')).toMatch(new RegExp('^' + NS.replace(/\./g, '\\.') + 'showSearchBar = yes$', 'm'));
     });
