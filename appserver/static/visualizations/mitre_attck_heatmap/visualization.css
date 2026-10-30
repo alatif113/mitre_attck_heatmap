@@ -77,7 +77,7 @@
 .mtr-top {
 	display: flex;
 	flex-wrap: wrap;
-	align-items: flex-end;
+	align-items: center;
 	justify-content: space-between;
 	gap: 12px 24px;
 	padding: 16px 16px 12px;
@@ -116,27 +116,25 @@
 	transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
+/* The host page (Splunk Web) styles every input and button, with margins and a box model of its
+   own. Pin what decides alignment, with a selector that outranks input[type=search]. */
+.mtr-viz .mtr-search-input,
+.mtr-viz .mtr-export-button,
+.mtr-viz .mtr-search-clear {
+	box-sizing: border-box;
+	height: 32px;
+	margin: 0;
+	vertical-align: middle;
+}
+
+.mtr-viz .mtr-search-input {
+	line-height: 20px;
+}
+
 .mtr-search-input:focus {
 	border-color: var(--mtr-accent);
 	box-shadow: 0 0 0 3px var(--mtr-accent-soft);
 	outline: none;
-}
-
-.mtr-search kbd {
-	position: absolute;
-	right: 8px;
-	font: inherit;
-	font-size: 10.5px;
-	padding: 0 5px;
-	border-radius: 4px;
-	border: 1px solid var(--mtr-border);
-	color: var(--mtr-muted);
-	pointer-events: none;
-}
-
-.mtr-search-container.mtr-has-query kbd,
-.mtr-search:focus-within kbd {
-	display: none;
 }
 
 .mtr-search-clear {

@@ -746,7 +746,6 @@ return SplunkVisualizationBase.extend({
                 <div class="mtr-search-container">
                     <div class="mtr-search">
                         <input id="mtrSearchInput" class="mtr-search-input" type="search" placeholder="Find technique" aria-label="Find a technique, tactic or sub-technique"/>
-                        <kbd aria-hidden="true">/</kbd>
                         <button type="button" class="mtr-search-clear" aria-label="Clear search">&times;</button>
                     </div>
                 </div>

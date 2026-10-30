@@ -316,6 +316,12 @@ describe('search', () => {
         expect(qa(viz, '.focused, .defocused').length).toBe(0);
     });
 
+    test('the search box shows no hint about the shortcut', () => {
+        const viz = typical();
+        expect(q(viz, '.mtr-search').textContent.trim()).toBe('\u00d7');
+        expect(q(viz, '.mtr-search kbd')).toBeNull();
+    });
+
     test('"/" moves to the search box', () => {
         const viz = typical();
         key(cell(viz, 'T1059'), '/');

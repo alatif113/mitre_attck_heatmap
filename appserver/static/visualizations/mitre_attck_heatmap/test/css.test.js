@@ -83,6 +83,18 @@ test('the corner marker for sub-techniques is faint', () => {
     expect(parseFloat(declarations('.mtr-subdot').opacity)).toBeLessThanOrEqual(0.3);
 });
 
+test('the search box, its clear button and the export button share one height and have no margin, whatever the page says', () => {
+    const shared = declarations('.mtr-viz .mtr-search-input, .mtr-viz .mtr-export-button, .mtr-viz .mtr-search-clear'.replace(/,\s*/g, ',\n'));
+    expect(px(shared.height)).toBe(32);
+    expect(shared.margin).toBe('0');
+    expect(shared['box-sizing']).toBe('border-box');
+    expect(declarations('.mtr-top')['align-items']).toBe('center');
+});
+
+test('there is no keyboard hint drawn in the search box', () => {
+    expect(css).not.toMatch(/kbd/);
+});
+
 test('the legend is in the page flow, not positioned over the matrix', () => {
     expect(rule('.mtr-legend')).not.toMatch(/position:\s*absolute/);
 });
