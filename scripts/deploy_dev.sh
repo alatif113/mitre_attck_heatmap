@@ -2,7 +2,7 @@
 #
 # Package the app and install it on the dev Splunk instance.
 #
-#   scripts/deploy_dev.sh [--skip-package] [--dry-run]
+#   scripts/deploy_dev.sh [--skip-package] [--dry-run] [--ssh-install [--restart]]
 #
 # Splunk's apps/local endpoint cannot take the package in the request body; it
 # installs from a path that already exists on the server. So this script
@@ -14,6 +14,16 @@
 #   4. removes the copied file, and prints the URLs to refresh static assets
 #      and reload config.
 #
+# --ssh-install installs without the REST API: steps 3 and the token are replaced by
+# unpacking the package into $SPLUNK_REMOTE_HOME/etc/apps over ssh. Use it when the
+# management port is unavailable, for example on a Free license (which turns off
+# remote logins, so every REST call answers 401). Files are extracted over the
+# installed app, so local/ and anything else not in the package is kept; files
+# the package no longer has stay behind. It then checks that the installed app.conf
+# has the build number of the package. --restart also runs "splunk restart" on the host
+# (a Free license needs no login for that); config files and the app's static files
+# are only read again after a restart.
+#
 # Settings come from .env in the app root (created from a template on first
 # run) or from the environment, which takes precedence:
 #   SPLUNK_TOKEN        authentication token (Settings > Tokens). Required.
@@ -22,6 +32,11 @@
 #                       SPLUNK_REMOTE_DIR, and the Splunk service user must be
 #                       able to read the copied file.
 #   SPLUNK_REMOTE_DIR   directory on the host for the copy. Default: /tmp
+#   SPLUNK_REMOTE_HOME  Splunk's install directory on the host, used by --ssh-install
+#                       and --restart. Default: /opt/splunk
+#   SPLUNK_SSH_SUDO=1   run the unpack and restart with sudo on the host (the ssh user
+#                       then needs passwordless sudo). Without it the ssh user must be
+#                       able to write to $SPLUNK_REMOTE_HOME/etc/apps.
 #   SPLUNK_URL          web URL. Default: https://splunk.home
 #   SPLUNK_MGMT_URL     REST URL. Default: $SPLUNK_URL:8089
 #   SPLUNK_VERIFY_TLS=1 verify the server certificate. By default it is NOT
@@ -43,14 +58,22 @@ ENV_FILE="${ENV_FILE:-$APP_ROOT/.env}"
 
 SKIP_PACKAGE=0
 DRY_RUN=0
+SSH_INSTALL=0
+RESTART=0
 for arg in "$@"; do
     case "$arg" in
         --skip-package) SKIP_PACKAGE=1 ;;
         --dry-run) DRY_RUN=1 ;;
-        -h|--help) sed -n '3,35p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
+        --ssh-install) SSH_INSTALL=1 ;;
+        --restart) RESTART=1 ;;
+        -h|--help) sed -n '3,50p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
         *) echo "error: unknown argument: $arg" >&2; exit 2 ;;
     esac
 done
+if [ "$RESTART" = 1 ] && [ "$SSH_INSTALL" = 0 ]; then
+    echo "error: --restart only goes with --ssh-install" >&2
+    exit 2
+fi
 
 die() {
     echo "error: $*" >&2
@@ -86,7 +109,7 @@ fi
 # nothing in it is executed. Values already in the environment win.
 while IFS= read -r line || [ -n "$line" ]; do
     case "$line" in
-        SPLUNK_TOKEN=*|SPLUNK_SSH_TARGET=*|SPLUNK_REMOTE_DIR=*|SPLUNK_URL=*|SPLUNK_MGMT_URL=*|SPLUNK_CA_CERT=*|SPLUNK_VERIFY_TLS=*)
+        SPLUNK_TOKEN=*|SPLUNK_SSH_TARGET=*|SPLUNK_REMOTE_DIR=*|SPLUNK_REMOTE_HOME=*|SPLUNK_SSH_SUDO=*|SPLUNK_URL=*|SPLUNK_MGMT_URL=*|SPLUNK_CA_CERT=*|SPLUNK_VERIFY_TLS=*)
             key="${line%%=*}"
             value="${line#*=}"
             value="${value%\"}"; value="${value#\"}"
@@ -112,6 +135,9 @@ SPLUNK_MGMT_URL="${SPLUNK_MGMT_URL:-$SPLUNK_URL:8089}"
 SPLUNK_MGMT_URL="${SPLUNK_MGMT_URL%/}"
 SPLUNK_REMOTE_DIR="${SPLUNK_REMOTE_DIR:-/tmp}"
 SPLUNK_REMOTE_DIR="${SPLUNK_REMOTE_DIR%/}"
+SPLUNK_REMOTE_HOME="${SPLUNK_REMOTE_HOME:-/opt/splunk}"
+SPLUNK_REMOTE_HOME="${SPLUNK_REMOTE_HOME%/}"
+SPLUNK_SSH_SUDO="${SPLUNK_SSH_SUDO:-}"
 SPLUNK_TOKEN="${SPLUNK_TOKEN:-}"
 SPLUNK_SSH_TARGET="${SPLUNK_SSH_TARGET:-}"
 SPLUNK_CA_CERT="${SPLUNK_CA_CERT:-}"
@@ -130,6 +156,10 @@ REMOTE_PATH="$SPLUNK_REMOTE_DIR/$APP_ID.tgz"
 [[ "$SPLUNK_SSH_TARGET" =~ ^[A-Za-z0-9._-]+@[A-Za-z0-9._-]+$|^[A-Za-z0-9._-]+$ ]] \
     || die "SPLUNK_SSH_TARGET must look like user@host"
 [[ "$SPLUNK_REMOTE_DIR" =~ ^/[A-Za-z0-9._/-]*$ ]] || die "SPLUNK_REMOTE_DIR must be an absolute path without spaces"
+[[ "$SPLUNK_REMOTE_HOME" =~ ^/[A-Za-z0-9._/-]+$ ]] || die "SPLUNK_REMOTE_HOME must be an absolute path without spaces"
+REMOTE_APPS="$SPLUNK_REMOTE_HOME/etc/apps"
+REMOTE_SUDO=""
+[ "$SPLUNK_SSH_SUDO" = 1 ] && REMOTE_SUDO="sudo "
 
 # The token is sent in a header, so only send it over TLS (or to this machine).
 case "$SPLUNK_MGMT_URL" in
@@ -137,7 +167,7 @@ case "$SPLUNK_MGMT_URL" in
     *) die "SPLUNK_MGMT_URL must be https:// (got $SPLUNK_MGMT_URL)" ;;
 esac
 
-if [ "$DRY_RUN" = 0 ]; then
+if [ "$DRY_RUN" = 0 ] && [ "$SSH_INSTALL" = 0 ]; then
     [ -n "$SPLUNK_TOKEN" ] || die "SPLUNK_TOKEN is empty; set it in $ENV_FILE"
     # Restricted to the characters tokens contain, so it is safe to quote in a curl config.
     [[ "$SPLUNK_TOKEN" =~ ^[A-Za-z0-9._~+/=-]+$ ]] || die "SPLUNK_TOKEN contains unexpected characters"
@@ -170,7 +200,12 @@ fi
 
 if [ "$DRY_RUN" = 1 ]; then
     echo "==> Dry run: would copy $ARCHIVE to $SPLUNK_SSH_TARGET:$REMOTE_PATH"
-    echo "==> Dry run: would POST $SPLUNK_MGMT_URL/services/apps/local (name=$REMOTE_PATH filename=true update=true)"
+    if [ "$SSH_INSTALL" = 1 ]; then
+        echo "==> Dry run: would unpack it into $SPLUNK_SSH_TARGET:$REMOTE_APPS${REMOTE_SUDO:+ (with sudo)}"
+        [ "$RESTART" = 1 ] && echo "==> Dry run: would run $SPLUNK_REMOTE_HOME/bin/splunk restart on $SPLUNK_SSH_TARGET"
+    else
+        echo "==> Dry run: would POST $SPLUNK_MGMT_URL/services/apps/local (name=$REMOTE_PATH filename=true update=true)"
+    fi
 else
     # --- copy --------------------------------------------------------------
 
@@ -179,6 +214,19 @@ else
 
     # --- install -----------------------------------------------------------
 
+    if [ "$SSH_INSTALL" = 1 ]; then
+        echo "==> Unpacking into $SPLUNK_SSH_TARGET:$REMOTE_APPS"
+        ssh "$SPLUNK_SSH_TARGET" "set -e; [ -d '$REMOTE_APPS' ] || { echo 'no such directory on the host: $REMOTE_APPS (set SPLUNK_REMOTE_HOME)' >&2; exit 3; }; ${REMOTE_SUDO}tar -xzf '$REMOTE_PATH' -C '$REMOTE_APPS' --no-same-owner; rm -f '$REMOTE_PATH'" \
+            || die "could not unpack the package on $SPLUNK_SSH_TARGET (the package was left at $REMOTE_PATH; if it is a permissions problem, see SPLUNK_SSH_SUDO)"
+        WANT_BUILD="$(tar -xzOf "$ARCHIVE" "$APP_ID/default/app.conf" | sed -nE 's/^build[[:space:]]*=[[:space:]]*([0-9]+).*/\1/p')"
+        HAVE_BUILD="$(ssh "$SPLUNK_SSH_TARGET" "sed -nE 's/^build[[:space:]]*=[[:space:]]*([0-9]+).*/\\1/p' '$REMOTE_APPS/$APP_ID/default/app.conf'")" || HAVE_BUILD=""
+        [ "$WANT_BUILD" = "$HAVE_BUILD" ] || die "the app on the host has build '$HAVE_BUILD', expected '$WANT_BUILD': the files were not replaced"
+        echo "==> Installed $APP_ID (build $HAVE_BUILD)"
+        if [ "$RESTART" = 1 ]; then
+            echo "==> Restarting Splunk on $SPLUNK_SSH_TARGET"
+            ssh "$SPLUNK_SSH_TARGET" "${REMOTE_SUDO}'$SPLUNK_REMOTE_HOME/bin/splunk' restart" || die "restart failed (see the output above)"
+        fi
+    else
     echo "==> Installing via $SPLUNK_MGMT_URL/services/apps/local"
     RESPONSE="$(mktemp)"
     trap 'rm -f "$RESPONSE"' EXIT
@@ -209,9 +257,20 @@ else
 
     ssh "$SPLUNK_SSH_TARGET" rm -f "$REMOTE_PATH" \
         || echo "warning: could not remove $SPLUNK_SSH_TARGET:$REMOTE_PATH" >&2
+    fi
 fi
 
 # --- next steps ------------------------------------------------------------
+
+if [ "$SSH_INSTALL" = 1 ]; then
+    cat <<EOF
+
+Next, in a browser:
+  Refresh static assets:  $SPLUNK_URL/en-US/_bump  (then a hard refresh, Cmd+Shift+R)
+$([ "$RESTART" = 1 ] || echo "Restart Splunk first (or run this script again with --restart): config changes and the app's files are read at startup.")
+EOF
+    exit 0
+fi
 
 cat <<EOF
 
