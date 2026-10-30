@@ -134,7 +134,7 @@ return SplunkVisualizationBase.extend({
 
         this.$el.empty();
 
-        this.$el.attr('class', '').addClass(theme).addClass('mtr-viz').addClass('mtr-display-' + display);
+        this.$el.attr('class', '').addClass(theme).addClass('mtr-viz').addClass('mtr-display-' + display).addClass('mtr-matrix-' + matrix);
         // The first render fades in and counts up; later ones (a refresh) do not. Tests switch it off.
         let entrance = firstRender && self._entrance !== false;
         if (entrance) this.$el.addClass('mtr-enter');

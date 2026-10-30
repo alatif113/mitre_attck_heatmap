@@ -570,7 +570,7 @@ describe('updateView', () => {
     test('applies the current Splunk theme as the root class', () => {
         vizUtils.setTheme('dark');
         const viz = render(Viz, loadFixture('single-row.json'));
-        expect(viz.el.className).toBe('dark mtr-viz mtr-display-id');
+        expect(viz.el.className).toBe('dark mtr-viz mtr-display-id mtr-matrix-enterprise');
     });
 
     test('colors cells along the configured gradient', () => {

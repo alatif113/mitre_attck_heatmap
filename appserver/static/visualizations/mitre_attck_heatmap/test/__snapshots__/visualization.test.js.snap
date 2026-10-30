@@ -285,7 +285,7 @@ exports[`render snapshots large.js with defaults 1`] = `
       "withValue": 15,
     },
   ],
-  "theme": "light mtr-viz mtr-display-id",
+  "theme": "light mtr-viz mtr-display-id mtr-matrix-enterprise",
 }
 `;
 
@@ -563,7 +563,7 @@ exports[`render snapshots large.js with display name 1`] = `
       "withValue": 15,
     },
   ],
-  "theme": "light mtr-viz mtr-display-name",
+  "theme": "light mtr-viz mtr-display-name mtr-matrix-enterprise",
 }
 `;
 
@@ -841,7 +841,7 @@ exports[`render snapshots large.js with hide null 1`] = `
       "withValue": 15,
     },
   ],
-  "theme": "light mtr-viz mtr-display-id",
+  "theme": "light mtr-viz mtr-display-id mtr-matrix-enterprise",
 }
 `;
 
@@ -1119,7 +1119,7 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
       "withValue": 15,
     },
   ],
-  "theme": "light mtr-viz mtr-display-id",
+  "theme": "light mtr-viz mtr-display-id mtr-matrix-enterprise",
 }
 `;
 
@@ -1397,7 +1397,7 @@ exports[`render snapshots single-row.json with defaults 1`] = `
       "withValue": 0,
     },
   ],
-  "theme": "light mtr-viz mtr-display-id",
+  "theme": "light mtr-viz mtr-display-id mtr-matrix-enterprise",
 }
 `;
 
@@ -1675,7 +1675,7 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
       "withValue": 1,
     },
   ],
-  "theme": "light mtr-viz mtr-display-id",
+  "theme": "light mtr-viz mtr-display-id mtr-matrix-enterprise",
 }
 `;
 
@@ -2147,7 +2147,7 @@ exports[`render snapshots typical.json with d3fend 1`] = `
       "withValue": 0,
     },
   ],
-  "theme": "light mtr-viz mtr-display-id",
+  "theme": "light mtr-viz mtr-display-id mtr-matrix-d3fend",
 }
 `;
 
@@ -2425,7 +2425,7 @@ exports[`render snapshots typical.json with defaults 1`] = `
       "withValue": 1,
     },
   ],
-  "theme": "light mtr-viz mtr-display-id",
+  "theme": "light mtr-viz mtr-display-id mtr-matrix-enterprise",
 }
 `;
 
@@ -2703,7 +2703,7 @@ exports[`render snapshots typical.json with display name 1`] = `
       "withValue": 1,
     },
   ],
-  "theme": "light mtr-viz mtr-display-name",
+  "theme": "light mtr-viz mtr-display-name mtr-matrix-enterprise",
 }
 `;
 
@@ -2969,7 +2969,7 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
       "withValue": 1,
     },
   ],
-  "theme": "light mtr-viz mtr-display-id",
+  "theme": "light mtr-viz mtr-display-id mtr-matrix-enterprise",
 }
 `;
 
@@ -3239,7 +3239,7 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
       "withValue": 1,
     },
   ],
-  "theme": "light mtr-viz mtr-display-id",
+  "theme": "light mtr-viz mtr-display-id mtr-matrix-enterprise",
 }
 `;
 
@@ -3399,7 +3399,7 @@ exports[`render snapshots typical.json with hide null 1`] = `
       "withValue": 1,
     },
   ],
-  "theme": "light mtr-viz mtr-display-id",
+  "theme": "light mtr-viz mtr-display-id mtr-matrix-enterprise",
 }
 `;
 
@@ -3625,7 +3625,7 @@ exports[`render snapshots typical.json with ics 1`] = `
       "withValue": 0,
     },
   ],
-  "theme": "light mtr-viz mtr-display-id",
+  "theme": "light mtr-viz mtr-display-id mtr-matrix-ics",
 }
 `;
 
@@ -3850,7 +3850,7 @@ exports[`render snapshots typical.json with mobile android 1`] = `
       "withValue": 0,
     },
   ],
-  "theme": "light mtr-viz mtr-display-id",
+  "theme": "light mtr-viz mtr-display-id mtr-matrix-mobile",
 }
 `;
 
@@ -4128,7 +4128,7 @@ exports[`render snapshots typical.json with no sub-techniques 1`] = `
       "withValue": 1,
     },
   ],
-  "theme": "light mtr-viz mtr-display-id",
+  "theme": "light mtr-viz mtr-display-id mtr-matrix-enterprise",
 }
 `;
 
@@ -4406,7 +4406,7 @@ exports[`render snapshots typical.json with search bar off 1`] = `
       "withValue": 1,
     },
   ],
-  "theme": "light mtr-viz mtr-display-id",
+  "theme": "light mtr-viz mtr-display-id mtr-matrix-enterprise",
 }
 `;
 
@@ -4684,7 +4684,7 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
       "withValue": 1,
     },
   ],
-  "theme": "light mtr-viz mtr-display-id",
+  "theme": "light mtr-viz mtr-display-id mtr-matrix-enterprise",
 }
 `;
 
@@ -4962,7 +4962,7 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
       "withValue": 1,
     },
   ],
-  "theme": "light mtr-viz mtr-display-id",
+  "theme": "light mtr-viz mtr-display-id mtr-matrix-enterprise",
 }
 `;
 
@@ -5240,6 +5240,6 @@ exports[`render snapshots wide.json with defaults 1`] = `
       "withValue": 0,
     },
   ],
-  "theme": "light mtr-viz mtr-display-id",
+  "theme": "light mtr-viz mtr-display-id mtr-matrix-enterprise",
 }
 `;

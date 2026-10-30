@@ -49,7 +49,8 @@ test('cells touch: no gap between them, no rounding, one fixed grid', () => {
 
 test('a column is never narrower than two lines of tactic name, so the matrix scrolls instead of squeezing', () => {
     expect(rule('.mtr-tactic-col')).toMatch(/min-width:\s*var\(--mtr-colmin\)/);
-    expect(px(declarations('.mtr-viz')['--mtr-colmin'])).toBe(76);
+    expect(px(declarations('.mtr-viz')['--mtr-colmin'])).toBe(92);
+    expect(px(declarations('.mtr-viz.mtr-matrix-ics,\n.mtr-viz.mtr-matrix-d3fend')['--mtr-colmin'])).toBe(112);
     expect(px(declarations('.mtr-viz.mtr-display-name')['--mtr-colmin'])).toBe(140);
 });
 
