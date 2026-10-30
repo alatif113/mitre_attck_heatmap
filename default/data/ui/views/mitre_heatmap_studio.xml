@@ -1,0 +1,56 @@
+<dashboard version="2" theme="light">
+  <label>MITRE ATT&amp;CK Heatmap (Dashboard Studio)</label>
+  <description>One MITRE ATT&amp;CK Heatmap in a Dashboard Studio dashboard. The data is generated with | makeresults, so it works with nothing ingested.</description>
+  <definition><![CDATA[{
+  "title": "MITRE ATT&CK Heatmap (Dashboard Studio)",
+  "description": "One MITRE ATT&CK Heatmap in a Dashboard Studio dashboard. The data is generated with | makeresults, so it works with nothing ingested.",
+  "inputs": {},
+  "defaults": {},
+  "dataSources": {
+    "ds_detections": {
+      "type": "ds.search",
+      "name": "Sample detections",
+      "options": {
+        "query": "| makeresults\n| eval row=split(\"T1595|83|Scanning of external IP ranges and ports against internet-facing assets;T1595.002|61|Vulnerability scanner signatures against public web servers;T1592|12|Reconnaissance of client configurations from web server logs;T1589|7|Employee name and address harvesting against the mail gateway;T1590|5|Network information probes against public DNS;T1583|4|Look-alike domains registered for the company brand;T1583.001|4|Typo-squatted domains seen in outbound proxy logs;T1566|214|Phishing emails with malicious attachments or links delivered to mailboxes;T1566.001|131|Spearphishing attachments: Office macros and ISO or LNK files;T1566.002|83|Spearphishing links to credential harvesting sites;T1190|96|Exploitation attempts against public-facing web applications;T1078|188|Logons with valid accounts from unusual locations;T1078.004|74|Cloud account logons from anonymous IP ranges;T1133|12|VPN logons outside business hours;T1189|31|Drive-by compromise through watering-hole domains;T1195|3|Software supply chain alerts from build pipeline monitoring;T1059|402|Command and scripting interpreter activity across endpoints;T1059.001|287|Encoded or obfuscated PowerShell command lines;T1059.003|96|cmd.exe launched by Office applications;T1059.004|22|Suspicious shell spawned by a web server process;T1059.005|18|Visual Basic scripts launched from user profile folders;T1059.007|9|JavaScript executed through wscript or cscript;T1047|61|WMI process creation on remote hosts;T1053|143|Scheduled task and job creation;T1053.005|129|Scheduled tasks created from user-writable paths;T1204|77|User execution of downloaded files;T1204.002|64|Malicious files opened from mail attachments;T1569|26|System services used to run payloads;T1569.002|21|Service execution through sc.exe or PsExec;T1547|118|Boot or logon autostart changes;T1547.001|104|Run key and startup folder modifications;T1543|47|System process creation or modification;T1543.003|41|New Windows services installed;T1136|9|Local account creation outside change windows;T1136.001|7|Local accounts created by non-admin processes;T1505|5|Server software component changes;T1505.003|5|Web shell indicators in web roots;T1197|4|BITS jobs used to download files;T1068|14|Local privilege escalation exploit signatures;T1548|52|Abuse of elevation control mechanisms;T1548.002|49|UAC bypass attempts;T1027|175|Obfuscated files or information;T1027.010|68|Command obfuscation in process arguments;T1036|133|Masquerading of system binaries;T1036.005|91|Executables named like legitimate system files in wrong folders;T1055|88|Process injection;T1055.001|33|DLL injection into long-running processes;T1070|57|Indicator removal on hosts;T1070.004|40|File deletion of tools after execution;T1685|73|Security tools disabled or modified;T1686|28|Host firewall rules changed;T1003|156|OS credential dumping;T1003.001|138|LSASS memory access by unsigned processes;T1003.003|11|NTDS.dit copy attempts on domain controllers;T1110|305|Brute force authentication failures;T1110.003|214|Password spraying across many accounts;T1558|17|Kerberos ticket abuse;T1558.003|14|Kerberoasting service ticket requests;T1555|29|Credentials from password stores;T1555.003|26|Credential access from web browsers;T1552|21|Unsecured credentials in files;T1082|249|System information discovery;T1083|161|File and directory discovery;T1018|112|Remote system discovery;T1087|98|Account discovery;T1087.002|71|Domain account enumeration;T1057|205|Process discovery;T1016|87|System network configuration discovery;T1069|52|Permission groups discovery;T1046|64|Network service discovery scans from internal hosts;T1135|33|Network share discovery;T1033|140|System owner and user discovery;T1021|92|Remote services logons;T1021.001|66|Remote Desktop Protocol sessions between workstations;T1021.002|58|SMB and admin share access;T1021.006|11|Windows Remote Management sessions;T1570|24|Lateral tool transfer;T1550|19|Use of alternate authentication material;T1550.002|15|Pass the hash logons;T1005|70|Data from local system staged by archive tools;T1074|36|Data staged in temporary folders;T1114|27|Email collection rules and forwarding;T1560|41|Archive collected data;T1560.001|38|Archive via utility;T1113|8|Screen capture tools;T1071|259|Application layer protocol command and control;T1071.001|241|HTTPS beaconing with regular intervals;T1071.004|77|DNS queries with long TXT responses;T1105|118|Ingress tool transfer from rare external hosts;T1573|44|Encrypted channel to uncommon destinations;T1090|31|Proxy and relay usage;T1095|9|Non-application layer protocol traffic;T1572|6|Protocol tunneling;T1041|39|Exfiltration over the command and control channel;T1048|22|Exfiltration over alternative protocols;T1567|18|Exfiltration over web services;T1567.002|15|Uploads to cloud storage from servers;T1020|0|Automated exfiltration checked and found none;T1486|14|Ransomware-like file encryption behavior;T1490|9|Inhibit system recovery: shadow copies deleted;T1489|6|Service stop on file servers;T1485|3|Data destruction events;T1496|52|Resource hijacking: cryptomining;T1498|17|Network denial of service;T1499|8|Endpoint denial of service\", \";\")\n| mvexpand row\n| eval parts=split(row, \"|\"), id=mvindex(parts, 0), Detections=tonumber(mvindex(parts, 1)), description=mvindex(parts, 2)\n| table id Detections description",
+        "queryParameters": {
+          "earliest": "-24h@h",
+          "latest": "now"
+        }
+      }
+    }
+  },
+  "visualizations": {
+    "viz_heatmap": {
+      "type": "mitre_attck_heatmap.mitre_attck_heatmap",
+      "title": "Detections by ATT&CK technique (sample data)",
+      "dataSources": {
+        "primary": "ds_detections"
+      },
+      "options": {
+        "matrix": "enterprise::"
+      }
+    }
+  },
+  "layout": {
+    "type": "absolute",
+    "options": {
+      "width": 1440,
+      "height": 1320,
+      "display": "auto-scale"
+    },
+    "structure": [
+      {
+        "item": "viz_heatmap",
+        "type": "block",
+        "position": {
+          "x": 0,
+          "y": 0,
+          "w": 1440,
+          "h": 1280
+        }
+      }
+    ]
+  }
+}]]></definition>
+  <meta type="hiddenElements"><![CDATA[{"hideEdit": false, "hideOpenInSearch": false, "hideExport": false}]]></meta>
+</dashboard>

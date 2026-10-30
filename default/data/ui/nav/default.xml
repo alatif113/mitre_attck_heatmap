@@ -1,3 +1,5 @@
 <nav>
   <view name="mitre_heatmap_testbench" default="true" />
+  <view name="mitre_heatmap_classic" />
+  <view name="mitre_heatmap_studio" />
 </nav>

@@ -15,7 +15,8 @@
 # iCloud conflict copies such as "visualization 2.js" are skipped too.
 #
 # APP_ENV selects what goes into the package:
-#   production (default)  app hidden (is_visible = 0); test-only files left out
+#   production (default)  app hidden (is_visible = 0); test-only files left out (the test bench,
+#                         the sample dashboards, their nav)
 #   test                  app visible (is_visible = 1), a new build number each time (so
 #                         browsers load the new visualization.js), and a nav that opens the
 #                         test bench dashboard, so it can be reached in Splunk
@@ -51,9 +52,12 @@ case "$APP_ENV" in
     test) IS_VISIBLE=1; ENV_EXCLUDES=() ;;
     production)
         IS_VISIBLE=0
-        # Test-only files: the test bench dashboard, its lookup, and the nav that opens it.
+        # Test-only files: the test bench and the two sample dashboards (classic and Dashboard Studio),
+        # the test bench's lookup, and the nav that opens them.
         ENV_EXCLUDES=(
             --exclude='/default/data/ui/views/mitre_heatmap_testbench.xml'
+            --exclude='/default/data/ui/views/mitre_heatmap_classic.xml'
+            --exclude='/default/data/ui/views/mitre_heatmap_studio.xml'
             --exclude='/default/data/ui/nav/default.xml'
             --exclude='/lookups/mitre_heatmap_test.csv'
         )
@@ -133,7 +137,7 @@ if [ "$APP_ENV" = test ]; then
     ARCHIVED_BUILD="$(tar -xzOf "$ARCHIVE" "$APP_ID/default/app.conf" | sed -nE 's/^build[[:space:]]*=[[:space:]]*([0-9]+).*/\1/p')"
     [ "$ARCHIVED_BUILD" = "$BUILD_STAMP" ] || die "archived app.conf has build=$ARCHIVED_BUILD, expected $BUILD_STAMP"
 fi
-if [ "$APP_ENV" = production ] && echo "$LISTING" | grep -Eq 'mitre_heatmap_test|/nav/'; then
+if [ "$APP_ENV" = production ] && echo "$LISTING" | grep -Eq 'mitre_heatmap_(test|classic|studio)|/nav/'; then
     die "production archive contains test-only files"
 fi
 if [ "$APP_ENV" = test ]; then

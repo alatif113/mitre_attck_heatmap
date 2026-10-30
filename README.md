@@ -2,7 +2,7 @@
 
 Custom Visualizations give you new interactive ways to visualize your data during search and investigation, and to better communicate results in dashboards and reports. After installing this app youll find a MITRE ATT&CK Heatmap diagram as an additional item in the visualization picker in Search and Dashboard.
 
-This app bundles ATT&CK v20.0 and D3FEND v0.22, and can import newer ATT&CK versions (see *Imported ATT&CK data* below). For more information visit https://attack.mitre.org/resources/versions/ and https://d3fend.mitre.org/resources/
+This app bundles ATT&CK v20.0 and D3FEND v1.6.0, and can import newer ATT&CK versions (see *Imported ATT&CK data* below). For more information visit https://attack.mitre.org/resources/versions/ and https://d3fend.mitre.org/resources/
 
 ![screenshot.png](https://github.com/alatif113/mitre_attack_heatmap/blob/master/appserver/static/screenshot.gif?raw=true)
 
@@ -99,7 +99,10 @@ This app is currently unsupported for Internet Explorer. Please report issues to
 
 ## Change Log
 
-### Unreleased
+### v1.11.0
+- D3FEND now follows the current ontology, as the D3FEND website draws it: seven tactic columns (Model, Harden, Detect, Isolate, Deceive, Evict, Restore), 30 techniques in them, and 241 sub-techniques under their techniques, shown with their own IDs. Before, each technique was its own column and no sub-technique attached. Dashboards that match on D3FEND tactic names or IDs in drilldown tokens need updating (tactic IDs are now `d3f:Model`, `d3f:Harden`, ...)
+- Two sample dashboards, one classic and one Dashboard Studio, each with a single heatmap fed by generated sample data (in the test package only)
+- Default panel height is now 1200 pixels (it was 2700)
 - New look: flat tactic headers with a coverage figure and gauge, connected fixed-height cells, hatching for techniques with no value, and tooltips and a legend in Splunk's light and dark colors
 - Colors are now split into 3, 5, 7 or 9 bands (*Color bands*, 5 by default) with bands that follow the data when the bounds come from it, and blend perceptually; new *Palette* option (Default, Risk, Sequential blues, Viridis)
 - New legend: value bands with a *No data* entry, hover to dim, click to pin

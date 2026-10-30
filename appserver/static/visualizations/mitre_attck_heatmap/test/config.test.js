@@ -130,6 +130,185 @@ describe('code defaults match savedsearches.conf (needed for Dashboard Studio)',
     });
 });
 
+describe('bundled matrix data is consistent (audit T-1)', () => {
+    Object.keys(MATRICES).forEach(name => {
+        describe(name, () => {
+            const m = MATRICES[name];
+            const tacticKeys = new Set(m.tactics.map(t => t.short_name));
+            const techniqueIds = new Set(m.techniques.map(t => t.id));
+
+            test('has tactics, techniques and sub-techniques', () => {
+                expect(m.tactics.length).toBeGreaterThanOrEqual(5);
+                expect(m.techniques.length).toBeGreaterThanOrEqual(20);
+                expect(m.sub_techniques.length).toBeGreaterThan(0);
+            });
+
+            test('no id is used twice, and no tactic is also a technique', () => {
+                const ids = m.techniques.map(t => t.id).concat(m.sub_techniques.map(s => s.id));
+                expect(new Set(ids).size).toBe(ids.length);
+                expect(new Set(m.tactics.map(t => t.id)).size).toBe(m.tactics.length);
+                expect(new Set(m.tactics.map(t => t.name)).size).toBe(m.tactics.length);
+                m.tactics.forEach(t => expect(techniqueIds.has(t.id)).toBe(false));
+            });
+
+            test('every technique is in at least one tactic column that exists', () => {
+                m.techniques.forEach(t => {
+                    expect(t.tactics.length).toBeGreaterThan(0);
+                    t.tactics.forEach(x => expect(tacticKeys.has(x)).toBe(true));
+                });
+            });
+
+            test('every tactic column has techniques', () => {
+                m.tactics.forEach(t => expect(m.techniques.some(x => x.tactics.indexOf(t.short_name) >= 0)).toBe(true));
+            });
+
+            test('every sub-technique names one existing technique by id, and has an id to show', () => {
+                m.sub_techniques.forEach(s => {
+                    expect(typeof s.technique).toBe('string');
+                    expect(techniqueIds.has(s.technique)).toBe(true);
+                    expect(s.short_id).toBeTruthy();
+                    expect(s.name).toBeTruthy();
+                });
+            });
+
+            test('tactics are in a defined order', () => {
+                const orders = m.tactics.map(t => t.sort_order);
+                expect(orders).toEqual(orders.slice().sort((a, b) => a - b));
+                expect(Math.max.apply(null, orders)).toBeLessThan(100);
+            });
+
+            test('links go to the matrix owner over https', () => {
+                m.techniques.concat(m.sub_techniques).forEach(x => expect(x.url).toMatch(/^https:\/\/(attack|d3fend)\.mitre\.org\//));
+            });
+        });
+    });
+
+    describe('d3fend follows the current ontology (audit P1-1)', () => {
+        test('has the seven defensive tactics as its columns, in order', () => {
+            expect(d3fend.tactics.map(t => t.name)).toEqual(['Model', 'Harden', 'Detect', 'Isolate', 'Deceive', 'Evict', 'Restore']);
+        });
+
+        test('techniques are not columns: Credential Hardening is a technique under Harden', () => {
+            const technique = d3fend.techniques.find(t => t.id === 'D3-CH');
+            expect(technique.name).toBe('Credential Hardening');
+            expect(technique.tactics).toEqual(['d3f:Harden']);
+            expect(d3fend.tactics.map(t => t.name)).not.toContain('Credential Hardening');
+        });
+
+        test('sub-techniques attach to their technique and show their own id', () => {
+            const sub = d3fend.sub_techniques.find(s => s.id === 'D3-HCI');
+            expect(sub.name).toBe('Hardware Component Inventory');
+            expect(sub.technique).toBe('D3-AI');
+            expect(sub.short_id).toBe('D3-HCI');
+            expect(d3fend.sub_techniques.length).toBeGreaterThan(150);
+        });
+    });
+});
+
+describe('release metadata', () => {
+    const manifest = JSON.parse(read('app.manifest'));
+    const appConf = parseConf(read('default/app.conf'));
+    const readme = read('README.md');
+
+    test('the version is the same in the manifest and both places in app.conf, and is the newest in the change log', () => {
+        const version = manifest.info.id.version;
+        expect(version).toMatch(/^\d+\.\d+\.\d+$/);
+        expect(appConf.launcher.version).toBe(version);
+        expect(appConf.id.version).toBe(version);
+        expect(readme).toMatch(new RegExp('## Change Log\\s+### v' + version.replace(/\./g, '\\.') + '\\n'));
+    });
+
+    test('the build number is a positive integer (it changes the URL of the static files)', () => {
+        expect(appConf.install.build).toMatch(/^[1-9]\d*$/);
+    });
+
+    test('the default panel height fits the matrix instead of a leftover from the old layout', () => {
+        const height = parseInt(parseConf(read('default/visualizations.conf'))[VIZ_NAME].default_height, 10);
+        expect(height).toBeGreaterThanOrEqual(800);
+        expect(height).toBeLessThanOrEqual(1500);
+    });
+
+    test('the bundled D3FEND version in the README is the ontology\'s', () => {
+        expect(readme).toMatch(/D3FEND v1\.6\.0/);
+    });
+});
+
+describe('sample dashboards (classic and Dashboard Studio)', () => {
+    const classic = new DOMParser().parseFromString(read('default/data/ui/views/mitre_heatmap_classic.xml'), 'text/xml');
+    const studioDoc = new DOMParser().parseFromString(read('default/data/ui/views/mitre_heatmap_studio.xml'), 'text/xml');
+    const studio = JSON.parse(studioDoc.querySelector('definition').textContent);
+    const VIZ_TYPE = VIZ_NAME + '.' + VIZ_NAME;
+    const classicQuery = classic.querySelector('viz query').textContent;
+    const studioQuery = studio.dataSources.ds_detections.options.query;
+    const formatter = read('appserver/static/visualizations/' + VIZ_NAME + '/formatter.html');
+    const formatterKeys = new Set(Array.from(formatter.matchAll(/\{\{VIZ_NAMESPACE\}\}\.(\w+)/g)).map(m => m[1]));
+    const validIds = new Set(enterpriseAttack.techniques.map(t => t.id).concat(enterpriseAttack.sub_techniques.map(s => s.id)));
+
+    // The sample rows, as the search builds them: id|value|description, separated by ;.
+    const rows = classicQuery.match(/split\("([^"]+)", ";"\)/)[1].split(';').map(r => r.split('|'));
+
+    test('both are well-formed and each holds exactly one heatmap', () => {
+        expect(classic.getElementsByTagName('parsererror')).toHaveLength(0);
+        expect(studioDoc.getElementsByTagName('parsererror')).toHaveLength(0);
+        expect(classic.documentElement.tagName).toBe('dashboard');
+        expect(classic.documentElement.getAttribute('version')).toBe('1.1');
+        expect(classic.querySelectorAll('panel')).toHaveLength(1);
+        expect(Array.from(classic.querySelectorAll('viz')).map(v => v.getAttribute('type'))).toEqual([VIZ_TYPE]);
+        expect(studioDoc.documentElement.getAttribute('version')).toBe('2');
+        expect(Object.keys(studio.visualizations)).toHaveLength(1);
+        expect(Object.values(studio.visualizations).map(v => v.type)).toEqual([VIZ_TYPE]);
+    });
+
+    test('both use the same generated sample search, which needs no data', () => {
+        expect(classicQuery).toBe(studioQuery);
+        expect(classicQuery.startsWith('| makeresults')).toBe(true);
+        expect(classicQuery).not.toMatch(/index=|inputlookup|`/);
+        expect(classicQuery).toMatch(/\| table id Detections description$/);
+    });
+
+    test('the sample data is typical: over 80 distinct, valid ids with sub-techniques, a spread of values and descriptions', () => {
+        const ids = rows.map(r => r[0]);
+        expect(rows.length).toBeGreaterThan(80);
+        expect(new Set(ids).size).toBe(ids.length);
+        ids.forEach(id => expect(validIds.has(id)).toBe(true));
+        expect(ids.filter(id => id.indexOf('.') > 0).length).toBeGreaterThan(25);
+        const values = rows.map(r => Number(r[1]));
+        values.forEach(v => expect(Number.isFinite(v)).toBe(true));
+        expect(Math.max.apply(null, values)).toBeGreaterThan(300);
+        expect(values.filter(v => v < 20).length).toBeGreaterThan(10);
+        rows.forEach(r => expect(r[2].length).toBeGreaterThan(10));
+    });
+
+    test('options only use settings the format menu has', () => {
+        const prefix = VIZ_TYPE + '.';
+        Array.from(classic.querySelectorAll('viz option')).forEach(o => {
+            const name = o.getAttribute('name');
+            if (name === 'height') return;
+            expect(name.startsWith(prefix)).toBe(true);
+            expect(formatterKeys).toContain(name.slice(prefix.length));
+        });
+        Object.keys(Object.values(studio.visualizations)[0].options).forEach(key => expect(formatterKeys).toContain(key));
+    });
+
+    test('the Dashboard Studio definition is complete: its panel is wired to its data source and is on the canvas', () => {
+        const [id, viz] = Object.entries(studio.visualizations)[0];
+        expect(studio.dataSources[viz.dataSources.primary].type).toBe('ds.search');
+        const item = studio.layout.structure.find(s => s.item === id);
+        expect(item).toBeDefined();
+        expect(item.position.x + item.position.w).toBeLessThanOrEqual(studio.layout.options.width);
+        expect(item.position.y + item.position.h).toBeLessThanOrEqual(studio.layout.options.height);
+        expect(item.position.h).toBeGreaterThanOrEqual(1000);
+    });
+
+    test('the nav opens them, and the production package leaves them out', () => {
+        const nav = read('default/data/ui/nav/default.xml');
+        ['mitre_heatmap_testbench', 'mitre_heatmap_classic', 'mitre_heatmap_studio'].forEach(view => expect(nav).toContain('name="' + view + '"'));
+        const script = read('scripts/package.sh');
+        ['mitre_heatmap_classic.xml', 'mitre_heatmap_studio.xml'].forEach(file => expect(script).toContain("--exclude='/default/data/ui/views/" + file + "'"));
+        expect(script).toMatch(/mitre_heatmap_\(test\|classic\|studio\)/);
+    });
+});
+
 describe('test bench dashboard', () => {
     const VIEW = 'default/data/ui/views/mitre_heatmap_testbench.xml';
     const xml = read(VIEW);
@@ -199,7 +378,7 @@ describe('test bench dashboard', () => {
     test('the nav opens this dashboard by default', () => {
         const nav = new DOMParser().parseFromString(read('default/data/ui/nav/default.xml'), 'text/xml');
         const views = Array.from(nav.querySelectorAll('view'));
-        expect(views.map(v => v.getAttribute('name'))).toEqual(['mitre_heatmap_testbench']);
+        expect(views.map(v => v.getAttribute('name'))).toEqual(['mitre_heatmap_testbench', 'mitre_heatmap_classic', 'mitre_heatmap_studio']);
         expect(views[0].getAttribute('default')).toBe('true');
         expect(fs.existsSync(path.join(APP_ROOT, VIEW))).toBe(true);
     });
