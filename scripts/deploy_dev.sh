@@ -8,7 +8,7 @@
 # installs from a path that already exists on the server. So this script
 #   1. runs scripts/package.sh with APP_ENV=test unless APP_ENV is set, so the
 #      app is visible and has a nav to the test bench (skipped with --skip-package)
-#   2. copies <app_id>.tgz to the Splunk host with scp
+#   2. copies <app_id>-<version>.tgz to the Splunk host with scp
 #   3. POSTs apps/local on the management port with the token, naming that path
 #      (filename=true, update=true)
 #   4. removes the copied file, and prints the URLs to refresh static assets
@@ -155,8 +155,14 @@ APP_ID="$(awk -F'[[:space:]]*=[[:space:]]*' '
 ' "$APP_ROOT/default/app.conf" | tr -d '[:space:]')"
 [ -n "$APP_ID" ] || die "no [package] id found in default/app.conf"
 
-ARCHIVE="$APP_ROOT/$APP_ID.tgz"
-REMOTE_PATH="$SPLUNK_REMOTE_DIR/$APP_ID.tgz"
+APP_VERSION="$(awk -F'[[:space:]]*=[[:space:]]*' '
+    /^\[/ { in_launcher = ($0 == "[launcher]") }
+    in_launcher && $1 == "version" { print $2; exit }
+' "$APP_ROOT/default/app.conf" | tr -d '[:space:]')"
+[ -n "$APP_VERSION" ] || die "no [launcher] version found in default/app.conf"
+
+ARCHIVE="$APP_ROOT/$APP_ID-$APP_VERSION.tgz"
+REMOTE_PATH="$SPLUNK_REMOTE_DIR/$APP_ID-$APP_VERSION.tgz"
 
 [ -n "$SPLUNK_SSH_TARGET" ] || die "SPLUNK_SSH_TARGET is not set (user@host for scp); see $ENV_FILE"
 [[ "$SPLUNK_SSH_TARGET" =~ ^[A-Za-z0-9._-]+@[A-Za-z0-9._-]+$|^[A-Za-z0-9._-]+$ ]] \

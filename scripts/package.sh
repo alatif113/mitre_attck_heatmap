@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
-# Build the visualization and package the app as <app_id>.tgz.
+# Build the visualization and package the app as <app_id>-<version>.tgz (the version is [launcher] version in
+# default/app.conf, for example mitre_attck_heatmap-1.11.0.tgz).
 #
 #   scripts/package.sh
 #
@@ -47,7 +48,13 @@ APP_ID="$(awk -F'[[:space:]]*=[[:space:]]*' '
 ' "$APP_ROOT/default/app.conf" | tr -d '[:space:]')"
 [ -n "$APP_ID" ] || die "no [package] id found in default/app.conf"
 
-ARCHIVE="$APP_ROOT/$APP_ID.tgz"
+APP_VERSION="$(awk -F'[[:space:]]*=[[:space:]]*' '
+    /^\[/ { in_launcher = ($0 == "[launcher]") }
+    in_launcher && $1 == "version" { print $2; exit }
+' "$APP_ROOT/default/app.conf" | tr -d '[:space:]')"
+[ -n "$APP_VERSION" ] || die "no [launcher] version found in default/app.conf"
+
+ARCHIVE="$APP_ROOT/$APP_ID-$APP_VERSION.tgz"
 
 APP_ENV="${APP_ENV:-production}"
 case "$APP_ENV" in
