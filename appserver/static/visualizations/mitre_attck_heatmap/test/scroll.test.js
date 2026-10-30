@@ -39,7 +39,7 @@ describe('the scrolling container', () => {
         const config = buildConfig({ hideNull: 'yes' });
         viz.updateView(viz.formatData(loadFixture('typical.json'), config), config);
         expect(viz.el.style.overflow).toBe('auto');
-        expect(viz.el.className).toBe('light mtr-viz mtr-display-id mtr-matrix-enterprise');
+        expect(viz.el.className).toBe('light mtr-viz mtr-display-id');
     });
 });
 
@@ -49,7 +49,7 @@ describe('the tile layout is gone', () => {
         try {
             const viz = render(Viz, loadFixture('typical.json'));
             viz.reflow();
-            expect(viz.el.className).toBe('light mtr-viz mtr-display-id mtr-matrix-enterprise');
+            expect(viz.el.className).toBe('light mtr-viz mtr-display-id');
             expect(viz.el.querySelectorAll('.mtr-tactic[title]').length).toBe(0);
         } finally {
             delete global.ResizeObserver;

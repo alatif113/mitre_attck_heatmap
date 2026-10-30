@@ -49,8 +49,7 @@ test('cells touch: no gap between them, no rounding, one fixed grid', () => {
 
 test('a column is never narrower than two lines of tactic name, so the matrix scrolls instead of squeezing', () => {
     expect(rule('.mtr-tactic-col')).toMatch(/min-width:\s*var\(--mtr-colmin\)/);
-    expect(px(declarations('.mtr-viz')['--mtr-colmin'])).toBe(92);
-    expect(px(declarations('.mtr-viz.mtr-matrix-ics,\n.mtr-viz.mtr-matrix-d3fend')['--mtr-colmin'])).toBe(112);
+    expect(px(declarations('.mtr-viz')['--mtr-colmin'])).toBe(76);
     expect(px(declarations('.mtr-viz.mtr-display-name')['--mtr-colmin'])).toBe(140);
 });
 
@@ -82,6 +81,11 @@ test('cells with no value are hatched, faintly', () => {
 
 test('the corner marker for sub-techniques is faint', () => {
     expect(parseFloat(declarations('.mtr-subdot').opacity)).toBeLessThanOrEqual(0.3);
+});
+
+test('a tactic name that does not fit ends in an ellipsis, with the first word whole: the column can be narrow', () => {
+    expect(declarations('.mtr-tactic-title')['-webkit-line-clamp']).toBe('2');
+    expect(px(declarations('.mtr-viz')['--mtr-colmin'])).toBeLessThanOrEqual(76);
 });
 
 test('the search box, its clear button and the export button share one height and have no margin, whatever the page says', () => {

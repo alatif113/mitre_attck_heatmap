@@ -23,7 +23,9 @@
 	--mtr-mono: "Splunk Platform Mono", Inconsolata, Consolas, "Droid Sans Mono", Monaco, "Courier New", Courier, monospace;
 	--mtr-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 	--mtr-tw: 44px;
-	--mtr-colmin: 92px;
+	/* Narrow on purpose. A tactic name that does not fit in two lines ends in an ellipsis; at 76 px
+	   the first word is always whole and at least 11 characters of any name show. */
+	--mtr-colmin: 76px;
 	--mtr-colmax: 200px;
 	--mtr-th: 28px;
 	--mtr-labh: 88px;
@@ -47,12 +49,6 @@
 	--mtr-hatch: rgba(255, 255, 255, 0.045);
 	--mtr-nodata-text: #C3CBD3;
 	--mtr-shadow: 0 10px 28px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.4);
-}
-
-.mtr-viz.mtr-matrix-ics,
-.mtr-viz.mtr-matrix-d3fend {
-	/* Longer tactic names ("Inhibit Response Function", "Operational Activity Mapping"). */
-	--mtr-colmin: 112px;
 }
 
 .mtr-viz.mtr-display-name {
