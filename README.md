@@ -51,6 +51,19 @@ If no usable imported data exists, the bundled data is drawn with a note saying 
 
 `bin/enterpriseAttack2json.py` regenerates the bundled data offline.
 
+### Dashboard Studio
+
+The heatmap can be added to a Dashboard Studio dashboard (Add chart > Custom visualizations). Studio runs it inside a restricted frame, which changes a few things:
+
+- **Tokens:** in Studio the drilldown values are `$row.mtr_technique_id.value$`, `$row.mtr_tactic_name.value$` and so on (classic dashboards use `$row.mtr_technique_id$`). Values that do not apply to a click are not set.
+- **Options** that are not set in the dashboard use the same defaults as classic dashboards.
+- **Export button:** the browser does not let the frame download files, so the export shows the layer in a box to copy instead.
+- **Technique links** in tooltips are shown as text (the frame cannot open new windows).
+- The heatmap follows the dashboard's own light or dark theme.
+- Trellis and scheduled email export are not available for custom visualizations in Studio.
+
+Studio's handling was checked against the code of Splunk 10.4.2 / Dashboard Studio 1.26.4; see `docs/studio-compatibility.md` (in the source repository) for what is still to be confirmed visually.
+
 ### Drilldowns
 
 1. **Sub-Technique ID**: the ID of a selected sub-technique is drilldownable via `$row.mtr_sub-technique_id$`
@@ -81,6 +94,9 @@ This app is currently unsupported for Internet Explorer. Please report issues to
 - Added *Roll up sub-techniques*, *Color bounds: From data*, status-based coloring and an ATT&CK Navigator export button
 - Fixed: Enterprise tactic order for ATT&CK v20, several dashboards on one page affecting each other, "Hide null" removing sub-techniques that have values, the legend for non-zero lower bounds, zero and decimal values in tooltips, searching for names with `&`, the animation loop multiplying on refresh, one click firing many drilldowns, and several Platform options that showed an empty matrix
 - Fixed: legend text built from field names is now escaped
+- Added a compact layout: below 640px wide the matrix is replaced by one tile per tactic
+- Removed the unused *Theme* option; the heatmap uses the theme of the dashboard it is in
+- Dashboard Studio: defaults now match classic dashboards, unset drilldown values are no longer sent as text "undefined", the imported-data read works inside Studio's frame, and the export falls back to a copy box
 
 ### v1.9.0
 - Added an optional search bar, enabled through the format menu, to quickly highlight techniques based on their ID or name
