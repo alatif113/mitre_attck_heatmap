@@ -1,101 +1,226 @@
 # MITRE ATT&CK<sup>&reg;</sup> Heatmap
 
-Custom Visualizations give you new interactive ways to visualize your data during search and investigation, and to better communicate results in dashboards and reports. After installing this app youll find a MITRE ATT&CK Heatmap diagram as an additional item in the visualization picker in Search and Dashboard.
+A custom visualization that turns search results into a MITRE ATT&CK or D3FEND matrix. Each technique is colored by a value from your search, such as detections, alerts or coverage, so gaps and hot spots are visible at a glance. After installing the app, *MITRE ATT&CK Heatmap* appears in the visualization picker in Search and in dashboards (Simple XML and Dashboard Studio).
 
-This app bundles ATT&CK v20.0 and D3FEND v1.6.0, and can import newer ATT&CK versions (see *Imported ATT&CK data* below). For more information visit https://attack.mitre.org/resources/versions/ and https://d3fend.mitre.org/resources/
+![The heatmap in a light dashboard](https://raw.githubusercontent.com/alatif113/mitre_attck_heatmap/master/images/hero-light.png)
 
-![screenshot.png](https://github.com/alatif113/mitre_attack_heatmap/blob/master/appserver/static/screenshot.gif?raw=true)
+![The same heatmap in a dark dashboard](https://raw.githubusercontent.com/alatif113/mitre_attck_heatmap/master/images/hero-dark.png)
 
-![screenshot.png](https://github.com/alatif113/mitre_attack_heatmap/blob/master/appserver/static/focus.gif?raw=true)
+The app bundles **ATT&CK v20.0** (Enterprise, ICS, Mobile) and **D3FEND v1.6.0**. It can also import newer ATT&CK versions (see [Imported ATT&CK data](#imported-attck-data)). More about the versions: https://attack.mitre.org/resources/versions/ and https://d3fend.mitre.org/resources/
 
-## Usage
+## Contents
 
-### Search Query
+- [Quick start](#quick-start)
+- [Features](#features)
+- [Search results](#search-results)
+- [Using the heatmap](#using-the-heatmap)
+- [Format menu](#format-menu)
+- [Drilldowns](#drilldowns)
+- [Dashboard Studio](#dashboard-studio)
+- [Imported ATT&CK data](#imported-attck-data)
+- [Troubleshooting](#troubleshooting)
+- [Support](#support) and [Change log](#change-log)
 
-`| table <att&ck_technique_id> <numerical_value> [description]`
+## Quick start
+
+1. Install the app. It has no dashboards of its own and needs no configuration.
+2. Run a search that returns technique IDs and a number, for example:
+
+   ```
+   | stats count AS "Detections" first(description) AS description BY id
+   | table id Detections description
+   ```
+3. Open the **Visualization** tab, choose **MITRE ATT&CK Heatmap**, and save the search to a dashboard.
+4. Open the format menu to pick a matrix, a palette, the number of color bands and the other [options](#format-menu).
+
+The animation below shows the heatmap loading: cells fade in and each tactic's coverage counts up. This happens once when the panel first loads, not on every refresh.
+
+![Cells fade in and tactic coverage counts up when the panel first loads](https://raw.githubusercontent.com/alatif113/mitre_attck_heatmap/master/images/animation.gif)
+
+## Features
+
+- **Four matrices.** ATT&CK Enterprise (with a filter for platforms such as Windows, Linux, macOS, Cloud and Containers), ICS and Mobile (Android, iOS), and D3FEND with its seven tactics.
+- **Color bands.** The scale is split into 3, 5, 7 or 9 bands, shown in the legend with their value ranges. Colors blend perceptually (OKLCH), and the text on every cell keeps at least 4.5:1 contrast. Choose the *Default*, *Risk*, *Sequential blues* or *Viridis* palette, or set your own three colors.
+- **Tactic summaries.** Each tactic header shows the share of its techniques that have a value, a count and a gauge. Hover it for the sum, average and highest technique.
+- **Rich tooltips.** Description, value, band and rank, the other tactics the technique belongs to, and every sub-technique. Click a sub-technique to drill down on it, or click a cell to pin the tooltip.
+- **Search.** Matches IDs, names, sub-technique names, descriptions and tactic names. Matches are ringed, everything else is dimmed.
+- **Gaps stand out.** Techniques without a value are faintly hatched, and the legend's *No data* entry dims everything that has a value.
+- **Status coloring.** Color by a text column (for example `covered`, `partial`, `gap`) instead of a number.
+- **Roll-up.** Show the sum, max, average or count of sub-technique values on the parent technique.
+- **ATT&CK Navigator export.** Download the current data as a Navigator layer.
+- **Drilldown.** Clicks on techniques, sub-techniques and tactics set tokens you can use in dashboards.
+- **Keyboard and light/dark.** One tab stop, arrow keys, and the colors follow the dashboard's theme. Search text, a pinned band, tactic or tooltip and the scroll position survive a refresh.
+- **Wall mode.** An optional, purely decorative mode for display walls.
+
+## Search results
+
+The visualization needs a technique ID and a number, and optionally a description:
+
+`| table <technique_id> <value> [description]`
 
 OR
 
-`| stats <aggregation> by <att&ck_technique_id>`
+`| stats <aggregation> BY <technique_id>`
 
-The visualization requires at least 2 fields to be present within the search output, with an optional third:
-1. **att&ck_technique_id**: The ID of a MITRE ATT&CK Technique (e.g. T0001)
-2. **numerical_value / aggregation**: A numerical value or aggregation to associate with the technique (e.g. count, sum, average)
-3. **(Optional) description**: An optional description to associate with the technique, to display within a tooltop on mouse hover.  
+1. **Technique ID.** An ATT&CK technique or sub-technique ID such as `T1059` or `T1059.001`, or a D3FEND ID such as `D3-AA`. IDs that are not in the chosen matrix are ignored.
+2. **Value.** A number, such as a count, sum or average.
+3. **Description (optional).** Shown in the tooltip.
 
-### Example search query
+By default these are the first, second and third columns. To use other columns, name them in the format menu (see [Fields](#format-menu)).
+
+Example, counting detections per technique:
 
 ```
-| stats count AS "Detection Count" first(description) as description by id
-| table id "Detection Count" description
+index=notable
+| stats count AS "Detections" first(rule_description) AS description BY mitre_technique_id
+| table mitre_technique_id Detections description
 ```
 
-### Reading the heatmap
+Because only the column order matters, the field names are free. The name of the value column becomes the legend title.
 
-- **Bands.** The scale is split into 3, 5, 7 or 9 color bands (*Colors > Color bands*, 5 by default), shown in the legend with their value ranges. Hover a band to dim everything outside it; click it to keep it pinned (click again or press Esc to let go). *No data* in the legend dims every technique that has a value, so the gaps stand out. Colors blend perceptually (OKLCH), and text on every cell has at least 4.5:1 contrast.
-- **Palette.** *Default* and *Risk* use the three colors in the format menu (Risk reverses them: low is good, high is bad); *Sequential blues* and *Viridis* have their own.
-- **Tactics.** Each header shows the share of its techniques that have a value, a count, and a gauge in the color of their average. Hover or focus it for the sum, average, highest technique and sub-technique counts; click it to focus that tactic (and send the drilldown).
-- **Techniques.** Cells with no value are faintly hatched. A small triangle in a cell's corner means some of its sub-techniques have values. Hover a cell, or focus it with the keyboard, for its tooltip: description, value, band and rank, the other tactics it is in, and every sub-technique (click one to drill down on it). Click a cell to pin the tooltip.
-- **Search.** Search matches IDs, names, sub-technique names, descriptions and tactic names: matches are ringed with the matched text underlined, and everything else is dimmed. The row above the matrix holds just the search box, the export button (if turned on) and the legend; to see the gaps, hover *No data* in the legend.
-- **Keyboard.** The matrix is a single tab stop; arrow keys move between cells, Home and End go to the ends of a column, Enter selects, Esc clears.
-- **Wall mode.** For a display nobody is touching (*Display > Wall mode*, off by default): cells twinkle, and tactic names and figures scramble and resolve now and then. It carries no information. It pauses while anyone searches, hovers, pins a tooltip, band or tactic, when the tab is hidden, and when the browser asks for less motion.
-- **Refreshing.** Search text, a pinned band or tactic, a pinned tooltip and the scroll position stay when the search refreshes.
-- **Empty results.** A search with no rows, rows whose IDs are not in the matrix, and rows without values each say so, instead of showing a blank or stale matrix.
+A search with no results, rows whose IDs are not in the matrix, and rows without a number each show a message instead of an empty matrix.
 
-### More than the first three columns
+### Sample data
 
-By default the first three columns are the technique ID, the value and the description. These options (format menu) change that:
+The test version of the app (the one with the sample dashboards, built with `APP_ENV=test`) includes two dashboards, one classic and one Dashboard Studio, with a single heatmap fed by generated data. They are meant for trying out the options.
 
-- **Fields**: name the columns instead of relying on their order. *ID field*, *Value field*, *Description field* and *Status field* take field names (matched exactly, then ignoring case). A name that is not in the results is shown as an error listing the available fields.
-- **Roll up sub-techniques** (*Scale*): when the search returns sub-technique IDs such as `T1059.001`, show the sum, max, average or count on the parent technique when it has no value of its own. Rolled-up cells have a dotted underline.
-- **Color bounds** (*Scale*): *From data* sets the scale from the lowest and highest value in the results (starting at 0 unless a value is negative) instead of the two bounds typed below it. With bounds from the data the color bands each hold about the same number of techniques; with bounds you set, the bands are even.
-- **Status colors**: set *Status field* to a text column and list colors as `gap=#d93f3c, partial=#f1813f, covered=#53a051`. Cells then take the color of their status (matched ignoring case; other statuses are gray), the legend lists each status with a count, and the number only appears in the tooltip. A parent technique without a status takes the first listed status among its sub-techniques when roll-up is on, so list the most important status first. *Sort by* gains *Status*, in the order listed.
-- **Export button** (*Export*): adds a button that downloads the current data as an [ATT&CK Navigator](https://mitre-attack.github.io/attack-navigator/) layer (format 4.5): values become scores, descriptions become comments, status colors and the legend are kept. Not available for D3FEND.
+## Using the heatmap
 
-### Imported ATT&CK data
+### Tactics and techniques
 
-MITRE publishes new ATT&CK versions more often than this app is released. The app can download them itself:
+![Hovering a cell shows its tooltip with every sub-technique](https://raw.githubusercontent.com/alatif113/mitre_attck_heatmap/master/images/tooltip-light.png)
 
-1. Enable the scripted input `bin/import_matrices.py` (Settings > Data inputs > Scripts) and the report *MITRE ATT&CK - update matrix collection* (Settings > Searches, reports, and alerts: enable it, then Edit > Edit Schedule, for example weekly after the input runs). Both are disabled by default. The Splunk host needs HTTPS access to `raw.githubusercontent.com`; settings (proxy, mirrors, limits) are in `mitre_attck_import.conf`.
-2. Set *Matrix data* to *Imported* in the format menu. *ATT&CK version* optionally pins a version such as `19.1`, or `19` for the newest 19.x.
+Each column is a tactic. Its header shows the coverage (the share of techniques with a value), the count, and a gauge in the color of the average. Hover or focus a cell, or use the keyboard, to see its tooltip: the description, the value, the band and the rank among all techniques with a value, the other tactics the technique is in, and its sub-techniques with their values. A small triangle in a cell's corner means some of its sub-techniques have values. Click a cell to pin its tooltip (click the cross or press Esc to close it). Click a tactic header to focus that tactic.
 
-If no usable imported data exists, the bundled data is drawn with a note saying so. D3FEND is always bundled. Newer ATT&CK versions can rename tactics (v20 replaced *Defense Evasion* with *Stealth* and *Defense Impairment* for Enterprise), which affects drilldown tokens that match on tactic names.
+Show names under the IDs with *Display > Show > ID + name*. Long names end in an ellipsis; the tooltip has the full name.
 
-`bin/enterpriseAttack2json.py` regenerates the bundled data offline.
+![Cells with the ID and the name](https://raw.githubusercontent.com/alatif113/mitre_attck_heatmap/master/images/names-light.png)
 
-### Dashboard Studio
+### Legend, search and gaps
+
+![Hovering a legend band dims everything outside it](https://raw.githubusercontent.com/alatif113/mitre_attck_heatmap/master/images/legend-band.png)
+
+The legend lists the bands with their value ranges. Hover a band to dim everything outside it; click it to keep it pinned, and click again or press Esc to let go. *No data* dims every technique that has a value.
+
+![Searching for "phish" ringing the matches](https://raw.githubusercontent.com/alatif113/mitre_attck_heatmap/master/images/search-light.png)
+
+The search box matches as you type. The row above the matrix holds only the search box, the export button (when turned on) and the legend.
+
+A walk-through of hovering, pinning, the legend and search:
+
+![Hovering, pinning, the legend and search](https://raw.githubusercontent.com/alatif113/mitre_attck_heatmap/master/images/explore.gif)
+
+### Keyboard
+
+The matrix is a single tab stop. Arrow keys move between cells, Home and End go to the first and last cell of a column, Enter selects (pins the tooltip and sends the drilldown), and Esc clears the search, a pinned band or tooltip.
+
+### Status colors
+
+![Cells colored by status](https://raw.githubusercontent.com/alatif113/mitre_attck_heatmap/master/images/status-light.png)
+
+Set *Status field* to a text column and list colors in *Status colors*, for example `gap=#d93f3c, partial=#f1813f, covered=#53a051`. Cells take the color of their status (matched ignoring case; other statuses are gray), the legend lists each status with a count, and the number only appears in the tooltip. A parent technique without a status takes the first listed status among its sub-techniques when roll-up is on, so list the most important status first. *Sort by* gains *Status*.
+
+```
+| inputlookup coverage.csv
+| table technique_id status description
+```
+
+### D3FEND
+
+![The D3FEND matrix](https://raw.githubusercontent.com/alatif113/mitre_attck_heatmap/master/images/d3fend-light.png)
+
+Choose *D3FEND* under *Matrix*. The columns are the seven defensive tactics (Model, Harden, Detect, Isolate, Deceive, Evict, Restore). The cells are D3FEND's techniques in the tactics that enable them, and each technique lists the more specific methods below it as sub-techniques, with their own IDs. D3FEND is always bundled; it is never imported.
+
+### Roll-up and color bounds
+
+- **Roll up sub-techniques** (*Scale*): when the search returns sub-technique IDs such as `T1059.001`, show the sum, max, average or count on the parent technique if it has no value of its own. Rolled-up cells have a dotted underline.
+- **Color bounds** (*Scale*): *Manual* uses the lower and upper bound you type (the bands are of equal width). *From data* uses the lowest and highest value in the results, starting at 0 unless a value is negative, and then each band holds about the same number of techniques.
+
+### Wall mode
+
+For a display nobody is touching (*Display > Wall mode*, off by default): cells twinkle, and tactic names and figures scramble and resolve now and then. It carries no information. It pauses while anyone searches, hovers or pins something, when the browser tab is hidden, and when the browser asks for less motion.
+
+![Wall mode twinkling cells](https://raw.githubusercontent.com/alatif113/mitre_attck_heatmap/master/images/wall.gif)
+
+### Export to ATT&CK Navigator
+
+Turn on *Export > Export button* to add a button that downloads the current data as an [ATT&CK Navigator](https://mitre-attack.github.io/attack-navigator/) layer (format 4.5): values become scores, descriptions become comments, and status colors and the legend are kept. Not available for D3FEND.
+
+## Format menu
+
+| Section | Option | What it does | Default |
+|---|---|---|---|
+| Data | Matrix | The matrix and platform: D3FEND; Enterprise (all, Containers, Cloud, ESXi, Linux, macOS, Network Devices, PRE, Windows); ICS; Mobile (all, Android, iOS) | Enterprise - All |
+| Data | Matrix data | *Bundled* or *Imported* (see [Imported ATT&CK data](#imported-attck-data)) | Bundled |
+| Data | ATT&CK version | With imported data, a version such as `19.1`, or `19` for the newest 19.x. Blank is the newest | blank |
+| Data | ID field, Value field, Description field, Status field | Names of the columns to use instead of the first, second and third. Matched exactly, then ignoring case. A name that is not in the results is shown as an error listing the available fields | blank |
+| Display | Show | *ID*, or *ID + name* | ID |
+| Display | Sub-techniques | Show sub-techniques in the tooltip and count them in each tactic | Yes |
+| Display | Hide empty | Hide techniques and tactics that have no value | No |
+| Display | Sort by, Sort order | Value, Name, ID or Status; ascending or descending | Value, Descending |
+| Display | Search bar | Show the search box | Yes |
+| Display | Wall mode | See [Wall mode](#wall-mode) | No |
+| Colors | Palette | *Default* and *Risk* use the three colors below (*Risk* reverses them: low is good, high is bad); *Sequential blues* and *Viridis* have their own | Default |
+| Colors | Low, Middle, High color | Used by *Default* and *Risk* | #B63457, #FCFCBD, #22908D |
+| Colors | Color bands | 3, 5, 7 or 9 | 5 |
+| Colors | Status colors | `name=#color, ...` | blank |
+| Scale | Roll up sub-techniques | None, Sum, Max, Average, Count | None |
+| Scale | Color bounds | Manual or From data | Manual |
+| Scale | Lower bound, Upper bound | The ends of the scale when Color bounds is Manual | 0, 100 |
+| Export | Export button | Adds the Navigator export button | No |
+
+Options that are not set in a dashboard use these defaults, in classic dashboards and in Dashboard Studio alike.
+
+## Drilldowns
+
+Clicking a technique, a sub-technique or a tactic header sets tokens that a dashboard can use. In a classic dashboard use `$row.<token>$`; in Dashboard Studio use `$row.<token>.value$`.
+
+| Token | Value |
+|---|---|
+| `mtr_sub-technique_id`, `mtr_sub-technique_name`, `mtr_sub-technique_value`, `mtr_sub-technique_status` | The selected sub-technique |
+| `mtr_technique_id`, `mtr_technique_name`, `mtr_technique_value`, `mtr_technique_status` | The selected technique, either by clicking it or one of its sub-techniques |
+| `mtr_tactic_id`, `mtr_tactic_name`, `mtr_tactic_value` | The tactic of the selected technique, or the tactic itself when its header is clicked |
+
+The status tokens are only set when a Status field is set. A value that does not apply to a click is not set, so the token stays unset.
+
+Tactic names and IDs come from the matrix in use. A newer ATT&CK version can rename tactics (v20 replaced *Defense Evasion* with *Stealth* and *Defense Impairment* for Enterprise), and D3FEND tactic IDs look like `d3f:Harden`. Dashboards that match on tactic names need updating when the version changes.
+
+## Dashboard Studio
 
 The heatmap can be added to a Dashboard Studio dashboard (Add chart > Custom visualizations). Studio runs it inside a restricted frame, which changes a few things:
 
-- **Tokens:** in Studio the drilldown values are `$row.mtr_technique_id.value$`, `$row.mtr_tactic_name.value$` and so on (classic dashboards use `$row.mtr_technique_id$`). Values that do not apply to a click are not set.
-- **Options** that are not set in the dashboard use the same defaults as classic dashboards.
-- **Export button:** the browser does not let the frame download files, so the export shows the layer in a box to copy instead.
+- **Tokens** are `$row.mtr_technique_id.value$` and so on, as above.
+- **Options** that are not set in the dashboard use the defaults listed above.
+- **Export button:** the browser does not let the frame download files, so the export shows the layer in a box to copy.
 - **Technique links** in tooltips are shown as text (the frame cannot open new windows).
 - The heatmap follows the dashboard's own light or dark theme.
 - Trellis and scheduled email export are not available for custom visualizations in Studio.
+- Each panel is its own frame, so panels do not share cached matrix data.
 
-Studio's handling was checked against the code of Splunk 10.4.2 / Dashboard Studio 1.26.4; see `docs/studio-compatibility.md` (in the source repository) for what is still to be confirmed visually.
+## Imported ATT&CK data
 
-### Drilldowns
+MITRE publishes new ATT&CK versions more often than this app is released. The app can download them itself. This is optional, and the bundled data is used until you set it up.
 
-1. **Sub-Technique ID**: the ID of a selected sub-technique is drilldownable via `$row.mtr_sub-technique_id$`
-2. **Technique ID**: the ID of a selected technique (either by clicking an underlying sub-technique or the technique itself) is drilldownable via `$row.mtr_technique_id$`
-3. **Tactic ID**: the ID of a selected tactic (either by clicking an underlying technique or the tactic itself) is drilldownable via `$row.mtr_tactic_id$`
-4. **Sub-Technique Name**: the name of a selected sub-technique is drilldownable via `$row.mtr_sub-technique_name$`
-5. **Technique Name**: the name of a selected technique is drilldownable via `$row.mtr_technique_name$`
-6. **Tactic Name**: the name of a selected tactic is drilldownable (either by clicking an underlying technique or the tactic itself) via `$row.mtr_tactic_name$`
-7. **Sub-Technique Value**: the value of a selected sub-technique is drilldownable via `$row.mtr_sub-technique_value$`
-8. **Technique Value**: the value of a selected technique is drilldownable (either by clicking an underlying sub-technique or the technique itself) via `$row.mtr_technique_value$`
-9. **Tactic Value**: the value of a selected tactic is drilldownable (either by clicking an underlying technique or the tactic itself) via `$row.mtr_tactic_value$`
+1. Enable the scripted input `bin/import_matrices.py` (Settings > Data inputs > Scripts). It runs weekly and writes one event per changed matrix to the index named in the `mitre_attck_matrix_index` macro (`index=main` by default).
+2. Enable the report *MITRE ATT&CK - update matrix collection* (Settings > Searches, reports, and alerts: enable it, then Edit > Edit Schedule, for example weekly after the input runs). It copies the events into the `mitre_matrix` KV Store collection that the heatmap reads.
+3. Set *Matrix data* to *Imported* in the format menu. *ATT&CK version* optionally pins a version.
 
-10. **Sub-Technique Status**: the status of a selected sub-technique, when a Status field is set, via `$row.mtr_sub-technique_status$`
-11. **Technique Status**: the status of a selected technique (either by clicking an underlying sub-technique or the technique itself) via `$row.mtr_technique_status$`
+The host running the input needs HTTPS access to `raw.githubusercontent.com`. Proxy, mirror and limit settings are in `mitre_attck_import.conf` (copy it to `local/` to change them). If no usable imported data exists, the bundled data is drawn with a note saying so.
 
-If any of the above values are not defined, the associated token is unset. 
+In Splunk Cloud, scripted inputs run only where the platform allows them (for example on an Inputs Data Manager); if you cannot run the input, keep *Matrix data* on *Bundled*.
+
+## Troubleshooting
+
+- **The matrix is empty or shows a message.** Check that the search returns rows, that the first column holds IDs that exist in the chosen matrix (for example `T1059`, not `Command and Scripting Interpreter`), and that the second holds a number. The message names which of these failed.
+- **A field name error.** The *ID field*, *Value field*, *Description field* or *Status field* option names a column that is not in the results. The error lists the columns that are.
+- **Everything is one color.** With *Manual* color bounds, values outside the lower and upper bounds take the end colors. Raise the upper bound or switch to *From data*.
+- **Sub-technique values do not show on their techniques.** Turn on *Roll up sub-techniques*.
+- **Dashboard Studio drilldown tokens are empty.** Use `$row.mtr_technique_id.value$`, with `.value`.
+- **The imported data is not used.** Check `| inputlookup mitre_matrix | table matrix version imported_at` returns rows, and that *Matrix data* is *Imported*.
 
 ## Support
 
-This app is currently unsupported for Internet Explorer. Please report issues to https://github.com/alatif113/mitre_attck_heatmap/issues
+This app is not supported on Internet Explorer. Please report issues at https://github.com/alatif113/mitre_attck_heatmap/issues
 
 ## Change Log
 

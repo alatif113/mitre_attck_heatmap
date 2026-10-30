@@ -98,7 +98,7 @@ rsync -am \
     --exclude='__pycache__' \
     --exclude='*.pyc' \
     --exclude='/scripts/' \
-    --exclude='/static/screenshot.PNG' \
+    --exclude='/images/' \
     --exclude='/*.tgz' \
     --exclude='.git' \
     --exclude='.env' \
@@ -129,7 +129,7 @@ tar -czf "$ARCHIVE" -C "$STAGE" "$APP_ID"
 
 echo "==> Checking archive"
 LISTING="$(tar -tzf "$ARCHIVE")"
-if echo "$LISTING" | grep -Eq '(^|/)(node_modules|test|tests)(/|$)|^[^/]+/local(/|$)|enterpriseAttack2json|__pycache__|\.pyc$|(^|/)\.env$'; then
+if echo "$LISTING" | grep -Eq '(^|/)(node_modules|test|tests)(/|$)|^[^/]+/local(/|$)|enterpriseAttack2json|^[^/]+/images(/|$)|__pycache__|\.pyc$|(^|/)\.env$'; then
     die "archive contains excluded paths"
 fi
 ARCHIVED_VISIBLE="$(tar -xzOf "$ARCHIVE" "$APP_ID/default/app.conf" | sed -nE 's/^is_visible[[:space:]]*=[[:space:]]*([01]).*/\1/p')"

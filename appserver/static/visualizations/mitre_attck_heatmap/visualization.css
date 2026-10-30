@@ -133,6 +133,13 @@
 	line-height: 20px;
 }
 
+/* The clear button is our own; hide the browser's, or Chrome shows two. */
+.mtr-search-input::-webkit-search-cancel-button,
+.mtr-search-input::-webkit-search-decoration {
+	-webkit-appearance: none;
+	appearance: none;
+}
+
 .mtr-search-input:focus {
 	border-color: var(--mtr-accent);
 	box-shadow: 0 0 0 3px var(--mtr-accent-soft);
