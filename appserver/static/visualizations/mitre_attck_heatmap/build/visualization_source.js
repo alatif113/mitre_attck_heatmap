@@ -885,11 +885,6 @@ return SplunkVisualizationBase.extend({
                 applyFocus();
                 return;
             }
-            if (e.key == '/' && !target.is('input, select, textarea') && showSearchBar) {
-                e.preventDefault();
-                $('#mtrSearchInput', self.$el).trigger('focus');
-                return;
-            }
             let $cell = target.closest('.mtr-technique');
             if ($cell.length === 0) return;
             if (e.key == 'Enter' || e.key == ' ') {

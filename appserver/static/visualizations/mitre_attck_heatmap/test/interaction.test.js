@@ -316,19 +316,17 @@ describe('search', () => {
         expect(qa(viz, '.focused, .defocused').length).toBe(0);
     });
 
-    test('the search box shows no hint about the shortcut', () => {
+    test('the search box shows no keyboard hint, and "/" is just a character', () => {
         const viz = typical();
         expect(q(viz, '.mtr-search').textContent.trim()).toBe('\u00d7');
         expect(q(viz, '.mtr-search kbd')).toBeNull();
+        const outsideEvent = $.Event('keydown', { key: '/' });
+        $(cell(viz, 'T1059')).trigger(outsideEvent);
+        expect(outsideEvent.isDefaultPrevented()).toBe(false);
+        expect(document.activeElement).not.toBe(q(viz, '.mtr-search-input'));
     });
 
-    test('"/" moves to the search box', () => {
-        const viz = typical();
-        key(cell(viz, 'T1059'), '/');
-        expect(document.activeElement).toBe(q(viz, '.mtr-search-input'));
-    });
-
-    test('without a search bar there is no search box or shortcut', () => {
+    test('without a search bar there is no search box', () => {
         const viz = typical({ showSearchBar: 'no' });
         expect(q(viz, '.mtr-search-container')).toBeNull();
     });
