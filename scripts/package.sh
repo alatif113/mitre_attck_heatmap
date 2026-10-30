@@ -98,6 +98,7 @@ rsync -am \
     --exclude='__pycache__' \
     --exclude='*.pyc' \
     --exclude='/scripts/' \
+    --exclude='/static/screenshot.PNG' \
     --exclude='/*.tgz' \
     --exclude='.git' \
     --exclude='.env' \
