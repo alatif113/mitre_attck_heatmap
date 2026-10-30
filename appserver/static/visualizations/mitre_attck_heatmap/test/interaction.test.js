@@ -421,11 +421,27 @@ describe("the legend's bands", () => {
         expect(q(viz, '.mtr-legend-hint').textContent).toMatch(/^No data · \d+ techniques/);
     });
 
-    test('a band also keeps a technique whose sub-technique is in it', () => {
+    test('a band lights exactly the techniques whose own value is in it, whatever their sub-techniques hold', () => {
         const viz = typical();
-        const subBand = q(viz, '.mtr-sub-technique[data-id="T1059.001"]').getAttribute('data-band');
-        $(band(viz, Number(subBand))).trigger('mouseenter');
-        expect(cell(viz, 'T1059', 'Execution').classList.contains('defocused')).toBe(false);
+        // T1078 (65) has sub-techniques in lower bands; T1059 (42) has sub-techniques in its own band and others.
+        for (let n = 0; n < 5; n++) {
+            $(band(viz, n)).trigger('mouseenter');
+            const lit = qa(viz, '.mtr-technique').filter(c => !c.classList.contains('defocused'));
+            lit.forEach(c => expect(c.getAttribute('data-band')).toBe(String(n)));
+            const inBand = qa(viz, '.mtr-technique').filter(c => c.getAttribute('data-band') === String(n));
+            expect(lit).toHaveLength(inBand.length);
+            $(band(viz, n)).trigger('mouseleave');
+        }
+    });
+
+    test('the number in the legend hint is the number of techniques that light up', () => {
+        const viz = typical();
+        for (let n = 0; n < 5; n++) {
+            $(band(viz, n)).trigger('mouseenter');
+            const lit = new Set(qa(viz, '.mtr-technique').filter(c => !c.classList.contains('defocused')).map(c => c.getAttribute('data-id')));
+            expect(q(viz, '.mtr-legend-hint').textContent).toContain(' \u00b7 ' + lit.size + ' techniques');
+            $(band(viz, n)).trigger('mouseleave');
+        }
     });
 
     test('the band, the search and the data filter work together', () => {
@@ -433,7 +449,7 @@ describe("the legend's bands", () => {
         search(viz, 'access');
         $(band(viz, 4)).trigger('mouseenter');
         const kept = qa(viz, '.mtr-technique').filter(c => !c.classList.contains('defocused'));
-        kept.forEach(c => expect(c.getAttribute('data-band') === '4' || c.parentNode.querySelector('.mtr-sub-technique[data-band="4"]')).toBeTruthy());
+        kept.forEach(c => expect(c.getAttribute('data-band')).toBe('4'));
     });
 });
 

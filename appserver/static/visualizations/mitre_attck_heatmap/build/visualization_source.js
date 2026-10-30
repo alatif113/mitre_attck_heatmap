@@ -700,7 +700,9 @@ return SplunkVisualizationBase.extend({
                     if (band === NO_DATA_BAND) {
                         inBand = !hasValue;
                     } else {
-                        inBand = $cell.attr('data-band') == band || $(`.mtr-sub-technique[data-band="${band}"]`, $container).length > 0;
+                        // The technique's own value decides, not its sub-techniques': a band
+                        // lights exactly the cells the legend counts for it.
+                        inBand = $cell.attr('data-band') == band;
                     }
                     if (!inBand) dim = true;
                 }
