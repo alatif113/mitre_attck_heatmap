@@ -108,9 +108,9 @@ This app is currently unsupported for Internet Explorer. Please report issues to
 - Keyboard navigation, focusable tactic headers, and a message for no results, ids that do not match the matrix, and rows without values
 - Search text, filter, pinned band/tactic/tooltip and scroll position now survive a refresh
 - Format menu reorganized (Data, Display, Colors, Scale, Export); the legend title is always the value field's name; sub-techniques are listed in the tooltip
-- New *Wall mode* switch (*Display*): twinkling cells and scrambling tactic headers for display walls
+- New *Wall mode* switch (*Display*), now the only animation setting: twinkling cells and scrambling tactic headers for display walls
 - Changed defaults: *Sort by* Value, *Descending* (was ascending)
-- Removed from the menu (still read if a saved dashboard sets them): *Legend title*, *Other status color*, *Lower bound from data*, *Technique's own value*, the Navigator layer name and version. Removed: *Duration*; *Animate* now fades cells in and counts up the percentages on first load, and the sweeping highlight is gone
+- Removed from the menu (still read if a saved dashboard sets them): *Legend title*, *Other status color*, *Lower bound from data*, *Technique's own value*, the Navigator layer name and version. Removed: *Duration*, and the *Animate* switch with the sweeping highlight. Cells now always fade in and the percentages count up when the panel first loads (not on refreshes, and not when the browser asks for less motion)
 - Updated the bundled data to ATT&CK v20.0
 - Added an optional scripted input and saved search that import newer ATT&CK versions, with *Matrix data* and *ATT&CK version* options
 - Added the Fields options to map result columns by name

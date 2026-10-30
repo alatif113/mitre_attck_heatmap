@@ -21,10 +21,8 @@ function confDefaults() {
 }
 
 // Short option names (e.g. { matrix: 'ics::' }) layered over the conf defaults.
-// Animation is off unless asked for, so tests don't leave a frame loop running.
 function buildConfig(options) {
     const config = confDefaults();
-    config[NAMESPACE + 'animate'] = 'no';
     Object.keys(options || {}).forEach(function(key) {
         config[NAMESPACE + key] = options[key];
     });
@@ -35,14 +33,25 @@ function createViz(Viz) {
     const el = document.createElement('div');
     document.body.appendChild(el);
     const viz = new Viz(el);
-    // Tooltips open at once in tests; in a browser the first one waits a moment.
+    // Tooltips open at once in tests; in a browser the first one waits a moment. The entrance
+    // (fade and count-up) is off, so tests don't leave a frame loop running; renderAnimated turns it on.
     viz._tooltipDelay = 0;
+    viz._entrance = false;
     return viz;
 }
 
 // Runs the same formatData -> updateView sequence Splunk does.
 function render(Viz, data, options) {
     const viz = createViz(Viz);
+    const config = buildConfig(options);
+    viz.updateView(viz.formatData(data, config), config);
+    return viz;
+}
+
+// Like render, with the first-render fade and count-up that a browser shows.
+function renderAnimated(Viz, data, options) {
+    const viz = createViz(Viz);
+    viz._entrance = true;
     const config = buildConfig(options);
     viz.updateView(viz.formatData(data, config), config);
     return viz;
@@ -89,4 +98,4 @@ function loadFixture(name) {
     return require(path.join(__dirname, '../fixtures', name));
 }
 
-module.exports = { NAMESPACE, buildConfig, createViz, render, summarize, loadFixture };
+module.exports = { NAMESPACE, buildConfig, createViz, render, renderAnimated, summarize, loadFixture };

@@ -612,7 +612,7 @@ describe('wall mode', () => {
         delete window.matchMedia;
     });
 
-    const wall = options => typical(Object.assign({ wallMode: 'yes', animate: 'no' }, options));
+    const wall = options => typical(Object.assign({ wallMode: 'yes' }, options));
     const expected = col => logic.hyphenateName(col.getAttribute('data-name'));
     const titles = viz => qa(viz, '.mtr-tactic-col').map(col => col.querySelector('.mtr-tactic-title').textContent);
     const figures = viz => qa(viz, '.mtr-tactic-col .mtr-fig-pct').map(f => f.textContent);
@@ -641,7 +641,7 @@ describe('wall mode', () => {
 
     test('cells with a status twinkle too, and cells with nothing do not', () => {
         const fields = ['id', 'count', 'description', 'state'].map(name => ({ name }));
-        const viz = render(Viz, { fields, rows: [['T1059', '', '', 'gap']] }, { wallMode: 'yes', animate: 'no', statusField: 'state' });
+        const viz = render(Viz, { fields, rows: [['T1059', '', '', 'gap']] }, { wallMode: 'yes', statusField: 'state' });
         jest.advanceTimersByTime(20000);
         expect(animate).toHaveBeenCalled();
         animate.mock.instances.forEach(el => expect(el.getAttribute('data-id')).toBe('T1059'));
@@ -723,7 +723,7 @@ describe('wall mode', () => {
 
     test('a refresh does not start a second set of timers', () => {
         const viz = wall();
-        for (let i = 0; i < 3; i++) viz.updateView(viz.formatData(loadFixture('typical.json'), buildConfig({ wallMode: 'yes', animate: 'no' })), buildConfig({ wallMode: 'yes', animate: 'no' }));
+        for (let i = 0; i < 3; i++) viz.updateView(viz.formatData(loadFixture('typical.json'), buildConfig({ wallMode: 'yes' })), buildConfig({ wallMode: 'yes' }));
         animate.mockClear();
         jest.advanceTimersByTime(10000);
         const withRefreshes = animate.mock.calls.length;

@@ -28,5 +28,4 @@ display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.autoLowerB
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.rollup = <string>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.rollupParent = <string>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar = <string>
-display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.animate = <string>
 display.visualizations.custom.mitre_attck_heatmap.mitre_attck_heatmap.wallMode = <string>

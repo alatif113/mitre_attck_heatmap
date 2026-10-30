@@ -20,7 +20,6 @@ describe('parseConfig', () => {
     test('applies code defaults when no options are set', () => {
         expect(parse({})).toEqual({
             columns: { id: 0, value: 1, description: -1, status: -1 },
-            animate: true,
             wallMode: false,
             palette: 'default',
             colorBands: 5,
@@ -55,9 +54,8 @@ describe('parseConfig', () => {
     });
 
     test('reads savedsearches.conf defaults', () => {
-        const options = parse(buildConfig({ animate: 'yes' }));
+        const options = parse(buildConfig());
         expect(options).toMatchObject({
-            animate: true,
             startColor: '#B63457',
             midColor: '#FCFCBD',
             endColor: '#22908D',
@@ -93,8 +91,8 @@ describe('parseConfig', () => {
     });
 
     test('normalizes boolean options', () => {
-        const options = parse(withOptions({ hideNull: 'yes', showSubTechniques: 'no', showSearchBar: 'false', animate: 'true', wallMode: 'yes' }));
-        expect(options).toMatchObject({ hideNull: true, showSubTechniques: false, showSearchBar: false, animate: true, wallMode: true });
+        const options = parse(withOptions({ hideNull: 'yes', showSubTechniques: 'no', showSearchBar: 'false', wallMode: 'yes' }));
+        expect(options).toMatchObject({ hideNull: true, showSubTechniques: false, showSearchBar: false, wallMode: true });
     });
 
     test('parses the numeric options as numbers (audit P2-5)', () => {

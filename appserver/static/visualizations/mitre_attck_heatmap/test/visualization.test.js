@@ -11,7 +11,7 @@ const $ = require('jquery');
 const SplunkVisualizationBase = require('api/SplunkVisualizationBase');
 const vizUtils = require('api/SplunkVisualizationUtils');
 const Viz = require('../build/visualization_source.js');
-const { NAMESPACE, buildConfig, createViz, render, summarize, loadFixture } = require('./support/render');
+const { NAMESPACE, buildConfig, createViz, render, renderAnimated, summarize, loadFixture } = require('./support/render');
 const { scenarios } = require('./support/scenarios');
 
 beforeAll(() => {
@@ -884,7 +884,7 @@ describe('animation', () => {
     const fill = (viz, name) => viz.el.querySelector('.mtr-tactic-col[data-name="' + name + '"] .mtr-meter-fill');
 
     test('the first render fades in and fills the gauges after a frame; the sweep of old is gone', () => {
-        const viz = render(Viz, loadFixture('typical.json'), { animate: 'yes' });
+        const viz = renderAnimated(Viz, loadFixture('typical.json'));
         expect(viz.el.classList.contains('mtr-enter')).toBe(true);
         expect(fill(viz, 'Execution').style.width).toBe('0%');
         frames.forEach(frame => frame(1000));
@@ -893,7 +893,7 @@ describe('animation', () => {
     });
 
     test('the percentages count up to their final value', () => {
-        const viz = render(Viz, loadFixture('typical.json'), { animate: 'yes' });
+        const viz = renderAnimated(Viz, loadFixture('typical.json'));
         const column = '.mtr-tactic-col[data-name="Execution"]';
         const pct = () => viz.el.querySelector(column + ' .mtr-fig-pct').textContent;
         const final = Math.round(viz.el.querySelectorAll(column + ' .mtr-technique[data-value]').length / viz.el.querySelectorAll(column + ' .mtr-technique').length * 100) + '%';
@@ -908,19 +908,28 @@ describe('animation', () => {
     });
 
     test('later renders (a refresh of the search) do not fade or count up again', () => {
-        const viz = render(Viz, loadFixture('typical.json'), { animate: 'yes' });
+        const viz = renderAnimated(Viz, loadFixture('typical.json'));
         frames.length = 0;
-        viz.updateView(viz.formatData(loadFixture('typical.json')), buildConfig({ animate: 'yes' }));
+        viz.updateView(viz.formatData(loadFixture('typical.json')), buildConfig());
         expect(viz.el.classList.contains('mtr-enter')).toBe(false);
         expect(fill(viz, 'Execution').style.width).not.toBe('0%');
         expect(frames).toHaveLength(0);
     });
 
-    test('with animate off nothing is animated', () => {
-        const viz = render(Viz, loadFixture('typical.json'), { animate: 'no' });
-        expect(viz.el.classList.contains('mtr-enter')).toBe(false);
-        expect(frames).toHaveLength(0);
-        expect(fill(viz, 'Execution').style.width).not.toBe('0%');
+    test('the browser asking for less motion skips the count-up: the figures are final at once', () => {
+        window.matchMedia = () => ({ matches: true });
+        try {
+            const viz = renderAnimated(Viz, loadFixture('typical.json'));
+            const final = Math.round(viz.el.querySelectorAll('.mtr-tactic-col[data-name="Execution"] .mtr-technique[data-value]').length / viz.el.querySelectorAll('.mtr-tactic-col[data-name="Execution"] .mtr-technique').length * 100) + '%';
+            expect(viz.el.querySelector('.mtr-tactic-col[data-name="Execution"] .mtr-fig-pct').textContent).toBe(final);
+        } finally {
+            delete window.matchMedia;
+        }
+    });
+
+    test('the animation is always on: there is no option for it', () => {
+        const viz = renderAnimated(Viz, loadFixture('typical.json'), { animate: 'no' });
+        expect(viz.el.classList.contains('mtr-enter')).toBe(true);
     });
 
     test('re-rendering during the count-up stops the old count (audit P1-4)', () => {
@@ -928,10 +937,10 @@ describe('animation', () => {
         let nextId = 1;
         window.requestAnimationFrame.mockImplementation(cb => { pending.set(nextId, cb); return nextId++; });
         jest.spyOn(window, 'cancelAnimationFrame').mockImplementation(id => pending.delete(id));
-        const viz = render(Viz, loadFixture('typical.json'), { animate: 'yes' });
+        const viz = renderAnimated(Viz, loadFixture('typical.json'));
         const before = pending.size;
         for (let i = 0; i < 3; i++) {
-            viz.updateView(viz.formatData(loadFixture('typical.json')), buildConfig({ animate: 'yes' }));
+            viz.updateView(viz.formatData(loadFixture('typical.json')), buildConfig());
         }
         expect(pending.size).toBeLessThanOrEqual(before);
         window.cancelAnimationFrame.mockRestore();

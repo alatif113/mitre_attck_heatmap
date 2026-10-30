@@ -113,7 +113,6 @@ define(function() {
 
         return {
             columns: columns,
-            animate: vizUtils.normalizeBoolean(get('animate') || 'yes'),
             wallMode: vizUtils.normalizeBoolean(get('wallMode') || 'no'),
             palette: parsePalette(get('palette')),
             colorBands: parseBandCount(get('colorBands')),

@@ -98,7 +98,7 @@ return SplunkVisualizationBase.extend({
             throw this._visualizationError(error);
         }
         let {
-            animate, startColor, midColor, endColor, startVal, endVal, display, legendTitle,
+            startColor, midColor, endColor, startVal, endVal, display, legendTitle,
             sortKey, sortOrder, hideNull, showSubTechniques, showSearchBar, matrix, platform,
             statusMode, statusColors, statusDefaultColor
         } = options;
@@ -130,7 +130,9 @@ return SplunkVisualizationBase.extend({
         this.$el.empty();
 
         this.$el.attr('class', '').addClass(theme).addClass('mtr-viz').addClass('mtr-display-' + display);
-        if (animate && firstRender) this.$el.addClass('mtr-enter');
+        // The first render fades in and counts up; later ones (a refresh) do not. Tests switch it off.
+        let entrance = firstRender && self._entrance !== false;
+        if (entrance) this.$el.addClass('mtr-enter');
 
         // The matrix scrolls, both ways, when the panel is too small for it. Tooltips are
         // positioned against this element, so it needs to be a positioning context.
@@ -608,7 +610,7 @@ return SplunkVisualizationBase.extend({
             $('.mtr-tactic .mtr-meter-fill', this)
                 .css('background', meanBand >= 0 ? bandColors[meanBand].background : '')
                 .attr('data-width', coverage)
-                .css('width', firstRender && animate ? '0%' : coverage + '%');
+                .css('width', entrance ? '0%' : coverage + '%');
             $('.mtr-fig-pct', $col).text(coverage + '%');
 
             let subCount = $('.mtr-sub-technique', this).length;
@@ -1068,7 +1070,7 @@ return SplunkVisualizationBase.extend({
         }
 
         // On the first render, the percentages count up and the gauges fill.
-        if (firstRender && animate) {
+        if (entrance) {
             let reduced = false;
             try { reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (error) { reduced = false; }
             if (!reduced) {
@@ -1093,7 +1095,7 @@ return SplunkVisualizationBase.extend({
             });
         }
         // The entrance runs once.
-        if (firstRender && animate) {
+        if (entrance) {
             setTimeout(function() { self.$el.removeClass('mtr-enter'); }, 1200);
         }
         };
