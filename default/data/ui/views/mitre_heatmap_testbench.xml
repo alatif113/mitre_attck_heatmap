@@ -504,6 +504,103 @@
   </row>
   <row>
     <panel>
+      <title>Narrow: normal data</title>
+      <html>
+        <p class="mtr-note">Three panels side by side, each narrower than 640px: the compact layout (one tile per tactic) takes over. Hover a tile for its statistics; click it to drill down.</p>
+      </html>
+      <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
+        <search>
+          <query><![CDATA[| makeresults
+| eval id=split("T1589,T1590,T1583,T1584,T1078,T1091,T1047,T1053,T1037,T1006,T1014,T1112,T1207,T1003,T1040,T1007,T1010,T1021,T1072,T1005,T1025,T1001,T1008,T1011,T1020,T1485,T1486,T1001.001,T1001.002,T1001.003,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1011.001,T1020.001,T1021.001,T1021.002,T1021.003,T1021.004,T1021.005,T1021.006,T1021.007,T1021.008,T1059,T1566", ",")
+| mvexpand id
+| streamstats count AS n
+| eval "Detection Count"=(n*37+11)%101
+| eval description="Test detections for ".id." (row ".n.")"
+| eval description=if(n==1, "First line\\nSecond line of the description", description)
+| table id "Detection Count" description]]></query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="height">420</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.matrix">$matrix$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.display">$display$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.hideNull">$hide_null$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.animate">no</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSubTechniques">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.startVal">0</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.endVal">100</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortKey">data-id</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortOrder">asc</option>
+      </viz>
+    </panel>
+    <panel>
+      <title>Narrow: status colors</title>
+      <html>
+        <p class="mtr-note">Tile bars show the mix of statuses.</p>
+      </html>
+      <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
+        <search>
+          <query><![CDATA[| makeresults
+| eval id=split("T1589,T1590,T1583,T1584,T1078,T1091,T1047,T1053,T1037,T1006,T1014,T1112,T1207,T1003,T1040,T1007,T1010,T1021,T1072,T1005,T1025,T1001,T1008,T1011,T1020,T1485,T1486,T1001.001,T1001.002,T1001.003,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1011.001,T1020.001,T1021.001,T1021.002,T1021.003,T1021.004,T1021.005,T1021.006,T1021.007,T1021.008,T1059,T1566", ",")
+| mvexpand id
+| streamstats count AS n
+| eval state=case(n%4==0, "gap", n%4==1, "covered", n%4==2, "Partial", true(), null())
+| eval "Detection Count"=(n*37+11)%101
+| eval description="Status ".coalesce(state, "none")." (row ".n.")"
+| table id "Detection Count" state description]]></query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="height">420</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.matrix">$matrix$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.display">$display$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.hideNull">$hide_null$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.animate">no</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSubTechniques">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.startVal">0</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.endVal">100</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortKey">data-id</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortOrder">asc</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.statusField">state</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.statusColors">gap=#d93f3c, Partial=#f1813f, covered=#53a051</option>
+      </viz>
+    </panel>
+    <panel>
+      <title>Narrow: roll-up</title>
+      <html>
+        <p class="mtr-note">The same panel as in the wide Roll-up row.</p>
+      </html>
+      <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
+        <search>
+          <query><![CDATA[| makeresults
+| eval id=split("T1001.001,T1001.002,T1001.003,T1003.001,T1003.002,T1003.003,T1003.004,T1003.005,T1003.006,T1003.007,T1003.008,T1011.001,T1020.001,T1021.001", ",")
+| mvexpand id
+| streamstats count AS n
+| eval "Detection Count"=(n*13+5)%40
+| eval description="Sub-technique row ".n
+| table id "Detection Count" description]]></query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="height">420</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.matrix">$matrix$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.display">$display$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.hideNull">$hide_null$</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.animate">no</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSubTechniques">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.showSearchBar">yes</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.startVal">0</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.endVal">100</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortKey">data-id</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.sortOrder">asc</option>
+        <option name="mitre_attck_heatmap.mitre_attck_heatmap.rollup">sum</option>
+      </viz>
+    </panel>
+  </row>
+  <row>
+    <panel>
       <title>Tiny: normal</title>
       <html>
         <p class="mtr-note">Very small panel.</p>

@@ -490,6 +490,34 @@ define(function() {
             '; showing the bundled data.';
     }
 
+    // ---- Layout: below this width the matrix is replaced by one tile per tactic ----
+
+    const COMPACT_BELOW_WIDTH = 640;
+    const FULL_AGAIN_AT_WIDTH = 664;   // a margin so a panel being dragged does not flicker
+    const SHORT_BELOW_HEIGHT = 140;
+    const FULL_AGAIN_AT_HEIGHT = 164;
+
+    // Which layout fits a panel of this size. `current` is the previous result
+    // ({compact, short}); the layout only changes once a size is clearly past a
+    // limit. A size of 0 (not laid out yet, or hidden) leaves the layout as it is.
+    function layoutMode(width, height, current) {
+        let compact = !!(current && current.compact);
+        let short = !!(current && current.short);
+        if (width > 0) {
+            compact = compact ? width < FULL_AGAIN_AT_WIDTH : width < COMPACT_BELOW_WIDTH;
+        }
+        if (height > 0) {
+            short = short ? height < FULL_AGAIN_AT_HEIGHT : height < SHORT_BELOW_HEIGHT;
+        }
+        return { compact: compact, short: short };
+    }
+
+    // The tooltip of a tactic tile: "Execution: Total 25; Unique Techniques 1 (4%)".
+    function tileTitle(name, stats) {
+        let parts = stats.map(stat => (stat.label + ' ' + stat.value).trim()).filter(Boolean);
+        return parts.length ? name + ': ' + parts.join('; ') : name;
+    }
+
     // A row counts when it has a number, or (with a status field) a status.
     function isValidEntry(entry, statusMode) {
         return isValidCount(entry.count) || (!!statusMode && entry.status !== '');
@@ -733,6 +761,9 @@ define(function() {
         statusSummary: statusSummary,
         statusBarGradient: statusBarGradient,
         isValidEntry: isValidEntry,
+        COMPACT_BELOW_WIDTH: COMPACT_BELOW_WIDTH,
+        layoutMode: layoutMode,
+        tileTitle: tileTitle,
         IMPORTED_MATRICES: IMPORTED_MATRICES,
         kvStoreUrl: kvStoreUrl,
         compareVersions: compareVersions,

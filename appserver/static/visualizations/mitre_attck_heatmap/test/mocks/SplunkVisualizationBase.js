@@ -21,6 +21,12 @@ SplunkVisualizationBase.prototype.drilldown = function(payload, e) {
     this.drilldowns.push(payload);
 };
 
+// Backbone's View#remove: detach the element.
+SplunkVisualizationBase.prototype.remove = function() {
+    if (this.el && this.el.parentNode) this.el.parentNode.removeChild(this.el);
+    return this;
+};
+
 SplunkVisualizationBase.extend = function(proto) {
     const Parent = this;
     function Child() {

@@ -476,3 +476,58 @@
 	font-size: var(--mtr-font-xsmall);
 	opacity: 0.8;
 }
+
+/* Narrow panels: one tile per tactic (see _applyLayout). Everything here is
+   under .mtr-compact, so wider panels are untouched. */
+.mtr-compact .mtr-search-container,
+.mtr-compact .mtr-technique-col,
+.mtr-compact .grid-wrapper,
+.mtr-compact .mtr-legend-title {
+	display: none;
+}
+
+.mtr-compact .mtr-viz-container {
+	flex-wrap: wrap;
+	gap: 0.4em;
+	padding: 0.5em;
+	justify-content: flex-start;
+}
+
+.mtr-compact .mtr-tactic-col {
+	flex: 1 1 5.5rem;
+	width: auto;
+	max-width: none;
+	margin: 0;
+}
+
+.mtr-compact .mtr-tactic {
+	position: static;
+}
+
+.mtr-compact .mtr-tactic-title {
+	height: auto;
+	min-height: 2.4em;
+	overflow: hidden;
+	font-size: var(--mtr-font-xsmall);
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	text-overflow: ellipsis;
+}
+
+.mtr-compact .mtr-meter-container {
+	position: static;
+	height: 0.9rem;
+	margin: 0.2rem 0;
+}
+
+.mtr-compact .mtr-legend {
+	position: static;
+	width: auto;
+	margin: 0.4rem 0.5rem 0;
+	transform: none;
+}
+
+.mtr-compact.mtr-short .mtr-legend {
+	display: none;
+}
