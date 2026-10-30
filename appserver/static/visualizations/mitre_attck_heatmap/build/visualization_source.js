@@ -475,6 +475,12 @@ return SplunkVisualizationBase.extend({
                 if ($(this).hasClass('mtr-tactic')) {
                     drilldown_data['mtr_tactic'] = $tactic_col.attr('data-name');
                 }
+                // Leave out what does not apply to this click. Classic dashboards treat a
+                // missing key as an unset token; Dashboard Studio would turn undefined
+                // into the text "undefined".
+                Object.keys(drilldown_data).forEach(function(key) {
+                    if (drilldown_data[key] === undefined || drilldown_data[key] === null) delete drilldown_data[key];
+                });
                 self._drilldown(drilldown_data, e);
             });
         });

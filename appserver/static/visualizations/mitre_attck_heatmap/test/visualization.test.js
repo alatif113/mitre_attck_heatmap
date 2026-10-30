@@ -237,7 +237,8 @@ describe('status-based coloring (feature 5)', () => {
     test('the drilldown adds status tokens', () => {
         const viz = render(Viz, data, options);
         $(cell(viz, 'T1059')).trigger('click');
-        expect(viz.drilldowns[0].data).toMatchObject({ mtr_technique_status: 'Covered', 'mtr_sub-technique_status': undefined });
+        expect(viz.drilldowns[0].data).toMatchObject({ mtr_technique_status: 'Covered' });
+        expect(viz.drilldowns[0].data).not.toHaveProperty('mtr_sub-technique_status');
         $(cell(viz, 'T1059.001')).trigger('click');
         expect(viz.drilldowns[1].data).toMatchObject({ 'mtr_sub-technique_status': 'gap', mtr_technique_status: 'Covered' });
     });
@@ -651,16 +652,53 @@ describe('drilldown', () => {
         expect(viz.drilldowns[0].data).toMatchObject({
             mtr_tactic: 'Reconnaissance',
             mtr_tactic_id: 'TA0043',
-            mtr_tactic_name: 'Reconnaissance',
-            mtr_technique_id: undefined,
-            'mtr_sub-technique_id': undefined
+            mtr_tactic_name: 'Reconnaissance'
         });
+        expect(viz.drilldowns[0].data).not.toHaveProperty('mtr_technique_id');
+        expect(viz.drilldowns[0].data).not.toHaveProperty('mtr_sub-technique_id');
     });
 
     test('technique clicks do not add mtr_tactic', () => {
         const viz = render(Viz, loadFixture('typical.json'));
         $(viz.el.querySelector('.mtr-technique[data-id="T1059"]')).trigger('click');
         expect(viz.drilldowns[0].data).not.toHaveProperty('mtr_tactic');
+    });
+});
+
+describe('drilldown payloads (also as Dashboard Studio sees them)', () => {
+    const { studioFieldValueTokens } = require('./support/studioBridge');
+    const clicks = {
+        'a tactic': viz => $(viz.el.querySelector('.mtr-tactic-title')).trigger('click'),
+        'a technique': viz => $(viz.el.querySelector('.mtr-technique[data-value]')).trigger('click'),
+        'a sub-technique': viz => $(viz.el.querySelector('.mtr-sub-technique[data-value]')).trigger('click')
+    };
+
+    test.each(Object.keys(clicks))('clicking %s sends only values that exist', label => {
+        const viz = render(Viz, loadFixture('typical.json'));
+        clicks[label](viz);
+        const data = viz.drilldowns[0].data;
+        expect(Object.keys(data).length).toBeGreaterThan(2);
+        Object.keys(data).forEach(key => expect(data[key]).toBeDefined());
+    });
+
+    test.each(Object.keys(clicks))('clicking %s gives Studio no "undefined" tokens', label => {
+        const viz = render(Viz, loadFixture('typical.json'));
+        clicks[label](viz);
+        const tokens = studioFieldValueTokens(viz.drilldowns[0]);
+        expect(tokens).not.toBeNull();
+        Object.keys(tokens).forEach(name => {
+            expect(tokens[name]).not.toBe('undefined');
+            expect(tokens[name]).not.toBe('null');
+        });
+    });
+
+    test('a sub-technique click gives Studio the row tokens for the technique, the sub-technique and the tactic', () => {
+        const viz = render(Viz, loadFixture('typical.json'));
+        clicks['a sub-technique'](viz);
+        const tokens = studioFieldValueTokens(viz.drilldowns[0]);
+        expect(Object.keys(tokens)).toEqual(expect.arrayContaining([
+            'row.mtr_sub-technique_id.value', 'row.mtr_technique_id.value', 'row.mtr_tactic_id.value'
+        ]));
     });
 });
 
