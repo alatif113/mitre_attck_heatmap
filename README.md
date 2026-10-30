@@ -150,24 +150,28 @@ Turn on *Export > Export button* to add a button that downloads the current data
 
 | Section | Option | What it does | Default |
 |---|---|---|---|
-| Data | Matrix | The matrix and platform: D3FEND; Enterprise (all, Containers, Cloud, ESXi, Linux, macOS, Network Devices, PRE, Windows); ICS; Mobile (all, Android, iOS) | Enterprise - All |
-| Data | Matrix data | *Bundled* or *Imported* (see [Imported ATT&CK data](#imported-attck-data)) | Bundled |
-| Data | ATT&CK version | With imported data, a version such as `19.1`, or `19` for the newest 19.x. Blank is the newest | blank |
-| Data | ID field, Value field, Description field, Status field | Names of the columns to use instead of the first, second and third. Matched exactly, then ignoring case. A name that is not in the results is shown as an error listing the available fields | blank |
-| Display | Show | *ID*, or *ID + name* | ID |
-| Display | Sub-techniques | Show sub-techniques in the tooltip and count them in each tactic | Yes |
-| Display | Hide empty | Hide techniques and tactics that have no value | No |
-| Display | Sort by, Sort order | Value, Name, ID or Status; ascending or descending | Value, Descending |
-| Display | Search bar | Show the search box | Yes |
-| Display | Wall mode | See [Wall mode](#wall-mode) | No |
-| Colors | Palette | *Default* and *Risk* use the three colors below (*Risk* reverses them: low is good, high is bad); *Sequential blues* and *Viridis* have their own | Default |
-| Colors | Low, Middle, High color | Used by *Default* and *Risk* | #B63457, #FCFCBD, #22908D |
-| Colors | Color bands | 3, 5, 7 or 9 | 5 |
-| Colors | Status colors | `name=#color, ...` | blank |
-| Scale | Roll up sub-techniques | None, Sum, Max, Average, Count | None |
-| Scale | Color bounds | Manual or From data | Manual |
-| Scale | Lower bound, Upper bound | The ends of the scale when Color bounds is Manual | 0, 100 |
-| Export | Export button | Adds the Navigator export button | No |
+| Data | Matrix | The framework to show: ATT&CK Enterprise (all platforms, or Containers, Cloud, ESXi, Linux, macOS, Network Devices, PRE or Windows), ICS, Mobile (all, Android or iOS), or D3FEND | Enterprise - All |
+| Data | Matrix data | *Bundled* uses the ATT&CK version that comes with the app. *Imported* uses a newer version that the app's optional import has downloaded (see [Imported ATT&CK data](#imported-attck-data)). D3FEND is always bundled | Bundled |
+| Data | ATT&CK version | Imported data only. A version such as `19.1`, or `19` for the newest 19.x. Blank is the newest imported version | blank |
+| Data | ID field | Name of the search field that holds the technique IDs. Blank uses the first field | blank |
+| Data | Value field | Name of the search field with the numbers that set the colors. Blank uses the second field. Its name is the legend title | blank |
+| Data | Description field | Name of the search field whose text appears in the tooltip. Blank uses the third field | blank |
+| Data | Status field | Name of a text field (for example `covered`, `partial`, `gap`) that sets the colors instead of numbers. Blank colors by number | blank |
+| Display | Show | What each cell shows: the technique *ID*, or the *ID + name* | ID |
+| Display | Sub-techniques | Include sub-techniques in tooltips and in each tactic's counts. *No* shows techniques only | Yes |
+| Display | Hide empty | Hide techniques and tactics that have no value in the search results | No |
+| Display | Sort by | What decides the order of techniques within a tactic: Value, Name, ID or Status | Value |
+| Display | Sort order | *Descending* puts the highest value (or Z to A) first; *Ascending* puts the lowest value (or A to Z) first | Descending |
+| Display | Search bar | A box above the matrix to find techniques by ID or name. Matches are outlined and everything else fades | Yes |
+| Display | Wall mode | For a screen nobody is interacting with: cells twinkle and tactic names briefly scramble, purely for show. See [Wall mode](#wall-mode) | No |
+| Colors | Palette | *Default* and *Risk* use the Low, Middle and High colors below (*Risk* flips them, so low values are good and high values are bad). *Sequential blues* and *Viridis* have their own colors | Default |
+| Colors | Low, Middle, High color | Colors for the lowest, middle and highest values. Used by the *Default* and *Risk* palettes | #B63457, #FCFCBD, #22908D |
+| Colors | Color bands | How many color steps the scale has: 3, 5, 7 or 9. With manual bounds each step covers an equal range of values; with bounds from the data each step holds about the same number of techniques | 5 |
+| Colors | Status colors | One color per status, written as `status=#color` and separated by commas, for example `covered=#53a051, gap=#d93f3c`. The order sets the legend and sort order. Used only when a Status field is set | blank |
+| Scale | Roll up sub-techniques | If your search returns sub-technique IDs, show their combined value on the parent technique when it has no value of its own: None, Sum, Max (highest), Average or Count | None |
+| Scale | Color bounds | *Manual* uses the lower and upper bound below. *From data* uses the lowest and highest values in the results, starting at 0 unless a value is negative | Manual |
+| Scale | Lower bound, Upper bound | The values that get the lowest and the highest color. Used only when Color bounds is Manual | 0, 100 |
+| Export | Export button | Adds a button that saves the current data as an ATT&CK Navigator layer file. Not available for D3FEND | No |
 
 Settings you do not change keep the defaults above, in classic dashboards and in Dashboard Studio alike.
 

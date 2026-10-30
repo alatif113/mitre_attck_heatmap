@@ -1,5 +1,5 @@
 <form class="splunk-formatter-section" section-label="Data">
-    <splunk-control-group label="Matrix" help="Which ATT&amp;CK matrix, and which platform of it, to draw.">    
+    <splunk-control-group label="Matrix" help="The framework to show: ATT&amp;CK Enterprise, ICS or Mobile (optionally limited to one platform), or D3FEND.">    
         <splunk-select name="{{VIZ_NAMESPACE}}.matrix" value="enterprise::">
             <option value="d3fend::">D3FEND</option>
             <option value="enterprise::">Enterprise - All</option>
@@ -21,53 +21,53 @@
             <option value="mobile::iOS">Mobile - iOS</option>
         </splunk-select>
     </splunk-control-group>
-    <splunk-control-group label="Matrix data" help="Bundled uses the ATT&amp;CK data shipped with this app. Imported uses the data downloaded by the app's scripted input, if it is enabled.">
+    <splunk-control-group label="Matrix data" help="Bundled uses the ATT&amp;CK version that comes with this app. Imported uses a newer version that the app's optional import has downloaded. D3FEND is always bundled.">
         <splunk-radio-input name="{{VIZ_NAMESPACE}}.matrixSource" value="bundled">
             <option value="bundled">Bundled</option>
             <option value="splunk">Imported</option>
         </splunk-radio-input>
     </splunk-control-group>
-    <splunk-control-group label="ATT&amp;CK version" help="Only used with imported data. For example 20 or 19.1. Blank uses the newest imported version.">
+    <splunk-control-group label="ATT&amp;CK version" help="Imported data only. Enter a version such as 19.1, or just 19 for the newest 19.x. Leave blank for the newest imported version.">
         <splunk-text-input name="{{VIZ_NAMESPACE}}.attackVersion" value="">
         </splunk-text-input>
     </splunk-control-group>
-    <splunk-control-group label="ID field" help="Name of the field holding the technique ID. Blank uses the 1st column.">
+    <splunk-control-group label="ID field" help="Name of the search field that holds the technique IDs (for example T1059). Leave blank to use the first field.">
         <splunk-text-input name="{{VIZ_NAMESPACE}}.idField" value="">
         </splunk-text-input>
     </splunk-control-group>
-    <splunk-control-group label="Value field" help="Name of the numeric field. Blank uses the 2nd column. Its name is the legend title.">
+    <splunk-control-group label="Value field" help="Name of the search field with the numbers that set the colors. Leave blank to use the second field. Its name is shown as the legend title.">
         <splunk-text-input name="{{VIZ_NAMESPACE}}.valueField" value="">
         </splunk-text-input>
     </splunk-control-group>
-    <splunk-control-group label="Description field" help="Name of the field shown in the tooltip. Blank uses the 3rd column.">
+    <splunk-control-group label="Description field" help="Name of the search field whose text appears in the tooltip. Leave blank to use the third field.">
         <splunk-text-input name="{{VIZ_NAMESPACE}}.descriptionField" value="">
         </splunk-text-input>
     </splunk-control-group>
-    <splunk-control-group label="Status field" help="Name of a text field used to color cells. Blank turns status off.">
+    <splunk-control-group label="Status field" help="Name of a text field (for example covered, partial, gap) that sets the colors instead of numbers. Leave blank to color by number.">
         <splunk-text-input name="{{VIZ_NAMESPACE}}.statusField" value="">
         </splunk-text-input>
     </splunk-control-group>
 </form>
 <form class="splunk-formatter-section" section-label="Display">
-    <splunk-control-group label="Show" help="ID shows the technique ID in each cell. ID + name adds the name below it.">
+    <splunk-control-group label="Show" help="What each cell shows: the technique ID, or the ID with the technique name below it.">
         <splunk-radio-input name="{{VIZ_NAMESPACE}}.display" value="id">
             <option value="id">ID</option>
             <option value="name">ID + name</option>
         </splunk-radio-input>
     </splunk-control-group>
-    <splunk-control-group label="Sub-techniques" help="Show sub-techniques in the tooltip and count them in each tactic.">
+    <splunk-control-group label="Sub-techniques" help="Include sub-techniques in tooltips and in each tactic's counts. Choose No to show techniques only.">
         <splunk-radio-input name="{{VIZ_NAMESPACE}}.showSubTechniques" value="yes">
             <option value="yes">Yes</option>
             <option value="no">No</option>
         </splunk-radio-input>
     </splunk-control-group>
-    <splunk-control-group label="Hide empty" help="Hide techniques and tactics that have no value.">
+    <splunk-control-group label="Hide empty" help="Hide techniques and tactics that have no value in the search results.">
         <splunk-radio-input name="{{VIZ_NAMESPACE}}.hideNull" value="no">
             <option value="yes">Yes</option>
             <option value="no">No</option>
         </splunk-radio-input>
     </splunk-control-group>
-    <splunk-control-group label="Sort by" help="How techniques are ordered within a tactic.">
+    <splunk-control-group label="Sort by" help="What decides the order of techniques within a tactic.">
         <splunk-radio-input name="{{VIZ_NAMESPACE}}.sortKey" value="data-value">
             <option value="data-value">Value</option>
             <option value="data-name">Name</option>
@@ -75,19 +75,19 @@
             <option value="data-status">Status</option>
         </splunk-radio-input>
     </splunk-control-group>
-    <splunk-control-group label="Sort order" help="Descending puts the highest values (or Z to A) first.">
+    <splunk-control-group label="Sort order" help="Descending puts the highest value (or Z to A) first. Ascending puts the lowest value (or A to Z) first.">
         <splunk-radio-input name="{{VIZ_NAMESPACE}}.sortOrder" value="desc">
             <option value="desc">Descending</option>
             <option value="asc">Ascending</option>
         </splunk-radio-input>
     </splunk-control-group>
-    <splunk-control-group label="Search bar" help="Show a search box above the matrix. Matching techniques are ringed and the rest dimmed.">
+    <splunk-control-group label="Search bar" help="Show a box above the matrix to find techniques by ID or name. Matches are outlined and everything else fades.">
         <splunk-radio-input name="{{VIZ_NAMESPACE}}.showSearchBar" value="yes">
             <option value="yes">Yes</option>
             <option value="no">No</option>
         </splunk-radio-input>
     </splunk-control-group>
-    <splunk-control-group label="Wall mode" help="For a display nobody is touching: cells twinkle, and tactic names and figures scramble and resolve now and then. It pauses while anyone uses the panel, and when the browser asks for less motion.">
+    <splunk-control-group label="Wall mode" help="For a screen nobody is interacting with. Cells twinkle and tactic names briefly scramble, purely for show. It pauses when someone uses the panel, when the browser tab is hidden, and when the browser asks for less motion.">
         <splunk-radio-input name="{{VIZ_NAMESPACE}}.wallMode" value="no">
             <option value="yes">Yes</option>
             <option value="no">No</option>
@@ -95,7 +95,7 @@
     </splunk-control-group>
 </form>
 <form class="splunk-formatter-section" section-label="Colors">
-    <splunk-control-group label="Palette" help="Default and Risk use the three colors below (Risk reverses them). The others have their own colors.">
+    <splunk-control-group label="Palette" help="The color scheme. Default and Risk use the Low, Middle and High colors below; Risk flips them so low values are good and high values are bad. Sequential blues and Viridis have their own colors.">
         <splunk-select name="{{VIZ_NAMESPACE}}.palette" value="default">
             <option value="default">Default</option>
             <option value="risk">Risk (reversed)</option>
@@ -103,7 +103,7 @@
             <option value="viridis">Viridis</option>
         </splunk-select>
     </splunk-control-group>
-    <splunk-control-group label="Low color" help="Used when Palette is Default or Risk.">
+    <splunk-control-group label="Low color" help="Color for the lowest values. Used by the Default and Risk palettes.">
         <splunk-color-picker type="custom" name="{{VIZ_NAMESPACE}}.startColor" value="#B63457">
             <splunk-color>#F9E721</splunk-color>
             <splunk-color>#FCFCBD</splunk-color>
@@ -115,7 +115,7 @@
             <splunk-color>#000000</splunk-color>
         </splunk-color-picker>
     </splunk-control-group>
-    <splunk-control-group label="Middle color" help="Used when Palette is Default or Risk.">
+    <splunk-control-group label="Middle color" help="Color for values halfway between the lowest and highest. Used by the Default and Risk palettes.">
         <splunk-color-picker type="custom" name="{{VIZ_NAMESPACE}}.midColor" value="#FCFCBD">
             <splunk-color>#F9E721</splunk-color>
             <splunk-color>#FCFCBD</splunk-color>
@@ -127,7 +127,7 @@
             <splunk-color>#000000</splunk-color>
         </splunk-color-picker>
     </splunk-control-group>
-    <splunk-control-group label="High color" help="Used when Palette is Default or Risk.">
+    <splunk-control-group label="High color" help="Color for the highest values. Used by the Default and Risk palettes.">
         <splunk-color-picker type="custom" name="{{VIZ_NAMESPACE}}.endColor" value="#22908D">
             <splunk-color>#F9E721</splunk-color>
             <splunk-color>#FCFCBD</splunk-color>
@@ -139,7 +139,7 @@
             <splunk-color>#000000</splunk-color>
         </splunk-color-picker>
     </splunk-control-group>
-    <splunk-control-group label="Color bands" help="How many colors the scale is split into. Edges are equal when the bounds are Manual and follow the data (equal counts per band) when they are From data.">
+    <splunk-control-group label="Color bands" help="How many color steps the scale has. With Manual bounds each step covers an equal range of values. With bounds From data, each step holds about the same number of techniques.">
         <splunk-select name="{{VIZ_NAMESPACE}}.colorBands" value="5">
             <option value="3">3</option>
             <option value="5">5</option>
@@ -147,13 +147,13 @@
             <option value="9">9</option>
         </splunk-select>
     </splunk-control-group>
-    <splunk-control-group label="Status colors" help="Used when a Status field is set. Format: name=#color, name=#color (for example covered=#53a051, gap=#d93f3c). The order sets the legend and sort order.">
+    <splunk-control-group label="Status colors" help="One color per status, written as status=#color and separated by commas, for example covered=#53a051, gap=#d93f3c. The order sets the legend and sort order. Used only when a Status field is set.">
         <splunk-text-input name="{{VIZ_NAMESPACE}}.statusColors" value="">
         </splunk-text-input>
     </splunk-control-group>
 </form>
 <form class="splunk-formatter-section" section-label="Scale">
-    <splunk-control-group label="Roll up sub-techniques" help="Show an aggregate of a technique's sub-technique values on the technique itself, when it has no value of its own.">
+    <splunk-control-group label="Roll up sub-techniques" help="If your search returns sub-technique IDs, show their combined value on the parent technique when it has no value of its own. Choose how to combine them: sum, highest, average or count.">
         <splunk-radio-input name="{{VIZ_NAMESPACE}}.rollup" value="none">
             <option value="none">None</option>
             <option value="sum">Sum</option>
@@ -162,23 +162,23 @@
             <option value="count">Count</option>
         </splunk-radio-input>
     </splunk-control-group>
-    <splunk-control-group label="Color bounds" help="Manual uses the two bounds below. From data uses the lowest (from zero) and highest value in the results.">
+    <splunk-control-group label="Color bounds" help="Manual uses the Lower and Upper bound below. From data uses the lowest and highest values in the results, starting at 0 unless a value is negative.">
         <splunk-radio-input name="{{VIZ_NAMESPACE}}.scaleMode" value="manual">
             <option value="manual">Manual</option>
             <option value="auto">From data</option>
         </splunk-radio-input>
     </splunk-control-group>
-    <splunk-control-group label="Lower bound" help="Used when Color bounds is Manual.">
+    <splunk-control-group label="Lower bound" help="The value that gets the lowest color. Used only when Color bounds is Manual.">
         <splunk-text-input name="{{VIZ_NAMESPACE}}.startVal" value="0">
         </splunk-text-input>
     </splunk-control-group>
-    <splunk-control-group label="Upper bound" help="Used when Color bounds is Manual.">
+    <splunk-control-group label="Upper bound" help="The value that gets the highest color. Used only when Color bounds is Manual.">
         <splunk-text-input name="{{VIZ_NAMESPACE}}.endVal" value="100">
         </splunk-text-input>
     </splunk-control-group>
 </form>
 <form class="splunk-formatter-section" section-label="Export">
-    <splunk-control-group label="Export button" help="Adds a button that downloads the current data as an ATT&amp;CK Navigator layer file. Not available for D3FEND.">
+    <splunk-control-group label="Export button" help="Add a button that saves the current data as an ATT&amp;CK Navigator layer file. Not available for D3FEND.">
         <splunk-radio-input name="{{VIZ_NAMESPACE}}.showExportButton" value="no">
             <option value="yes">Yes</option>
             <option value="no">No</option>
