@@ -35,13 +35,6 @@ return SplunkVisualizationBase.extend({
         SplunkVisualizationBase.prototype.initialize.apply(this, arguments);
         this.$el = $(this.el);
         this.animate = false;
-        this._layout = { compact: false, short: false };
-        // Splunk calls reflow() on resizes, but a ResizeObserver also catches panels that
-        // change size in other ways (dragging in a dashboard editor, for example).
-        if (typeof ResizeObserver !== 'undefined') {
-            this._resizeObserver = new ResizeObserver(() => this._applyLayout());
-            this._resizeObserver.observe(this.el);
-        }
         this.colorMap = [
             { pct: 0, color: { r: 0x63, g: 0xbe, b: 0x7b } },
             { pct: 50, color: { r: 0xff, g: 0xd5, b: 0x84 } },
@@ -114,6 +107,13 @@ return SplunkVisualizationBase.extend({
         self.animate = animate && !statusMode;
 
         this.$el.attr('class', '').addClass(theme);
+
+        // The matrix scrolls, both ways, when the panel is too small for it. The legend is
+        // positioned against this element, so it needs to be a positioning context.
+        this.$el.css('overflow', 'auto');
+        if (['absolute', 'relative', 'fixed', 'sticky'].indexOf(this.$el.css('position')) < 0) {
+            this.$el.css('position', 'relative');
+        }
 
         this.colorMap = logic.buildColorMap(startColor, midColor, endColor);
 
@@ -552,7 +552,6 @@ return SplunkVisualizationBase.extend({
         $content.appendTo(this.$el);
         $legend.appendTo(this.$el);
 
-        this._applyLayout(true);
 
         if (self.animate) {
             let steps = logic.animationSteps(startVal, endVal, duration);
@@ -602,39 +601,10 @@ return SplunkVisualizationBase.extend({
         });
     },
     
-    // Override to respond to re-sizing events
+    // Override to respond to re-sizing events. Nothing to do: the matrix sizes itself with CSS and
+    // scrolls when it no longer fits (columns and cells have minimum widths).
     reflow: function() {
-        this._applyLayout();
-    },
 
-    remove: function() {
-        if (this._resizeObserver) this._resizeObserver.disconnect();
-        if (SplunkVisualizationBase.prototype.remove) {
-            return SplunkVisualizationBase.prototype.remove.apply(this, arguments);
-        }
-    },
-
-    // Narrow panels show one tile per tactic instead of the matrix. Only a class on
-    // the root changes (the page is not redrawn), so resizing is cheap and keeps
-    // hover and search state. `redrawn` is true right after a render, which
-    // resets the root's classes and creates fresh tactic elements.
-    _applyLayout: function(redrawn) {
-        let next = logic.layoutMode(this.$el.width(), this.$el.height(), this._layout);
-        let changed = next.compact !== this._layout.compact;
-        this._layout = next;
-
-        this.$el.toggleClass('mtr-compact', next.compact).toggleClass('mtr-short', next.compact && next.short);
-
-        if (next.compact && (changed || redrawn)) {
-            $('.mtr-tactic', this.$el).each(function() {
-                let stats = $('.mtr-stat', this).map(function() {
-                    return { label: $('.mtr-stats-label', this).text(), value: $('.mtr-stats-val', this).text() };
-                }).get();
-                $(this).attr('title', logic.tileTitle($('.mtr-tactic-title', this).text(), stats));
-            });
-        } else if (!next.compact && changed) {
-            $('.mtr-tactic', this.$el).removeAttr('title');
-        }
     },
 
     _setAnimationClass: function(lower, upper) {

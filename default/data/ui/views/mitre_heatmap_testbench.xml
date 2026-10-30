@@ -506,7 +506,7 @@
     <panel>
       <title>Narrow: normal data</title>
       <html>
-        <p class="mtr-note">Three panels side by side, each narrower than 640px: the compact layout (one tile per tactic) takes over. Hover a tile for its statistics; click it to drill down.</p>
+        <p class="mtr-note">Three panels side by side, each too narrow for the whole matrix: it scrolls sideways (and up and down) instead of squeezing the columns.</p>
       </html>
       <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
         <search>
@@ -537,7 +537,7 @@
     <panel>
       <title>Narrow: status colors</title>
       <html>
-        <p class="mtr-note">Tile bars show the mix of statuses.</p>
+        <p class="mtr-note">The status bars and legend stay, and the matrix scrolls.</p>
       </html>
       <viz type="mitre_attck_heatmap.mitre_attck_heatmap">
         <search>

@@ -94,7 +94,7 @@ This app is currently unsupported for Internet Explorer. Please report issues to
 - Added *Roll up sub-techniques*, *Color bounds: From data*, status-based coloring and an ATT&CK Navigator export button
 - Fixed: Enterprise tactic order for ATT&CK v20, several dashboards on one page affecting each other, "Hide null" removing sub-techniques that have values, the legend for non-zero lower bounds, zero and decimal values in tooltips, searching for names with `&`, the animation loop multiplying on refresh, one click firing many drilldowns, and several Platform options that showed an empty matrix
 - Fixed: legend text built from field names is now escaped
-- Added a compact layout: below 640px wide the matrix is replaced by one tile per tactic
+- Narrow or short panels now scroll (sideways and up and down) instead of squeezing the columns; a column is never narrower than one cell, and cells have minimum and maximum widths that differ for IDs and names
 - Removed the unused *Theme* option; the heatmap uses the theme of the dashboard it is in
 - Dashboard Studio: defaults now match classic dashboards, unset drilldown values are no longer sent as text "undefined", the imported-data read works inside Studio's frame, and the export falls back to a copy box
 
