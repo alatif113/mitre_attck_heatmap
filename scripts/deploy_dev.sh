@@ -237,7 +237,15 @@ else
         echo "==> Installed $APP_ID (build $HAVE_BUILD)"
         if [ "$RESTART" = 1 ]; then
             echo "==> Restarting Splunk on $SPLUNK_SSH_TARGET"
-            ssh "$SPLUNK_SSH_TARGET" "$RESTART_CMD" || die "restart failed (see the output above). With SPLUNK_SERVICE the ssh user needs a sudoers rule for exactly: /bin/systemctl restart $SPLUNK_SERVICE"
+            echo "    running on the host: $RESTART_CMD"
+            if ! RESTART_OUT="$(ssh "$SPLUNK_SSH_TARGET" "$RESTART_CMD" 2>&1)"; then
+                echo "$RESTART_OUT" >&2
+                if [ -z "$SPLUNK_SERVICE" ] && echo "$RESTART_OUT" | grep -qi "systemd manages the splunk service"; then
+                    die "this Splunk runs under systemd, which 'splunk restart' cannot use without root. Set SPLUNK_SERVICE=Splunkd.service in $ENV_FILE (the unit name from 'systemctl status') and allow it with a sudoers line: <user> ALL=(root) NOPASSWD: /bin/systemctl restart Splunkd.service"
+                fi
+                die "restart failed (see the output above). With SPLUNK_SERVICE the ssh user needs a sudoers rule for exactly: /bin/systemctl restart $SPLUNK_SERVICE"
+            fi
+            [ -z "$RESTART_OUT" ] || echo "$RESTART_OUT"
         fi
     else
     echo "==> Installing via $SPLUNK_MGMT_URL/services/apps/local"
