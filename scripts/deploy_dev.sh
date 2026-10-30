@@ -20,9 +20,11 @@
 # remote logins, so every REST call answers 401). Files are extracted over the
 # installed app, so local/ and anything else not in the package is kept; files
 # the package no longer has stay behind. It then checks that the installed app.conf
-# has the build number of the package. --restart also runs "splunk restart" on the host
-# (a Free license needs no login for that); config files and the app's static files
-# are only read again after a restart.
+# has the build number of the package. --restart also restarts Splunk on the host: with
+# SPLUNK_SERVICE set it runs "sudo -n /bin/systemctl restart <service>" (so a sudoers
+# rule for exactly that command is enough), otherwise "splunk restart" from
+# SPLUNK_REMOTE_HOME (a Free license needs no login for that). Config files and the
+# app's static files are only read again after a restart.
 #
 # Settings come from .env in the app root (created from a template on first
 # run) or from the environment, which takes precedence:
@@ -34,7 +36,10 @@
 #   SPLUNK_REMOTE_DIR   directory on the host for the copy. Default: /tmp
 #   SPLUNK_REMOTE_HOME  Splunk's install directory on the host, used by --ssh-install
 #                       and --restart. Default: /opt/splunk
-#   SPLUNK_SSH_SUDO=1   run the unpack and restart with sudo on the host (the ssh user
+#   SPLUNK_SERVICE      systemd unit that runs Splunk, for example Splunkd.service. When set,
+#                       --restart uses sudo -n /bin/systemctl restart <unit>. Example sudoers line:
+#                         me ALL=(root) NOPASSWD: /bin/systemctl restart Splunkd.service
+#   SPLUNK_SSH_SUDO=1   run the unpack (and a restart without SPLUNK_SERVICE) with sudo on the host (the ssh user
 #                       then needs passwordless sudo). Without it the ssh user must be
 #                       able to write to $SPLUNK_REMOTE_HOME/etc/apps.
 #   SPLUNK_URL          web URL. Default: https://splunk.home
@@ -109,7 +114,7 @@ fi
 # nothing in it is executed. Values already in the environment win.
 while IFS= read -r line || [ -n "$line" ]; do
     case "$line" in
-        SPLUNK_TOKEN=*|SPLUNK_SSH_TARGET=*|SPLUNK_REMOTE_DIR=*|SPLUNK_REMOTE_HOME=*|SPLUNK_SSH_SUDO=*|SPLUNK_URL=*|SPLUNK_MGMT_URL=*|SPLUNK_CA_CERT=*|SPLUNK_VERIFY_TLS=*)
+        SPLUNK_TOKEN=*|SPLUNK_SSH_TARGET=*|SPLUNK_REMOTE_DIR=*|SPLUNK_REMOTE_HOME=*|SPLUNK_SSH_SUDO=*|SPLUNK_SERVICE=*|SPLUNK_URL=*|SPLUNK_MGMT_URL=*|SPLUNK_CA_CERT=*|SPLUNK_VERIFY_TLS=*)
             key="${line%%=*}"
             value="${line#*=}"
             value="${value%\"}"; value="${value#\"}"
@@ -138,6 +143,7 @@ SPLUNK_REMOTE_DIR="${SPLUNK_REMOTE_DIR%/}"
 SPLUNK_REMOTE_HOME="${SPLUNK_REMOTE_HOME:-/opt/splunk}"
 SPLUNK_REMOTE_HOME="${SPLUNK_REMOTE_HOME%/}"
 SPLUNK_SSH_SUDO="${SPLUNK_SSH_SUDO:-}"
+SPLUNK_SERVICE="${SPLUNK_SERVICE:-}"
 SPLUNK_TOKEN="${SPLUNK_TOKEN:-}"
 SPLUNK_SSH_TARGET="${SPLUNK_SSH_TARGET:-}"
 SPLUNK_CA_CERT="${SPLUNK_CA_CERT:-}"
@@ -158,8 +164,15 @@ REMOTE_PATH="$SPLUNK_REMOTE_DIR/$APP_ID.tgz"
 [[ "$SPLUNK_REMOTE_DIR" =~ ^/[A-Za-z0-9._/-]*$ ]] || die "SPLUNK_REMOTE_DIR must be an absolute path without spaces"
 [[ "$SPLUNK_REMOTE_HOME" =~ ^/[A-Za-z0-9._/-]+$ ]] || die "SPLUNK_REMOTE_HOME must be an absolute path without spaces"
 REMOTE_APPS="$SPLUNK_REMOTE_HOME/etc/apps"
+[ -z "$SPLUNK_SERVICE" ] || [[ "$SPLUNK_SERVICE" =~ ^[A-Za-z0-9@._-]+$ ]] || die "SPLUNK_SERVICE must be a systemd unit name such as Splunkd.service"
 REMOTE_SUDO=""
-[ "$SPLUNK_SSH_SUDO" = 1 ] && REMOTE_SUDO="sudo "
+# -n: fail at once instead of waiting for a password nobody can type over ssh.
+[ "$SPLUNK_SSH_SUDO" = 1 ] && REMOTE_SUDO="sudo -n "
+if [ -n "$SPLUNK_SERVICE" ]; then
+    RESTART_CMD="sudo -n /bin/systemctl restart $SPLUNK_SERVICE"
+else
+    RESTART_CMD="${REMOTE_SUDO}'$SPLUNK_REMOTE_HOME/bin/splunk' restart"
+fi
 
 # The token is sent in a header, so only send it over TLS (or to this machine).
 case "$SPLUNK_MGMT_URL" in
@@ -202,7 +215,7 @@ if [ "$DRY_RUN" = 1 ]; then
     echo "==> Dry run: would copy $ARCHIVE to $SPLUNK_SSH_TARGET:$REMOTE_PATH"
     if [ "$SSH_INSTALL" = 1 ]; then
         echo "==> Dry run: would unpack it into $SPLUNK_SSH_TARGET:$REMOTE_APPS${REMOTE_SUDO:+ (with sudo)}"
-        [ "$RESTART" = 1 ] && echo "==> Dry run: would run $SPLUNK_REMOTE_HOME/bin/splunk restart on $SPLUNK_SSH_TARGET"
+        [ "$RESTART" = 1 ] && echo "==> Dry run: would run on $SPLUNK_SSH_TARGET: $RESTART_CMD"
     else
         echo "==> Dry run: would POST $SPLUNK_MGMT_URL/services/apps/local (name=$REMOTE_PATH filename=true update=true)"
     fi
@@ -224,7 +237,7 @@ else
         echo "==> Installed $APP_ID (build $HAVE_BUILD)"
         if [ "$RESTART" = 1 ]; then
             echo "==> Restarting Splunk on $SPLUNK_SSH_TARGET"
-            ssh "$SPLUNK_SSH_TARGET" "${REMOTE_SUDO}'$SPLUNK_REMOTE_HOME/bin/splunk' restart" || die "restart failed (see the output above)"
+            ssh "$SPLUNK_SSH_TARGET" "$RESTART_CMD" || die "restart failed (see the output above). With SPLUNK_SERVICE the ssh user needs a sudoers rule for exactly: /bin/systemctl restart $SPLUNK_SERVICE"
         fi
     else
     echo "==> Installing via $SPLUNK_MGMT_URL/services/apps/local"
