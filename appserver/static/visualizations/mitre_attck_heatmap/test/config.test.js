@@ -79,6 +79,26 @@ describe('format options are declared everywhere (audit P3-3)', () => {
     });
 });
 
+describe('code defaults match savedsearches.conf (needed for Dashboard Studio)', () => {
+    // Classic dashboards get the [default] stanza of savedsearches.conf merged into the
+    // options; Dashboard Studio passes only the options set in the dashboard, so there
+    // the code defaults are what users see. They must be the same.
+    const logic = require('heatmapLogic');
+    const vizUtils = require('api/SplunkVisualizationUtils');
+    const NS = 'display.visualizations.custom.' + VIZ_NAME + '.' + VIZ_NAME + '.';
+    const defaults = parseConf(read('default/savedsearches.conf')).default;
+    const parse = config => logic.parseConfig(config, NS, vizUtils, [{ name: 'id' }, { name: 'count' }, { name: 'description' }, { name: 'state' }]);
+    const keys = Object.keys(defaults).filter(k => k.startsWith(NS));
+
+    test('there are defaults to compare', () => {
+        expect(keys.length).toBeGreaterThan(25);
+    });
+
+    test.each(keys.map(k => [k.slice(NS.length), defaults[k]]))('%s = %p', (name, value) => {
+        expect(parse({ [NS + name]: value })).toEqual(parse({}));
+    });
+});
+
 describe('test bench dashboard', () => {
     const VIEW = 'default/data/ui/views/mitre_heatmap_testbench.xml';
     const xml = read(VIEW);

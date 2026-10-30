@@ -99,7 +99,9 @@ define(function() {
         return { id: id, value: value, description: description, status: status };
     }
 
-    // Reads the format options, applying the same defaults as before.
+    // Reads the format options. The defaults here must equal the [default] stanza of
+    // savedsearches.conf (a test checks): classic dashboards get that stanza merged in,
+    // while Dashboard Studio passes only the options set in the dashboard.
     function parseConfig(config, namespace, vizUtils, fields) {
         let get = function(key) {
             return config[namespace + key];
@@ -110,17 +112,17 @@ define(function() {
 
         return {
             columns: columns,
-            animate: vizUtils.normalizeBoolean(get('animate') || 'no'),
+            animate: vizUtils.normalizeBoolean(get('animate') || 'yes'),
             duration: Math.max(toNumber(get('duration'), 300), 0) || 300,
-            startColor: get('startColor') || '#53a051',
-            midColor: get('midColor') || '#f8be34',
-            endColor: get('endColor') || '#dc4e41',
+            startColor: get('startColor') || '#B63457',
+            midColor: get('midColor') || '#FCFCBD',
+            endColor: get('endColor') || '#22908D',
             startVal: toNumber(get('startVal'), 0),
             endVal: toNumber(get('endVal'), 100),
             display: get('display') || 'id',
             legendTitle: vizUtils.escapeHtml(get('legendTitle')) ||
                 vizUtils.escapeHtml(fields[columns.status >= 0 ? columns.status : columns.value].name),
-            sortKey: get('sortKey') || 'data-id',
+            sortKey: get('sortKey') || 'data-value',
             sortOrder: get('sortOrder') || 'asc',
             hideNull: vizUtils.normalizeBoolean(get('hideNull') || 'no'),
             showSubTechniques: vizUtils.normalizeBoolean(get('showSubTechniques') || 'yes'),
