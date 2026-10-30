@@ -1,6 +1,6 @@
 /*
  * Unit tests for build/heatmapLogic.js. Tests named "(audit ...)" pin current
- * defective behavior documented in docs/audit.md; change them together with
+ * defective behavior documented in docs/ARCHITECTURE.md; change them together with
  * the fix.
  */
 const logic = require('heatmapLogic');

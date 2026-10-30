@@ -1,4 +1,4 @@
-.DS_STORE
+.DS_Store
 /local/
 /metadata/local.meta
 /default/indexes.conf
@@ -17,3 +17,6 @@ node_modules/
 test/
 coverage/
 .env
+docs/
+CLAUDE.md
+images/

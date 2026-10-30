@@ -4,7 +4,7 @@
  * own, no downloads, no new windows, and a replacement fetch() that goes
  * through the dashboard page. These tests cover what the visualization does
  * about that. The behavior of Studio itself was read from its shipped source;
- * see docs/studio-compatibility.md.
+ * see docs/ARCHITECTURE.md.
  */
 const $ = require('jquery');
 const logic = require('heatmapLogic');

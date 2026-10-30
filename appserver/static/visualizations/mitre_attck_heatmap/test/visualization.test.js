@@ -3,7 +3,7 @@
  * mocked Splunk APIs.
  *
  * The snapshots are characterization tests: they pin today's rendered markup
- * (including known defects listed in docs/audit.md) so refactors can prove
+ * (including known defects listed in docs/ARCHITECTURE.md) so refactors can prove
  * they change nothing. If a change is meant to alter output, update the
  * snapshot deliberately with `npm test -- -u` and review the diff.
  */

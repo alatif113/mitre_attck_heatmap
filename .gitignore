@@ -1,7 +1,10 @@
 .git/
 **/node_modules
 *.old
-.DS_STORE
+.DS_Store
 coverage/
 *.tgz
 .env
+__pycache__/
+*.pyc
+* [0-9].*
