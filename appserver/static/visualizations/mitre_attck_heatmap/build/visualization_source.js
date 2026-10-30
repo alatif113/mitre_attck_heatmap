@@ -28,8 +28,12 @@ function(
 const matrixCache = new Map();
 const MATRIX_CACHE_MS = 5 * 60 * 1000;
 
+// The first tooltip waits a moment. Once one is open, moving onto another cell must rest there a
+// little longer before it takes over, so a pointer crossing cells on its way to the tooltip does
+// not replace it; and the tooltip lingers after the pointer leaves its cell.
 const TOOLTIP_DELAY_MS = 120;
-const TOOLTIP_GRACE_MS = 220;
+const TOOLTIP_SWITCH_MS = 350;
+const TOOLTIP_GRACE_MS = 600;
 const TOOLTIP_WIDTH = 310;
 const NO_BAND = -9;
 const NO_DATA_BAND = -2;
@@ -42,6 +46,7 @@ return SplunkVisualizationBase.extend({
         this.$el = $(this.el);
         this.colorMap = logic.buildStopMap(['#B63457', '#FCFCBD', '#22908D']);
         this._tooltipDelay = TOOLTIP_DELAY_MS;
+        this._switchDelay = TOOLTIP_SWITCH_MS;
         // What the user has done in the panel. It outlives a re-render (a refresh
         // of the search brings new data, not a new panel), so search text, the
         // pinned band, a selected tactic, the pinned tooltip and the scroll position stay.
@@ -543,13 +548,17 @@ return SplunkVisualizationBase.extend({
             if (ui.pin) return;
             clearTimeout(self._hideTimer);
             clearTimeout(self._showTimer);
-            // The first tooltip waits a moment; moving to the next cell replaces it at once.
-            if (tooltipState.$tip || self._tooltipDelay === 0 || e.type == 'focus') {
+            // Back on the cell whose tooltip is open (for instance from the tooltip): keep it.
+            if (tooltipState.cell === cell) return;
+            let delay = (e.type == 'focus') ? 0 : (tooltipState.$tip ? self._switchDelay : self._tooltipDelay);
+            if (delay === 0) {
                 showTooltip(cell, false);
             } else {
-                self._showTimer = setTimeout(function() { showTooltip(cell, false); }, self._tooltipDelay);
+                self._showTimer = setTimeout(function() { showTooltip(cell, false); }, delay);
             }
         }).on('mouseleave blur', function() {
+            // A cell the pointer only crossed does not get a tooltip.
+            clearTimeout(self._showTimer);
             if (!ui.pin) scheduleClose();
         });
 
@@ -1170,8 +1179,9 @@ return SplunkVisualizationBase.extend({
         let cell = $cell[0].getBoundingClientRect();
         let width = Math.max(220, Math.min(TOOLTIP_WIDTH, el.clientWidth - 24));
         $tip.css('width', width + 'px');
-        let left = cell.right - box.left + el.scrollLeft + 8;
-        if (cell.right - box.left + 8 + width > el.clientWidth - 12) left = cell.left - box.left + el.scrollLeft - 8 - width;
+        // Touching the cell, so the pointer can move onto the tooltip without crossing other cells.
+        let left = cell.right - box.left + el.scrollLeft;
+        if (cell.right - box.left + width > el.clientWidth - 12) left = cell.left - box.left + el.scrollLeft - width;
         left = Math.max(el.scrollLeft + 12, left);
         let height = $tip.outerHeight() || 0;
         let top = cell.top - box.top + el.scrollTop - 4;

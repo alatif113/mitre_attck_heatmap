@@ -36,6 +36,7 @@ function createViz(Viz) {
     // Tooltips open at once in tests; in a browser the first one waits a moment. The entrance
     // (fade and count-up) is off, so tests don't leave a frame loop running; renderAnimated turns it on.
     viz._tooltipDelay = 0;
+    viz._switchDelay = 0;
     viz._entrance = false;
     return viz;
 }

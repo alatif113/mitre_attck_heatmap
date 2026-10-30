@@ -66,7 +66,7 @@ describe('several instances on one page (audit P2-2)', () => {
             $(cell(a)).trigger('mouseenter');
             $(cell(b)).trigger('mouseenter');
             $(cell(a)).trigger('mouseleave');
-            jest.advanceTimersByTime(500);
+            jest.advanceTimersByTime(700);
             expect(states(a).tooltips).toBe(0);
             expect(states(b).tooltips).toBe(1);
         } finally {
@@ -830,7 +830,7 @@ describe('tooltip', () => {
             $(cell).trigger('mouseleave');
             // It lingers a moment, so the pointer can move onto it.
             expect(viz.el.querySelector('.mtr-technique-tooltip')).not.toBeNull();
-            jest.advanceTimersByTime(500);
+            jest.advanceTimersByTime(700);
             expect(viz.el.querySelector('.mtr-technique-tooltip')).toBeNull();
         } finally {
             jest.useRealTimers();

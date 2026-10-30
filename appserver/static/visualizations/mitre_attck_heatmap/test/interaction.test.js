@@ -769,3 +769,107 @@ describe('wall mode', () => {
         expect(read(walled)).toEqual(read(plain));
     });
 });
+
+
+describe('moving the pointer onto a tooltip', () => {
+    beforeEach(() => jest.useFakeTimers());
+    afterEach(() => jest.useRealTimers());
+
+    // As in a browser: a pointer rests a moment before the first tooltip, and longer before a second one takes over.
+    const withDelays = () => {
+        const viz = typical();
+        viz._tooltipDelay = 120;
+        viz._switchDelay = 350;
+        return viz;
+    };
+    const first = viz => { hover(viz, 'T1059'); jest.advanceTimersByTime(150); };
+    const tooltipId = viz => { const t = q(viz, '.mtr-technique-tooltip .mtr-id'); return t ? t.textContent : null; };
+
+    test('the first tooltip appears after a short wait', () => {
+        const viz = withDelays();
+        hover(viz, 'T1059');
+        expect(q(viz, '.mtr-technique-tooltip')).toBeNull();
+        jest.advanceTimersByTime(150);
+        expect(tooltipId(viz)).toBe('T1059');
+    });
+
+    test('crossing other cells on the way to the tooltip does not replace it', () => {
+        const viz = withDelays();
+        first(viz);
+        $(cell(viz, 'T1059')).trigger('mouseleave');
+        hover(viz, 'T1486');
+        jest.advanceTimersByTime(100);
+        $(cell(viz, 'T1486')).trigger('mouseleave');
+        hover(viz, 'T1078');
+        jest.advanceTimersByTime(100);
+        $(cell(viz, 'T1078')).trigger('mouseleave');
+        $(q(viz, '.mtr-technique-tooltip')).trigger('mouseenter');
+        jest.advanceTimersByTime(5000);
+        expect(tooltipId(viz)).toBe('T1059');
+    });
+
+    test('a pointer that rests on another cell does get that cell\'s tooltip', () => {
+        const viz = withDelays();
+        first(viz);
+        $(cell(viz, 'T1059')).trigger('mouseleave');
+        hover(viz, 'T1486');
+        jest.advanceTimersByTime(300);
+        expect(tooltipId(viz)).toBe('T1059');
+        jest.advanceTimersByTime(100);
+        expect(tooltipId(viz)).toBe('T1486');
+    });
+
+    test('the tooltip stays while the pointer is on it, and closes a moment after it leaves', () => {
+        const viz = withDelays();
+        first(viz);
+        $(cell(viz, 'T1059')).trigger('mouseleave');
+        jest.advanceTimersByTime(300);
+        $(q(viz, '.mtr-technique-tooltip')).trigger('mouseenter');
+        jest.advanceTimersByTime(30000);
+        expect(tooltipId(viz)).toBe('T1059');
+        $(q(viz, '.mtr-technique-tooltip')).trigger('mouseleave');
+        jest.advanceTimersByTime(300);
+        expect(tooltipId(viz)).toBe('T1059');
+        jest.advanceTimersByTime(400);
+        expect(q(viz, '.mtr-technique-tooltip')).toBeNull();
+    });
+
+    test('there is time to reach the tooltip: it lingers about half a second after the pointer leaves the cell', () => {
+        const viz = withDelays();
+        first(viz);
+        $(cell(viz, 'T1059')).trigger('mouseleave');
+        jest.advanceTimersByTime(500);
+        expect(tooltipId(viz)).toBe('T1059');
+        jest.advanceTimersByTime(200);
+        expect(q(viz, '.mtr-technique-tooltip')).toBeNull();
+    });
+
+    test('moving back onto the same cell keeps its tooltip, without rebuilding it', () => {
+        const viz = withDelays();
+        first(viz);
+        const tooltip = q(viz, '.mtr-technique-tooltip');
+        $(cell(viz, 'T1059')).trigger('mouseleave');
+        jest.advanceTimersByTime(200);
+        hover(viz, 'T1059');
+        jest.advanceTimersByTime(2000);
+        expect(q(viz, '.mtr-technique-tooltip')).toBe(tooltip);
+    });
+
+    test('the keyboard is not delayed', () => {
+        const viz = withDelays();
+        first(viz);
+        $(cell(viz, 'T1486')).trigger('focus');
+        expect(tooltipId(viz)).toBe('T1486');
+    });
+
+    test('the tooltip touches its cell, so no other cell lies between them', () => {
+        const viz = typical();
+        const rect = (left, top, width, height) => ({ left, top, width, height, right: left + width, bottom: top + height });
+        viz.el.getBoundingClientRect = () => rect(0, 0, 1200, 800);
+        Object.defineProperty(viz.el, 'clientWidth', { value: 1200, configurable: true });
+        Object.defineProperty(viz.el, 'clientHeight', { value: 800, configurable: true });
+        cell(viz, 'T1059').getBoundingClientRect = () => rect(100, 100, 44, 28);
+        hover(viz, 'T1059');
+        expect(parseInt(q(viz, '.mtr-technique-tooltip').style.left)).toBe(144);
+    });
+});
