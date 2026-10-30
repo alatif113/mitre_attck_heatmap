@@ -10,6 +10,7 @@ The app bundles **ATT&CK v20.0** (Enterprise, ICS, Mobile) and **D3FEND v1.6.0**
 
 ## Contents
 
+- [Installation](#installation)
 - [Quick start](#quick-start)
 - [Features](#features)
 - [Search results](#search-results)
@@ -21,17 +22,20 @@ The app bundles **ATT&CK v20.0** (Enterprise, ICS, Mobile) and **D3FEND v1.6.0**
 - [Troubleshooting](#troubleshooting)
 - [Support](#support) and [Change log](#change-log)
 
+## Installation
+
+Install the app from Splunkbase (*Apps > Find More Apps*) or with *Apps > Manage Apps > Install app from file*. It adds no dashboards, needs no configuration and requires no restart. If the visualization does not appear in the picker right away, refresh the browser. It was developed and tested on Splunk Enterprise 10.4 with Google Chrome; other current browsers should work. Internet Explorer is not supported.
+
 ## Quick start
 
-1. Install the app. It has no dashboards of its own and needs no configuration.
-2. Run a search that returns technique IDs and a number, for example:
+1. Run a search that returns technique IDs and a number, for example:
 
    ```
    | stats count AS "Detections" first(description) AS description BY id
    | table id Detections description
    ```
-3. Open the **Visualization** tab, choose **MITRE ATT&CK Heatmap**, and save the search to a dashboard.
-4. Open the format menu to pick a matrix, a palette, the number of color bands and the other [options](#format-menu).
+2. Open the **Visualization** tab, choose **MITRE ATT&CK Heatmap**, and save the search to a dashboard.
+3. Open the format menu to pick a matrix, a palette, the number of color bands and the other [options](#format-menu).
 
 The animation below shows the heatmap loading: cells fade in and each tactic's coverage counts up. This happens once when the panel first loads, not on every refresh.
 
@@ -80,10 +84,6 @@ Because only the column order matters, the field names are free. The name of the
 
 A search with no results, rows whose IDs are not in the matrix, and rows without a number each show a message instead of an empty matrix.
 
-### Sample data
-
-The test version of the app (the one with the sample dashboards, built with `APP_ENV=test`) includes two dashboards, one classic and one Dashboard Studio, with a single heatmap fed by generated data. They are meant for trying out the options.
-
 ## Using the heatmap
 
 ### Tactics and techniques
@@ -106,7 +106,7 @@ The legend lists the bands with their value ranges. Hover a band to dim everythi
 
 The search box matches as you type. The row above the matrix holds only the search box, the export button (when turned on) and the legend.
 
-A walk-through of hovering, pinning, the legend and search:
+Hovering, pinning, the legend and search in action:
 
 ![Hovering, pinning, the legend and search](https://raw.githubusercontent.com/alatif113/mitre_attck_heatmap/master/images/explore.gif)
 
@@ -169,7 +169,7 @@ Turn on *Export > Export button* to add a button that downloads the current data
 | Scale | Lower bound, Upper bound | The ends of the scale when Color bounds is Manual | 0, 100 |
 | Export | Export button | Adds the Navigator export button | No |
 
-Options that are not set in a dashboard use these defaults, in classic dashboards and in Dashboard Studio alike.
+Settings you do not change keep the defaults above, in classic dashboards and in Dashboard Studio alike.
 
 ## Drilldowns
 
@@ -225,29 +225,35 @@ This app is not supported on Internet Explorer. Please report issues at https://
 ## Change Log
 
 ### v1.11.0
-- D3FEND now follows the current ontology, as the D3FEND website draws it: seven tactic columns (Model, Harden, Detect, Isolate, Deceive, Evict, Restore), 30 techniques in them, and 241 sub-techniques under their techniques, shown with their own IDs. Before, each technique was its own column and no sub-technique attached. Dashboards that match on D3FEND tactic names or IDs in drilldown tokens need updating (tactic IDs are now `d3f:Model`, `d3f:Harden`, ...)
-- Two sample dashboards, one classic and one Dashboard Studio, each with a single heatmap fed by generated sample data (in the test package only)
-- Default panel height is now 1200 pixels (it was 2700)
-- New look: flat tactic headers with a coverage figure and gauge, connected fixed-height cells, hatching for techniques with no value, and tooltips and a legend in Splunk's light and dark colors
-- Colors are now split into 3, 5, 7 or 9 bands (*Color bands*, 5 by default) with bands that follow the data when the bounds come from it, and blend perceptually; new *Palette* option (Default, Risk, Sequential blues, Viridis)
-- New legend: value bands with a *No data* entry, hover to dim, click to pin
-- New tooltip: description, band and rank, other tactics, and every sub-technique (clickable); sub-technique cells are no longer drawn in a popover
-- Search now finds sub-technique names, descriptions and tactic names; the row above the matrix is just the search box, the export button and the legend
-- Keyboard navigation, focusable tactic headers, and a message for no results, ids that do not match the matrix, and rows without values
-- Search text, filter, pinned band/tactic/tooltip and scroll position now survive a refresh
-- Format menu reorganized (Data, Display, Colors, Scale, Export); the legend title is always the value field's name; sub-techniques are listed in the tooltip
-- New *Wall mode* switch (*Display*), now the only animation setting: twinkling cells and scrambling tactic headers for display walls
-- Changed defaults: *Sort by* Value, *Descending* (was ascending)
-- Removed from the menu (still read if a saved dashboard sets them): *Legend title*, *Other status color*, *Lower bound from data*, *Technique's own value*, the Navigator layer name and version. Removed: *Duration*, and the *Animate* switch with the sweeping highlight. Cells now always fade in and the percentages count up when the panel first loads (not on refreshes, and not when the browser asks for less motion)
-- Updated the bundled data to ATT&CK v20.0
-- Added an optional scripted input and saved search that import newer ATT&CK versions, with *Matrix data* and *ATT&CK version* options
-- Added the Fields options to map result columns by name
-- Added *Roll up sub-techniques*, *Color bounds: From data*, status-based coloring and an ATT&CK Navigator export button
-- Fixed: Enterprise tactic order for ATT&CK v20, several dashboards on one page affecting each other, "Hide null" removing sub-techniques that have values, the legend for non-zero lower bounds, zero and decimal values in tooltips, searching for names with `&`, the animation loop multiplying on refresh, one click firing many drilldowns, and several Platform options that showed an empty matrix
-- Fixed: legend text built from field names is now escaped
-- Narrow or short panels now scroll (sideways and up and down) instead of squeezing the columns; a column is never narrower than one cell, and cells have minimum and maximum widths that differ for IDs and names
-- Removed the unused *Theme* option; the heatmap uses the theme of the dashboard it is in
-- Dashboard Studio: defaults now match classic dashboards, unset drilldown values are no longer sent as text "undefined", the imported-data read works inside Studio's frame, and the export falls back to a copy box
+
+**New**
+- A new look: flat tactic headers with a coverage figure and gauge, connected cells, hatching for techniques with no value, and a tooltip and legend that follow Splunk's light and dark themes
+- Color bands (3, 5, 7 or 9) with a legend that has a *No data* entry, a *Palette* option (Default, Risk, Sequential blues, Viridis) and perceptual color blending
+- A new tooltip with the band and rank, the other tactics a technique is in, and clickable sub-techniques; click a cell to pin it
+- Search that also matches sub-technique names, descriptions and tactic names; keyboard navigation; messages for empty results, unmatched IDs and rows without values
+- Search text, the pinned band, tactic or tooltip, and the scroll position are kept when the search refreshes
+- Map result columns by name (*ID field*, *Value field*, *Description field*, *Status field*)
+- *Roll up sub-techniques*, *Color bounds: From data*, status-based coloring, and an ATT&CK Navigator export button
+- *Matrix data: Imported*, with a scripted input and a report that download newer ATT&CK versions
+- *Wall mode* for display walls
+- Bundled data updated to ATT&CK v20.0
+- Dashboard Studio: defaults match classic dashboards, and the export shows a copy box
+
+**Changed**
+- D3FEND follows the current ontology: seven tactic columns (Model, Harden, Detect, Isolate, Deceive, Evict, Restore), 30 techniques and 241 sub-techniques with their own IDs. Dashboards that match on D3FEND tactic names or IDs in drilldown tokens need updating (for example `d3f:Harden`)
+- ATT&CK v20 replaced the Enterprise tactic *Defense Evasion* with *Stealth* and *Defense Impairment*; drilldowns that match on that name need updating
+- The default panel height is 1200 pixels (it was 2700)
+- Panels that are too small now scroll instead of squeezing the columns
+- *Sort by* now defaults to Value, Descending
+- The entrance animation is always on, once when the panel first loads
+- The legend title is always the value field's name; the menu is smaller and grouped into Data, Display, Colors, Scale and Export
+
+**Removed**
+- The *Theme* option (the heatmap follows the dashboard's theme), the *Animate* and *Duration* options, *Legend title*, and the sweeping highlight animation
+
+**Fixed**
+- Enterprise tactic order for v20, several heatmaps on one dashboard affecting each other, *Hide empty* removing sub-techniques that have values, zero and decimal values in tooltips, searching for names that contain `&`, one click sending several drilldowns, and several platform choices that showed an empty matrix
+- Text built from field names in the legend is now escaped
 
 ### v1.9.0
 - Added an optional search bar, enabled through the format menu, to quickly highlight techniques based on their ID or name
