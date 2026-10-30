@@ -93,6 +93,12 @@
             <option value="no">No</option>
         </splunk-radio-input>
     </splunk-control-group>
+    <splunk-control-group label="Wall mode" help="For a display nobody is touching: cells twinkle, and tactic names and figures scramble and resolve now and then. It pauses while anyone uses the panel, and when the browser asks for less motion.">
+        <splunk-radio-input name="{{VIZ_NAMESPACE}}.wallMode" value="no">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </splunk-radio-input>
+    </splunk-control-group>
 </form>
 <form class="splunk-formatter-section" section-label="Colors">
     <splunk-control-group label="Palette" help="Default and Risk use the three colors below (Risk reverses them). The others have their own colors.">

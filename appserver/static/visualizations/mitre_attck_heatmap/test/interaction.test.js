@@ -579,3 +579,177 @@ describe('the logic is exercised through the same numbers', () => {
         expect(edges).toEqual(expected.slice(0, 5));
     });
 });
+
+
+describe('wall mode', () => {
+    let animate;
+
+    beforeEach(() => {
+        jest.useFakeTimers();
+        animate = jest.fn();
+        Element.prototype.animate = animate;
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+        delete Element.prototype.animate;
+        delete window.matchMedia;
+    });
+
+    const wall = options => typical(Object.assign({ wallMode: 'yes', animate: 'no' }, options));
+    const expected = col => logic.hyphenateName(col.getAttribute('data-name'));
+    const titles = viz => qa(viz, '.mtr-tactic-col').map(col => col.querySelector('.mtr-tactic-title').textContent);
+    const figures = viz => qa(viz, '.mtr-tactic-col .mtr-fig-pct').map(f => f.textContent);
+
+    test('is off unless the option is set: nothing twinkles and nothing scrambles', () => {
+        const viz = typical();
+        const before = titles(viz);
+        jest.advanceTimersByTime(30000);
+        expect(animate).not.toHaveBeenCalled();
+        expect(titles(viz)).toEqual(before);
+    });
+
+    test('cells with a value twinkle, two at a time', () => {
+        const viz = wall();
+        jest.advanceTimersByTime(900);
+        expect(animate).toHaveBeenCalledTimes(2);
+        const [keyframes, timing] = animate.mock.calls[0];
+        expect(keyframes.map(k => k.filter)).toEqual(['brightness(1)', 'brightness(1.7) saturate(1.25)', 'brightness(1)']);
+        expect(timing.duration).toBeGreaterThanOrEqual(1300);
+        const twinkled = animate.mock.instances;
+        twinkled.forEach(el => expect(el.hasAttribute('data-value')).toBe(true));
+        jest.advanceTimersByTime(5000);
+        expect(animate.mock.calls.length).toBeGreaterThan(6);
+        expect(viz.el.querySelectorAll('.mtr-technique').length).toBeGreaterThan(0);
+    });
+
+    test('cells with a status twinkle too, and cells with nothing do not', () => {
+        const fields = ['id', 'count', 'description', 'state'].map(name => ({ name }));
+        const viz = render(Viz, { fields, rows: [['T1059', '', '', 'gap']] }, { wallMode: 'yes', animate: 'no', statusField: 'state' });
+        jest.advanceTimersByTime(20000);
+        expect(animate).toHaveBeenCalled();
+        animate.mock.instances.forEach(el => expect(el.getAttribute('data-id')).toBe('T1059'));
+    });
+
+    test('now and then a tactic header scrambles and then resolves to what it was', () => {
+        const viz = wall();
+        const names = qa(viz, '.mtr-tactic-col').map(expected);
+        const pcts = figures(viz);
+        jest.advanceTimersByTime(3050);
+        // A scramble has begun: some title or figure is not itself.
+        expect(titles(viz).some((t, i) => t !== names[i]) || figures(viz).some((f, i) => f !== pcts[i])).toBe(true);
+        // Soft hyphens, spaces and the % sign stay put while it runs.
+        titles(viz).forEach((t, i) => expect(t.length).toBe(names[i].length));
+        jest.advanceTimersByTime(1500);
+        const during = titles(viz).map((t, i) => t === names[i]);
+        expect(during.filter(same => !same).length).toBeLessThanOrEqual(2);
+    });
+
+    test('stopping restores every header exactly', () => {
+        const viz = wall();
+        const names = qa(viz, '.mtr-tactic-col').map(expected);
+        const pcts = figures(viz);
+        jest.advanceTimersByTime(3050);
+        viz._stopWall();
+        expect(titles(viz)).toEqual(names);
+        expect(figures(viz)).toEqual(pcts);
+        animate.mockClear();
+        jest.advanceTimersByTime(30000);
+        expect(animate).not.toHaveBeenCalled();
+        expect(titles(viz)).toEqual(names);
+    });
+
+    test('nothing happens while someone is using the panel', () => {
+        const viz = wall();
+        const names = qa(viz, '.mtr-tactic-col').map(expected);
+        $(cell(viz, 'T1059', 'Execution')).trigger('click');
+        animate.mockClear();
+        jest.advanceTimersByTime(20000);
+        expect(animate).not.toHaveBeenCalled();
+        expect(titles(viz)).toEqual(names);
+    });
+
+    test('a search, a pinned band, a focused tactic or a hover each pause it', () => {
+        const pause = setup => {
+            animate = jest.fn();
+            Element.prototype.animate = animate;
+            const viz = wall();
+            setup(viz);
+            animate.mockClear();
+            jest.advanceTimersByTime(8000);
+            return animate.mock.calls.length;
+        };
+        expect(pause(viz => search(viz, 'phish'))).toBe(0);
+        expect(pause(viz => $(q(viz, '.mtr-band[data-band="2"]')).trigger('click'))).toBe(0);
+        expect(pause(viz => $(q(viz, '.mtr-tactic-col[data-name="Impact"] .mtr-tactic-title')).trigger('click'))).toBe(0);
+        expect(pause(viz => hover(viz, 'T1059'))).toBe(0);
+        expect(pause(viz => $(q(viz, '.mtr-band[data-band="1"]')).trigger('mouseenter'))).toBe(0);
+    });
+
+    test('it carries on when the person lets go', () => {
+        const viz = wall();
+        $(cell(viz, 'T1059', 'Execution')).trigger('click');
+        jest.advanceTimersByTime(5000);
+        animate.mockClear();
+        key(viz.el, 'Escape');
+        jest.advanceTimersByTime(3000);
+        expect(animate).toHaveBeenCalled();
+    });
+
+    test('the browser asking for less motion switches it off', () => {
+        window.matchMedia = () => ({ matches: true });
+        const viz = wall();
+        const names = qa(viz, '.mtr-tactic-col').map(expected);
+        jest.advanceTimersByTime(30000);
+        expect(animate).not.toHaveBeenCalled();
+        expect(titles(viz)).toEqual(names);
+    });
+
+    test('a refresh does not start a second set of timers', () => {
+        const viz = wall();
+        for (let i = 0; i < 3; i++) viz.updateView(viz.formatData(loadFixture('typical.json'), buildConfig({ wallMode: 'yes', animate: 'no' })), buildConfig({ wallMode: 'yes', animate: 'no' }));
+        animate.mockClear();
+        jest.advanceTimersByTime(10000);
+        const withRefreshes = animate.mock.calls.length;
+        const single = wall();
+        animate.mockClear();
+        jest.advanceTimersByTime(10000);
+        // Two panels twinkle about twice as often as one, not four times as often.
+        expect(withRefreshes).toBeGreaterThan(0);
+        expect(animate.mock.calls.length).toBeLessThan(withRefreshes * 3);
+        expect(single).toBeDefined();
+    });
+
+    test('turning it off in the next refresh stops it', () => {
+        const viz = wall();
+        jest.advanceTimersByTime(3050);
+        viz.updateView(viz.formatData(loadFixture('typical.json'), buildConfig()), buildConfig());
+        expect(viz._stopWall || null).toBeNull();
+        animate.mockClear();
+        jest.advanceTimersByTime(20000);
+        expect(animate).not.toHaveBeenCalled();
+    });
+
+    test('a message in place of the matrix stops it', () => {
+        const viz = wall();
+        viz.updateView(viz.formatData(loadFixture('empty.json'), buildConfig()), buildConfig());
+        animate.mockClear();
+        jest.advanceTimersByTime(20000);
+        expect(animate).not.toHaveBeenCalled();
+    });
+
+    test('a panel taken off the page stops it', () => {
+        const viz = wall();
+        viz.el.remove();
+        jest.advanceTimersByTime(20000);
+        expect(animate).not.toHaveBeenCalled();
+    });
+
+    test('it does not change what the panel shows once it stops: values, colors and text are untouched', () => {
+        const plain = typical();
+        const walled = wall();
+        walled._stopWall();
+        const read = viz => qa(viz, '.mtr-technique[data-value]').map(c => c.getAttribute('data-id') + c.getAttribute('data-value') + c.style.background);
+        expect(read(walled)).toEqual(read(plain));
+    });
+});

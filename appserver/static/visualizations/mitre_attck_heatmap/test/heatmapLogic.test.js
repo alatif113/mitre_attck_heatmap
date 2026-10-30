@@ -21,6 +21,7 @@ describe('parseConfig', () => {
         expect(parse({})).toEqual({
             columns: { id: 0, value: 1, description: -1, status: -1 },
             animate: true,
+            wallMode: false,
             palette: 'default',
             colorBands: 5,
             startColor: '#B63457',
@@ -92,8 +93,8 @@ describe('parseConfig', () => {
     });
 
     test('normalizes boolean options', () => {
-        const options = parse(withOptions({ hideNull: 'yes', showSubTechniques: 'no', showSearchBar: 'false', animate: 'true' }));
-        expect(options).toMatchObject({ hideNull: true, showSubTechniques: false, showSearchBar: false, animate: true });
+        const options = parse(withOptions({ hideNull: 'yes', showSubTechniques: 'no', showSearchBar: 'false', animate: 'true', wallMode: 'yes' }));
+        expect(options).toMatchObject({ hideNull: true, showSubTechniques: false, showSearchBar: false, animate: true, wallMode: true });
     });
 
     test('parses the numeric options as numbers (audit P2-5)', () => {

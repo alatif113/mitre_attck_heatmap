@@ -38,6 +38,7 @@ The visualization requires at least 2 fields to be present within the search out
 - **Techniques.** Cells with no value are faintly hatched. A small triangle in a cell's corner means some of its sub-techniques have values. Hover a cell, or focus it with the keyboard, for its tooltip: description, value, band and rank, the other tactics it is in, and every sub-technique (click one to drill down on it). Click a cell to pin the tooltip.
 - **Search and filter.** Search matches IDs, names, sub-technique names, descriptions and tactic names. The box shows how many matches there are and where, and Enter (or the arrows) steps through them. *All / With data / Gaps* hides cells accordingly. Press `/` to jump to the search box.
 - **Keyboard.** The matrix is a single tab stop; arrow keys move between cells, Home and End go to the ends of a column, Enter selects, Esc clears.
+- **Wall mode.** For a display nobody is touching (*Display > Wall mode*, off by default): cells twinkle, and tactic names and figures scramble and resolve now and then. It carries no information. It pauses while anyone searches, hovers, pins a tooltip, band or tactic, when the tab is hidden, and when the browser asks for less motion.
 - **Refreshing.** Search text, the filter, a pinned band or tactic, a pinned tooltip and the scroll position stay when the search refreshes.
 - **Empty results.** A search with no rows, rows whose IDs are not in the matrix, and rows without values each say so, instead of showing a blank or stale matrix.
 
@@ -107,6 +108,7 @@ This app is currently unsupported for Internet Explorer. Please report issues to
 - Keyboard navigation, focusable tactic headers, and a message for no results, ids that do not match the matrix, and rows without values
 - Search text, filter, pinned band/tactic/tooltip and scroll position now survive a refresh
 - Format menu reorganized (Data, Display, Colors, Scale, Export); the legend title is always the value field's name; sub-techniques are listed in the tooltip
+- New *Wall mode* switch (*Display*): twinkling cells and scrambling tactic headers for display walls
 - Changed defaults: *Sort by* Value, *Descending* (was ascending)
 - Removed from the menu (still read if a saved dashboard sets them): *Legend title*, *Other status color*, *Lower bound from data*, *Technique's own value*, the Navigator layer name and version. Removed: *Duration*; *Animate* now fades cells in and counts up the percentages on first load, and the sweeping highlight is gone
 - Updated the bundled data to ATT&CK v20.0

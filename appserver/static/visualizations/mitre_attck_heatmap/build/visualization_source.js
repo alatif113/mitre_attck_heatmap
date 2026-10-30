@@ -124,6 +124,7 @@ return SplunkVisualizationBase.extend({
         clearTimeout(self._showTimer);
         clearTimeout(self._hideTimer);
         window.cancelAnimationFrame(self._countFrame);
+        if (self._stopWall) self._stopWall();
         if (self._keyHandler) self.$el.off('keydown', self._keyHandler);
 
         this.$el.empty();
@@ -976,6 +977,94 @@ return SplunkVisualizationBase.extend({
             }
         }
 
+        // ---- Wall mode: for a display nobody is touching. Cells twinkle and tactic headers
+        // scramble and resolve, now and then. It carries no information, only life, and it
+        // keeps out of the way: everything waits while anyone interacts with the panel, while
+        // the tab is hidden, and when the browser asks for less motion.
+        if (options.wallMode) {
+            let wall = { stopped: false, timers: {}, scrambling: [], startedAt: Date.now() };
+            let alive = function() {
+                return !wall.stopped && $.contains(document.documentElement, self.el);
+            };
+            let quiet = function() {
+                let reduced = false;
+                try { reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (error) { reduced = false; }
+                return reduced || document.hidden || tooltipState.$tip !== null || ui.pin !== null ||
+                    ui.query !== '' || ui.band !== NO_BAND || ui.tactic !== null ||
+                    hoverBand !== NO_BAND || hoverStatus !== null || self.$el.find(':focus').length > 0;
+            };
+
+            let twinkle = function() {
+                if (!alive()) return;
+                wall.timers.twinkle = setTimeout(twinkle, 220 + Math.random() * 330);
+                if (quiet()) return;
+                let box = self.el.getBoundingClientRect();
+                let cells = $('.mtr-technique[data-value], .mtr-technique[data-status]', $content).filter(function() {
+                    if (!this.animate || $(this).parent().hasClass('mtr-gone')) return false;
+                    let r = this.getBoundingClientRect();
+                    return box.width === 0 || (r.top > box.top && r.bottom < box.bottom && r.left > box.left && r.right < box.right);
+                }).toArray();
+                for (let i = 0; i < 2 && cells.length > 0; i++) {
+                    let cell = cells.splice(Math.floor(Math.random() * cells.length), 1)[0];
+                    cell.animate([
+                        { filter: 'brightness(1)' },
+                        { filter: 'brightness(1.7) saturate(1.25)', offset: 0.4 },
+                        { filter: 'brightness(1)' }
+                    ], { duration: 1300 + Math.random() * 700, easing: 'ease-in-out' });
+                }
+            };
+
+            let scramble = function($el) {
+                let el = $el[0];
+                if (!el || wall.scrambling.some(entry => entry.el === el)) return;
+                let final = $el.text();
+                let chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789#%&*+';
+                let started = Date.now();
+                let duration = 900 + final.length * 22;
+                let entry = { el: el, final: final, id: 0 };
+                entry.id = setInterval(function() {
+                    let progress = Math.min(1, (Date.now() - started) / duration);
+                    let reveal = Math.floor(final.length * progress);
+                    $el.text(final.split('').map(function(c, i) {
+                        return (i < reveal || c === ' ' || c === '­' || c === '%' || c === '/') ? c : chars[Math.floor(Math.random() * chars.length)];
+                    }).join(''));
+                    if (progress >= 1) {
+                        clearInterval(entry.id);
+                        $el.text(final);
+                        wall.scrambling = wall.scrambling.filter(other => other !== entry);
+                    }
+                }, 45);
+                wall.scrambling.push(entry);
+            };
+
+            let decode = function() {
+                if (!alive()) return;
+                wall.timers.decode = setTimeout(decode, 3500 + Math.random() * 2500);
+                // Not while the percentages are still counting up.
+                if (quiet() || Date.now() - wall.startedAt < 2500) return;
+                let $cols = $('.mtr-tactic-col', $content);
+                if ($cols.length === 0) return;
+                let $col = $cols.eq(Math.floor(Math.random() * $cols.length));
+                scramble($('.mtr-tactic-title', $col));
+                scramble($('.mtr-fig-pct', $col));
+            };
+
+            self._stopWall = function() {
+                wall.stopped = true;
+                clearTimeout(wall.timers.twinkle);
+                clearTimeout(wall.timers.decode);
+                wall.scrambling.forEach(function(entry) {
+                    clearInterval(entry.id);
+                    $(entry.el).text(entry.final);
+                });
+                wall.scrambling = [];
+                self._stopWall = null;
+            };
+
+            wall.timers.twinkle = setTimeout(twinkle, 800);
+            wall.timers.decode = setTimeout(decode, 3000);
+        }
+
         // On the first render, the percentages count up and the gauges fill.
         if (firstRender && animate) {
             let reduced = false;
@@ -1044,6 +1133,7 @@ return SplunkVisualizationBase.extend({
 
     // A message in place of the matrix (no results, loading).
     _renderMessage: function(theme, title, text) {
+        if (this._stopWall) this._stopWall();
         clearTimeout(this._showTimer);
         clearTimeout(this._hideTimer);
         window.cancelAnimationFrame(this._countFrame);
