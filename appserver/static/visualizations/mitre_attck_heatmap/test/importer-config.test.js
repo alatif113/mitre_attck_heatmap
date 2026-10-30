@@ -81,8 +81,8 @@ describe('scheduled search', () => {
     const macros = parseConf(read('default/macros.conf'));
     const search = searches[SEARCH_NAME];
 
-    test('is scheduled but disabled until the input is enabled', () => {
-        expect(search).toMatchObject({ disabled: '1', enableSched: '1' });
+    test('is an unscheduled, disabled report until the admin enables it (a scheduled one has no Edit in Splunk Web)', () => {
+        expect(search).toMatchObject({ disabled: '1', enableSched: '0' });
         expect(search.cron_schedule).toMatch(/^([0-9*/,-]+ ){4}[0-9*/,-]+$/);
     });
 

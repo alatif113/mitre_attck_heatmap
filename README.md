@@ -56,7 +56,7 @@ By default the first three columns are the technique ID, the value and the descr
 
 MITRE publishes new ATT&CK versions more often than this app is released. The app can download them itself:
 
-1. Enable the scripted input `bin/import_matrices.py` (Settings > Data inputs > Scripts) and the saved search *MITRE ATT&CK - update matrix collection*. Both are disabled by default. The Splunk host needs HTTPS access to `raw.githubusercontent.com`; settings (proxy, mirrors, limits) are in `mitre_attck_import.conf`.
+1. Enable the scripted input `bin/import_matrices.py` (Settings > Data inputs > Scripts) and the report *MITRE ATT&CK - update matrix collection* (Settings > Searches, reports, and alerts: enable it, then Edit > Edit Schedule, for example weekly after the input runs). Both are disabled by default. The Splunk host needs HTTPS access to `raw.githubusercontent.com`; settings (proxy, mirrors, limits) are in `mitre_attck_import.conf`.
 2. Set *Matrix data* to *Imported* in the format menu. *ATT&CK version* optionally pins a version such as `19.1`, or `19` for the newest 19.x.
 
 If no usable imported data exists, the bundled data is drawn with a note saying so. D3FEND is always bundled. Newer ATT&CK versions can rename tactics (v20 replaced *Defense Evasion* with *Stealth* and *Defense Impairment* for Enterprise), which affects drilldown tokens that match on tactic names.
