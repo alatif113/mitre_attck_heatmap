@@ -72,7 +72,7 @@
 	outline-offset: 2px;
 }
 
-/* ---- Top row: search and filter, legend ------------------------------------ */
+/* ---- Top row: search box, export button, legend ------------------------------ */
 
 .mtr-top {
 	display: flex;
@@ -156,65 +156,8 @@
 	display: block;
 }
 
-.mtr-search-clear:hover,
-.mtr-search-prev:hover:not(:disabled),
-.mtr-search-next:hover:not(:disabled) {
+.mtr-search-clear:hover {
 	background: var(--mtr-surface);
-}
-
-.mtr-search-prev,
-.mtr-search-next {
-	width: 32px;
-	height: 32px;
-	padding: 0;
-	border: 1px solid var(--mtr-border);
-	border-radius: 8px;
-	background: transparent;
-	cursor: pointer;
-}
-
-.mtr-search-prev:disabled,
-.mtr-search-next:disabled {
-	opacity: 0.4;
-	cursor: default;
-}
-
-.mtr-search-status {
-	max-width: 300px;
-	font-size: 12px;
-	color: var(--mtr-muted);
-}
-
-.mtr-filter {
-	display: flex;
-	gap: 2px;
-	padding: 3px;
-	border-radius: 9px;
-	background: var(--mtr-surface);
-}
-
-.mtr-filter button {
-	height: 26px;
-	padding: 0 11px;
-	border: 0;
-	border-radius: 7px;
-	background: transparent;
-	color: var(--mtr-muted);
-	font-size: 12px;
-	font-weight: 500;
-	cursor: pointer;
-	white-space: nowrap;
-	transition: background-color 180ms ease, color 180ms ease;
-}
-
-.mtr-filter button:hover {
-	color: var(--mtr-text);
-}
-
-.mtr-filter button.mtr-on {
-	background: var(--mtr-tip);
-	color: var(--mtr-text);
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), 0 0 0 1px var(--mtr-border);
 }
 
 .mtr-toolbar {
@@ -574,10 +517,6 @@
 	min-width: 0;
 }
 
-.mtr-technique-container.mtr-gone {
-	display: none;
-}
-
 .mtr-technique {
 	position: relative;
 	display: flex;
@@ -637,11 +576,6 @@
 .mtr-technique.focused {
 	box-shadow: inset 0 0 0 2px var(--mtr-accent);
 	z-index: 2;
-}
-
-.mtr-technique.mtr-current {
-	box-shadow: inset 0 0 0 3px var(--mtr-accent), 0 0 0 2px var(--mtr-panel);
-	z-index: 5;
 }
 
 .mtr-technique.defocused {

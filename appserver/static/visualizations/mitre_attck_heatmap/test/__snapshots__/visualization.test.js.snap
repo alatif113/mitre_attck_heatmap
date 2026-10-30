@@ -14,8 +14,8 @@ exports[`render snapshots empty.json with defaults 1`] = `
 exports[`render snapshots large.js with defaults 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 436506,
-  "htmlSha256": "0ca87c589f2da23867fd5c0e26e16c488664e8f3fce564f527eb6f76b67d3162",
+  "htmlLength": 435788,
+  "htmlSha256": "2cb0797557c89c9f8fffc58f86e8853c6c2a6ab02fcc66dedacf0d64136db92c",
   "legend": {
     "labels": [
       "0",
@@ -292,8 +292,8 @@ exports[`render snapshots large.js with defaults 1`] = `
 exports[`render snapshots large.js with display name 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 452068,
-  "htmlSha256": "e7a65ce0d70c84069cea8585dc378582bd1d27e5605084808fc64e012341f0d5",
+  "htmlLength": 451350,
+  "htmlSha256": "f4c0b5829e66633306a2cdd1eceada6c059cd9ffec44cb71d578ae9899074b3f",
   "legend": {
     "labels": [
       "0",
@@ -570,8 +570,8 @@ exports[`render snapshots large.js with display name 1`] = `
 exports[`render snapshots large.js with hide null 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 436506,
-  "htmlSha256": "0ca87c589f2da23867fd5c0e26e16c488664e8f3fce564f527eb6f76b67d3162",
+  "htmlLength": 435788,
+  "htmlSha256": "2cb0797557c89c9f8fffc58f86e8853c6c2a6ab02fcc66dedacf0d64136db92c",
   "legend": {
     "labels": [
       "0",
@@ -848,8 +848,8 @@ exports[`render snapshots large.js with hide null 1`] = `
 exports[`render snapshots large.js with sort by id desc 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 436506,
-  "htmlSha256": "bb3cc1d59d3cf15b73704195f1611b215a1df5e3f6bb3b440809dd5cf7238be6",
+  "htmlLength": 435788,
+  "htmlSha256": "7c8875e00e6f243d72cac4b16e141c6bf414ed825f5e533efb273d36d34af6fd",
   "legend": {
     "labels": [
       "0",
@@ -1126,8 +1126,8 @@ exports[`render snapshots large.js with sort by id desc 1`] = `
 exports[`render snapshots single-row.json with defaults 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 306851,
-  "htmlSha256": "4f914f4b999a5de8530b23ce1806f2bdc8984a23ae045c04125bd956b6b3f1c1",
+  "htmlLength": 306133,
+  "htmlSha256": "ff5044d5de4e86eadb37c252f399d0a439d855256f6b58b936a1733dc780a188",
   "legend": {
     "labels": [
       "0",
@@ -1404,8 +1404,8 @@ exports[`render snapshots single-row.json with defaults 1`] = `
 exports[`render snapshots typical.json with custom scale and legend 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 310187,
-  "htmlSha256": "f3883d476cd006301ebf40e2650a4cef23e0d04fd5721aef5893dc2734ffaf7b",
+  "htmlLength": 309469,
+  "htmlSha256": "438304d56e987aa0b0054d2f2e45d60566386a46841b05c5d4a0f5bfb84b7ae0",
   "legend": {
     "labels": [
       "50",
@@ -1682,8 +1682,8 @@ exports[`render snapshots typical.json with custom scale and legend 1`] = `
 exports[`render snapshots typical.json with d3fend 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 85635,
-  "htmlSha256": "252fdba2bdb783f2e562ced1f272336612398ad196c2823fb71d7c551061f0f8",
+  "htmlLength": 84917,
+  "htmlSha256": "7618074f1f512aa1bac91ab1ac719c1e79f121cf2e2da13e305dae4fcb12b96a",
   "legend": {
     "labels": [
       "0",
@@ -2154,8 +2154,8 @@ exports[`render snapshots typical.json with d3fend 1`] = `
 exports[`render snapshots typical.json with defaults 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 310249,
-  "htmlSha256": "4cfe3d39c347d97d4401d84dea6ae2e03bbf46ba6b9b8895f5a94b0d530fe1ea",
+  "htmlLength": 309531,
+  "htmlSha256": "3f691c993fc7e5c43466af12d4db1ce97cb756febea7da311b7248fe3ef2298a",
   "legend": {
     "labels": [
       "0",
@@ -2432,8 +2432,8 @@ exports[`render snapshots typical.json with defaults 1`] = `
 exports[`render snapshots typical.json with display name 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 325811,
-  "htmlSha256": "1f2d68dec13442a59e95fe15db1130f8411ed4152bad8b93796674489b254571",
+  "htmlLength": 325093,
+  "htmlSha256": "e34668b1882743dbe2a660067f86ed36da786beb6da671ffb5a43c1b88de6f5d",
   "legend": {
     "labels": [
       "0",
@@ -2710,8 +2710,8 @@ exports[`render snapshots typical.json with display name 1`] = `
 exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 97039,
-  "htmlSha256": "c4f4832f5e41a66fecb55753d3da3b4638c4255b9f8ef755e228000ec9b967c8",
+  "htmlLength": 96321,
+  "htmlSha256": "2a82e1cf43fa9e201b02f3e3bd39f54d603ec2b2f5f85d5c1e15d64a80f45908",
   "legend": {
     "labels": [
       "0",
@@ -2976,8 +2976,8 @@ exports[`render snapshots typical.json with enterprise multi-platform 1`] = `
 exports[`render snapshots typical.json with enterprise windows 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 236558,
-  "htmlSha256": "ab4d747f487ab7ca9184474a4b76f1e6408eea85056226ac636a81a565ddbb91",
+  "htmlLength": 235840,
+  "htmlSha256": "5015d22879aed12ddb2a723d5bacab36b921583a33b3ea50440c198f5abe0988",
   "legend": {
     "labels": [
       "0",
@@ -3246,8 +3246,8 @@ exports[`render snapshots typical.json with enterprise windows 1`] = `
 exports[`render snapshots typical.json with hide null 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 33442,
-  "htmlSha256": "f275ffa65a68bbc432be492e88d697cc4972e5ed4abd60a1d029bd944366f5e6",
+  "htmlLength": 32724,
+  "htmlSha256": "7d8398b19e3f65ad86d4c8dd3069ee34645f1259b700cd3f53eda92191611467",
   "legend": {
     "labels": [
       "0",
@@ -3406,8 +3406,8 @@ exports[`render snapshots typical.json with hide null 1`] = `
 exports[`render snapshots typical.json with ics 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 83154,
-  "htmlSha256": "3b26f1d2315ce6906f23db68cb9cf59a0cb94c81100251b4b4596fb4c7b4c22b",
+  "htmlLength": 82436,
+  "htmlSha256": "2f90068a34b40cd023a1348abb8c000a0cf630b18534001d40ade2a7f6d95bbb",
   "legend": {
     "labels": [
       "0",
@@ -3632,8 +3632,8 @@ exports[`render snapshots typical.json with ics 1`] = `
 exports[`render snapshots typical.json with mobile android 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 88757,
-  "htmlSha256": "4bd94ebea5721ca3f8be0c718c2c2b811fb9cc16b97c30db6e3939a871b0bc7f",
+  "htmlLength": 88039,
+  "htmlSha256": "a262c2c99af38a1e62251a42aea1e7483a1fe1e3e516dc13a50789a4892eaee1",
   "legend": {
     "labels": [
       "0",
@@ -3857,8 +3857,8 @@ exports[`render snapshots typical.json with mobile android 1`] = `
 exports[`render snapshots typical.json with no sub-techniques 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 174456,
-  "htmlSha256": "544bb05af31532406c86a2d9d03afc120306b1ab6a8f2f408f8e61787c1a3282",
+  "htmlLength": 173738,
+  "htmlSha256": "0de1563d6fa2cbb80e8b9eee8a79c07fecac73834a59ca453c945ce27b1bcb62",
   "legend": {
     "labels": [
       "0",
@@ -4413,8 +4413,8 @@ exports[`render snapshots typical.json with search bar off 1`] = `
 exports[`render snapshots typical.json with sort by id desc 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 310249,
-  "htmlSha256": "a5d4067d0b4635058e357c21a0c22d4a005057e742334846b4ccc08ab8adfaa6",
+  "htmlLength": 309531,
+  "htmlSha256": "859dfa1a7e5b5e1af6c4d10c6c089b737b17469ee69a8a2fca2524fb7c7a0a1c",
   "legend": {
     "labels": [
       "0",
@@ -4691,8 +4691,8 @@ exports[`render snapshots typical.json with sort by id desc 1`] = `
 exports[`render snapshots typical.json with sort by name asc 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 310249,
-  "htmlSha256": "83829aeb481df68850c67754122993a2e0ebdcc1fce4508411d4ff23d9e33f65",
+  "htmlLength": 309531,
+  "htmlSha256": "f0c95ded2e3c53369b2d376f7afd0d57605674064f50647e45525639ae3f496c",
   "legend": {
     "labels": [
       "0",
@@ -4969,8 +4969,8 @@ exports[`render snapshots typical.json with sort by name asc 1`] = `
 exports[`render snapshots wide.json with defaults 1`] = `
 {
   "hasSearchBar": true,
-  "htmlLength": 307546,
-  "htmlSha256": "ce2187e30791d0765be5fb70ed2ba6bf4a7fd657985517a79a3e20ae5175533d",
+  "htmlLength": 306828,
+  "htmlSha256": "7bd5e54ed2f1a6659842168daf5230ddaf1a06dda7232e9b69cbad0c1b957bac",
   "legend": {
     "labels": [
       "0",

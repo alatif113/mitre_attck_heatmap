@@ -271,26 +271,24 @@ describe('a tooltip does not fade in twice', () => {
 });
 
 describe('search', () => {
-    test('shows how many cells match, and in which part of the technique', () => {
+    test('dims what does not match and rings what does', () => {
         const viz = typical();
         search(viz, 'phish');
-        const status = q(viz, '.mtr-search-status').textContent;
-        expect(status).toMatch(/^– of \d+ · /);
-        expect(status).toContain('name');
         expect(qa(viz, '.mtr-technique.focused').length).toBeGreaterThan(0);
+        expect(qa(viz, '.mtr-technique.defocused').length).toBeGreaterThan(100);
+        qa(viz, '.mtr-technique.focused').forEach(c => expect(c.classList.contains('defocused')).toBe(false));
     });
 
-    test('matches sub-technique names, descriptions and tactic names too', () => {
+    test('matches ids, names, sub-technique names, descriptions and tactic names', () => {
         const viz = typical();
+        search(viz, 't1059');
+        expect(cell(viz, 'T1059', 'Execution').classList.contains('focused')).toBe(true);
         search(viz, 'powershell');
         expect(cell(viz, 'T1059', 'Execution').classList.contains('focused')).toBe(true);
-        expect(q(viz, '.mtr-search-status').textContent).toContain('sub-technique');
         search(viz, 'second paragraph');
         expect(cell(viz, 'T1566', 'Initial Access').classList.contains('focused')).toBe(true);
-        expect(q(viz, '.mtr-search-status').textContent).toContain('description');
         search(viz, 'exfil');
         expect(q(viz, '.mtr-tactic-col[data-name="Exfiltration"] .mtr-tactic').classList.contains('mtr-match')).toBe(true);
-        expect(q(viz, '.mtr-search-status').textContent).toContain('tactic name');
     });
 
     test('the matched text is underlined', () => {
@@ -302,38 +300,11 @@ describe('search', () => {
         expect(cell(viz, 'T1059', 'Execution').querySelector('.mtr-cell-id').textContent).toBe('T1059');
     });
 
-    test('no matches say so', () => {
+    test('a search with no match dims everything', () => {
         const viz = typical();
         search(viz, 'zzzz');
-        expect(q(viz, '.mtr-search-status').textContent).toBe('No matches');
-        expect(q(viz, '.mtr-search-next').disabled).toBe(true);
-    });
-
-    test('next and previous step through the matches, wrapping round', () => {
-        const viz = typical();
-        search(viz, 'phishing');
-        const total = qa(viz, '.mtr-technique.focused').length;
-        expect(total).toBeGreaterThan(1);
-        const current = () => qa(viz, '.mtr-current').map(c => c.getAttribute('data-id') + '@' + c.closest('.mtr-tactic-col').getAttribute('data-id'));
-        $(q(viz, '.mtr-search-next')).trigger('click');
-        const first = current();
-        expect(first).toHaveLength(1);
-        expect(q(viz, '.mtr-search-status').textContent).toMatch(new RegExp('^1 of ' + total));
-        $(q(viz, '.mtr-search-next')).trigger('click');
-        expect(current()).not.toEqual(first);
-        $(q(viz, '.mtr-search-prev')).trigger('click');
-        expect(current()).toEqual(first);
-        $(q(viz, '.mtr-search-prev')).trigger('click');
-        expect(q(viz, '.mtr-search-status').textContent).toMatch(new RegExp('^' + total + ' of ' + total));
-    });
-
-    test('Enter steps to the next match, Shift+Enter to the previous', () => {
-        const viz = typical();
-        search(viz, 'phishing');
-        key(q(viz, '.mtr-search-input'), 'Enter');
-        expect(q(viz, '.mtr-search-status').textContent).toMatch(/^1 of /);
-        key(q(viz, '.mtr-search-input'), 'Enter', { shiftKey: true });
-        expect(q(viz, '.mtr-search-status').textContent).toMatch(/^\d+ of \d+/);
+        expect(qa(viz, '.mtr-technique.focused')).toHaveLength(0);
+        expect(qa(viz, '.mtr-technique').every(c => c.classList.contains('defocused'))).toBe(true);
     });
 
     test('the clear button empties the search and the focus', () => {
@@ -343,7 +314,6 @@ describe('search', () => {
         $(q(viz, '.mtr-search-clear')).trigger('click');
         expect(q(viz, '.mtr-search-input').value).toBe('');
         expect(qa(viz, '.focused, .defocused').length).toBe(0);
-        expect(q(viz, '.mtr-search-status').textContent).toBe('');
     });
 
     test('"/" moves to the search box', () => {
@@ -352,34 +322,27 @@ describe('search', () => {
         expect(document.activeElement).toBe(q(viz, '.mtr-search-input'));
     });
 
-    test('without a search bar there is no search, filter or shortcut', () => {
+    test('without a search bar there is no search box or shortcut', () => {
         const viz = typical({ showSearchBar: 'no' });
         expect(q(viz, '.mtr-search-container')).toBeNull();
-        expect(q(viz, '.mtr-filter')).toBeNull();
     });
 });
 
-describe('All / With data / Gaps', () => {
-    const gone = viz => qa(viz, '.mtr-technique-container.mtr-gone').map(c => c.querySelector('.mtr-technique'));
-    const choose = (viz, show) => $(q(viz, '.mtr-filter [data-show="' + show + '"]')).trigger('click');
-
-    test('All shows everything and is selected at first', () => {
-        const viz = typical();
-        expect(gone(viz)).toHaveLength(0);
-        expect(q(viz, '.mtr-filter [data-show="all"]').classList.contains('mtr-on')).toBe(true);
+describe('the top row', () => {
+    test('holds only the search box, the export button and the legend', () => {
+        const viz = typical({ showExportButton: 'yes' });
+        const top = q(viz, '.mtr-top');
+        const parts = Array.from(top.querySelectorAll('input, button, select, textarea')).filter(el => !el.closest('.mtr-legend'));
+        expect(parts.map(el => el.className)).toEqual(['mtr-search-input', 'mtr-search-clear', 'mtr-export-button']);
+        expect(top.querySelector('.mtr-legend')).not.toBeNull();
+        ['.mtr-search-prev', '.mtr-search-next', '.mtr-search-status', '.mtr-filter'].forEach(sel => expect(top.querySelector(sel)).toBeNull());
     });
 
-    test('With data hides the cells with no value, Gaps hides the ones with a value', () => {
-        const viz = typical();
-        choose(viz, 'data');
-        expect(gone(viz).length).toBeGreaterThan(100);
-        expect(gone(viz).every(c => !c.hasAttribute('data-value'))).toBe(true);
-        choose(viz, 'gaps');
-        expect(gone(viz).length).toBeGreaterThan(0);
-        expect(gone(viz).every(c => c.hasAttribute('data-value'))).toBe(true);
-        expect(q(viz, '.mtr-filter [data-show="gaps"]').getAttribute('aria-pressed')).toBe('true');
-        choose(viz, 'all');
-        expect(gone(viz)).toHaveLength(0);
+    test('without a search bar or an export button it is just the legend', () => {
+        const viz = typical({ showSearchBar: 'no' });
+        const top = q(viz, '.mtr-top');
+        expect(Array.from(top.children).map(c => c.className)).toEqual(['mtr-controls', 'mtr-legend']);
+        expect(top.querySelector('.mtr-controls').children).toHaveLength(0);
     });
 });
 
@@ -444,7 +407,7 @@ describe("the legend's bands", () => {
         }
     });
 
-    test('the band, the search and the data filter work together', () => {
+    test('the band and the search work together', () => {
         const viz = typical();
         search(viz, 'access');
         $(band(viz, 4)).trigger('mouseenter');
@@ -521,13 +484,11 @@ describe('a refresh of the search results', () => {
         expect(qa(viz, '.mtr-technique.focused')).toHaveLength(matches);
     });
 
-    test('keeps the data filter, the pinned band and the selected tactic', () => {
+    test('keeps the pinned band and the selected tactic', () => {
         const viz = typical();
-        $(q(viz, '.mtr-filter [data-show="data"]')).trigger('click');
         $(q(viz, '.mtr-band[data-band="2"]')).trigger('click');
         $(q(viz, '.mtr-tactic-col[data-name="Impact"] .mtr-tactic-title')).trigger('click');
         refresh(viz);
-        expect(q(viz, '.mtr-filter [data-show="data"]').classList.contains('mtr-on')).toBe(true);
         expect(q(viz, '.mtr-band[data-band="2"]').classList.contains('mtr-band-pinned')).toBe(true);
         expect(q(viz, '.mtr-tactic-col[data-name="Impact"] .mtr-tactic').classList.contains('mtr-tactic-selected')).toBe(true);
     });

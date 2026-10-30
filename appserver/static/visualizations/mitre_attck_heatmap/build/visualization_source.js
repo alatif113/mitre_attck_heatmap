@@ -50,7 +50,7 @@ return SplunkVisualizationBase.extend({
         // What the user has done in the panel. It outlives a re-render (a refresh
         // of the search brings new data, not a new panel), so search text, the
         // pinned band, a selected tactic, the pinned tooltip and the scroll position stay.
-        this._ui = { query: '', show: 'all', band: NO_BAND, tactic: null, pin: null, current: -1, scrollTop: 0, scrollLeft: 0, rendered: false };
+        this._ui = { query: '', band: NO_BAND, tactic: null, pin: null, scrollTop: 0, scrollLeft: 0, rendered: false };
     },
 
     // Optionally implement to format data returned from search. 
@@ -670,18 +670,13 @@ return SplunkVisualizationBase.extend({
         // not of interest. `focused` marks a match, `defocused` what is dimmed.
         let hoverBand = NO_BAND;
         let hoverStatus = null;
-        let matchList = [];
         let applyFocus = function() {
             let band = (ui.band !== NO_BAND) ? ui.band : hoverBand;
             let query = ui.query.toLowerCase();
-            matchList = [];
-            let fieldCounts = {};
-            let tacticMatches = 0;
 
             $('.mtr-tactic', $content).each(function() {
                 let name = ($(this).closest('.mtr-tactic-col').attr('data-name') || '').toLowerCase();
                 let hit = query !== '' && name.indexOf(query) > -1;
-                if (hit) tacticMatches++;
                 $(this).toggleClass('mtr-match', hit);
                 $(this).toggleClass('mtr-tactic-selected', ui.tactic !== null && $(this).closest('.mtr-tactic-col').attr('data-id') == ui.tactic);
             });
@@ -702,7 +697,6 @@ return SplunkVisualizationBase.extend({
                         subNames: $('.mtr-sub-technique', $container).map(function() { return $(this).attr('data-name'); }).get()
                     }, query);
                     match = fields.length > 0;
-                    fields.forEach(function(field) { fieldCounts[field] = (fieldCounts[field] || 0) + 1; });
                     if (!match) dim = true;
                 }
 
@@ -722,18 +716,8 @@ return SplunkVisualizationBase.extend({
 
                 if (ui.tactic !== null && $cell.closest('.mtr-tactic-col').attr('data-id') != ui.tactic) dim = true;
 
-                // The All / With data / Gaps switch hides cells outright.
-                let gone = (ui.show == 'data' && !hasValue) || (ui.show == 'gaps' && hasValue);
-                $container.toggleClass('mtr-gone', gone);
-
                 $cell.toggleClass('focused', match && !dim).toggleClass('defocused', dim);
-                $cell.removeClass('mtr-current');
-                if (match && !gone) matchList.push(this);
             });
-
-            if (ui.current >= matchList.length) ui.current = matchList.length - 1;
-            if (query === '') ui.current = -1;
-            if (matchList[ui.current]) $(matchList[ui.current]).addClass('mtr-current');
 
             // Highlight the matched text in the cells.
             $('.mtr-technique', $content).each(function() {
@@ -744,21 +728,7 @@ return SplunkVisualizationBase.extend({
                 self._highlight($('.mtr-cell-name', $cell), $cell.attr('data-name'), query);
             });
 
-            let $status = $('.mtr-search-status', self.$el);
-            if (query === '') {
-                $status.text('');
-            } else if (matchList.length == 0 && tacticMatches == 0) {
-                $status.text('No matches');
-            } else {
-                let parts = Object.keys(fieldCounts).map(function(field) { return fieldCounts[field] + ' ' + field; });
-                if (tacticMatches) parts.push('tactic name');
-                $status.text((ui.current >= 0 ? (ui.current + 1) : '–') + ' of ' + matchList.length + ' · ' + parts.join(' · '));
-            }
-            $('.mtr-search-prev, .mtr-search-next', self.$el).prop('disabled', matchList.length == 0);
             $('.mtr-search-container', self.$el).toggleClass('mtr-has-query', query !== '');
-            $('.mtr-filter button', self.$el).each(function() {
-                $(this).toggleClass('mtr-on', $(this).attr('data-show') == ui.show).attr('aria-pressed', $(this).attr('data-show') == ui.show);
-            });
             $('.mtr-band', self.$el).each(function() {
                 let b = parseInt($(this).attr('data-band'));
                 let active = band !== NO_BAND;
@@ -767,7 +737,7 @@ return SplunkVisualizationBase.extend({
             });
         };
 
-        // ---- The top row: search and filter on the left, the legend on the right.
+        // ---- The top row: the search box and the export button on the left, the legend on the right.
         let $top = $('<div class="mtr-top"></div>');
         let $controls = $('<div class="mtr-controls"></div>').appendTo($top);
 
@@ -779,14 +749,6 @@ return SplunkVisualizationBase.extend({
                         <kbd aria-hidden="true">/</kbd>
                         <button type="button" class="mtr-search-clear" aria-label="Clear search">&times;</button>
                     </div>
-                    <button type="button" class="mtr-search-prev" aria-label="Previous match" disabled>&uarr;</button>
-                    <button type="button" class="mtr-search-next" aria-label="Next match" disabled>&darr;</button>
-                    <span class="mtr-search-status" role="status"></span>
-                    <div class="mtr-filter" role="group" aria-label="Show">
-                        <button type="button" data-show="all">All</button>
-                        <button type="button" data-show="data">With data</button>
-                        <button type="button" data-show="gaps">Gaps</button>
-                    </div>
                 </div>
             `);
             let $input = $('input', $searchbar);
@@ -794,33 +756,13 @@ return SplunkVisualizationBase.extend({
             $input.on('input change', function() {
                 // Compared with attribute values, not written into HTML, so no escaping.
                 ui.query = this.value.trim();
-                ui.current = -1;
                 applyFocus();
             });
             $('.mtr-search-clear', $searchbar).on('click', function() {
                 $input.val('');
                 ui.query = '';
-                ui.current = -1;
                 applyFocus();
                 $input.trigger('focus');
-            });
-            let step = function(direction) {
-                if (!matchList.length) return;
-                ui.current = (ui.current + direction + matchList.length) % matchList.length;
-                applyFocus();
-                if (matchList[ui.current].scrollIntoView) matchList[ui.current].scrollIntoView({ block: 'center', inline: 'center' });
-            };
-            $('.mtr-search-next', $searchbar).on('click', function() { step(1); });
-            $('.mtr-search-prev', $searchbar).on('click', function() { step(-1); });
-            $input.on('keydown', function(e) {
-                if (e.key == 'Enter') {
-                    e.preventDefault();
-                    step(e.shiftKey ? -1 : 1);
-                }
-            });
-            $('.mtr-filter button', $searchbar).on('click', function() {
-                ui.show = $(this).attr('data-show');
-                applyFocus();
             });
             $searchbar.appendTo($controls);
         }
@@ -927,9 +869,6 @@ return SplunkVisualizationBase.extend({
         $content.appendTo(this.$el);
 
         // The first tab stop of the matrix: arrow keys move between cells from there.
-        let focusableCells = function() {
-            return $('.mtr-technique', $content).filter(function() { return !$(this).parent().hasClass('mtr-gone') && $(this).is(':visible') !== false; });
-        };
         $('.mtr-technique', $content).first().attr('tabindex', '0');
         $content.on('focusin', '.mtr-technique', function() {
             $('.mtr-technique[tabindex="0"]', $content).attr('tabindex', '-1');
@@ -961,7 +900,7 @@ return SplunkVisualizationBase.extend({
             }
             if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].indexOf(e.key) < 0) return;
             e.preventDefault();
-            let cells = $('.mtr-technique', $content).filter(function() { return !$(this).parent().hasClass('mtr-gone'); }).toArray();
+            let cells = $('.mtr-technique', $content).toArray();
             let next = logic.nextCell(cells.map(function(c) {
                 let r = c.getBoundingClientRect();
                 return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
@@ -1013,7 +952,7 @@ return SplunkVisualizationBase.extend({
                 if (quiet()) return;
                 let box = self.el.getBoundingClientRect();
                 let cells = $('.mtr-technique[data-value], .mtr-technique[data-status]', $content).filter(function() {
-                    if (!this.animate || $(this).parent().hasClass('mtr-gone')) return false;
+                    if (!this.animate) return false;
                     let r = this.getBoundingClientRect();
                     return box.width === 0 || (r.top > box.top && r.bottom < box.bottom && r.left > box.left && r.right < box.right);
                 }).toArray();

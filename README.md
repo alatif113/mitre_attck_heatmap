@@ -36,10 +36,10 @@ The visualization requires at least 2 fields to be present within the search out
 - **Palette.** *Default* and *Risk* use the three colors in the format menu (Risk reverses them: low is good, high is bad); *Sequential blues* and *Viridis* have their own.
 - **Tactics.** Each header shows the share of its techniques that have a value, a count, and a gauge in the color of their average. Hover or focus it for the sum, average, highest technique and sub-technique counts; click it to focus that tactic (and send the drilldown).
 - **Techniques.** Cells with no value are faintly hatched. A small triangle in a cell's corner means some of its sub-techniques have values. Hover a cell, or focus it with the keyboard, for its tooltip: description, value, band and rank, the other tactics it is in, and every sub-technique (click one to drill down on it). Click a cell to pin the tooltip.
-- **Search and filter.** Search matches IDs, names, sub-technique names, descriptions and tactic names. The box shows how many matches there are and where, and Enter (or the arrows) steps through them. *All / With data / Gaps* hides cells accordingly. Press `/` to jump to the search box.
+- **Search.** Search matches IDs, names, sub-technique names, descriptions and tactic names: matches are ringed with the matched text underlined, and everything else is dimmed. Press `/` to jump to the search box. The row above the matrix holds just the search box, the export button (if turned on) and the legend; to see the gaps, hover *No data* in the legend.
 - **Keyboard.** The matrix is a single tab stop; arrow keys move between cells, Home and End go to the ends of a column, Enter selects, Esc clears.
 - **Wall mode.** For a display nobody is touching (*Display > Wall mode*, off by default): cells twinkle, and tactic names and figures scramble and resolve now and then. It carries no information. It pauses while anyone searches, hovers, pins a tooltip, band or tactic, when the tab is hidden, and when the browser asks for less motion.
-- **Refreshing.** Search text, the filter, a pinned band or tactic, a pinned tooltip and the scroll position stay when the search refreshes.
+- **Refreshing.** Search text, a pinned band or tactic, a pinned tooltip and the scroll position stay when the search refreshes.
 - **Empty results.** A search with no rows, rows whose IDs are not in the matrix, and rows without values each say so, instead of showing a blank or stale matrix.
 
 ### More than the first three columns
@@ -104,7 +104,7 @@ This app is currently unsupported for Internet Explorer. Please report issues to
 - Colors are now split into 3, 5, 7 or 9 bands (*Color bands*, 5 by default) with bands that follow the data when the bounds come from it, and blend perceptually; new *Palette* option (Default, Risk, Sequential blues, Viridis)
 - New legend: value bands with a *No data* entry, hover to dim, click to pin
 - New tooltip: description, band and rank, other tactics, and every sub-technique (clickable); sub-technique cells are no longer drawn in a popover
-- Search now shows match counts and where they are, steps through matches, finds sub-technique names, descriptions and tactic names; new *All / With data / Gaps* switch; `/` focuses the search box
+- Search now finds sub-technique names, descriptions and tactic names, and `/` focuses the search box; the row above the matrix is just the search box, the export button and the legend
 - Keyboard navigation, focusable tactic headers, and a message for no results, ids that do not match the matrix, and rows without values
 - Search text, filter, pinned band/tactic/tooltip and scroll position now survive a refresh
 - Format menu reorganized (Data, Display, Colors, Scale, Export); the legend title is always the value field's name; sub-techniques are listed in the tooltip
