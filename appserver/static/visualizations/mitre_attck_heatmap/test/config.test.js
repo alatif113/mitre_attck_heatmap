@@ -56,6 +56,12 @@ describe('format options are declared everywhere (audit P3-3)', () => {
     const confKeys = keysOf(read('default/savedsearches.conf'));
     const specKeys = keysOf(read('README/savedsearches.conf.spec'));
 
+    test('there is no theme option: the visualization follows the theme of the dashboard it is in', () => {
+        expect(formatterKeys).not.toContain('theme');
+        expect(confKeys).not.toContain('theme');
+        expect(specKeys).not.toContain('theme');
+    });
+
     test('every option in the format menu has a default in savedsearches.conf', () => {
         formatterKeys.forEach(key => expect(confKeys).toContain(key));
     });
