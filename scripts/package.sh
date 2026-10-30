@@ -16,7 +16,8 @@
 #
 # APP_ENV selects what goes into the package:
 #   production (default)  app hidden (is_visible = 0); test-only files left out
-#   test                  app visible (is_visible = 1) with a nav that opens the
+#   test                  app visible (is_visible = 1), a new build number each time (so
+#                         browsers load the new visualization.js), and a nav that opens the
 #                         test bench dashboard, so it can be reached in Splunk
 # The flag is rewritten in the staged copy only; default/app.conf in the repo
 # is not touched.
@@ -109,6 +110,16 @@ STAGED_CONF="$STAGE/$APP_ID/default/app.conf"
 sed -E "s/^is_visible[[:space:]]*=.*$/is_visible = $IS_VISIBLE/" "$STAGED_CONF" > "$STAGED_CONF.tmp"
 mv "$STAGED_CONF.tmp" "$STAGED_CONF"
 
+# A test package gets a new build number each time. Splunk Web puts the build number in the URL of
+# the app's static files (visualization.js, visualization.css), so with an unchanged number browsers
+# keep showing the old files after an install. default/app.conf in the repo is not touched.
+if [ "$APP_ENV" = test ]; then
+    [ "$(grep -cE '^build[[:space:]]*=' "$STAGED_CONF")" = 1 ] || die "expected exactly one build line in default/app.conf"
+    BUILD_STAMP="$(date +%s)"
+    sed -E "s/^build[[:space:]]*=.*$/build = $BUILD_STAMP/" "$STAGED_CONF" > "$STAGED_CONF.tmp"
+    mv "$STAGED_CONF.tmp" "$STAGED_CONF"
+fi
+
 tar -czf "$ARCHIVE" -C "$STAGE" "$APP_ID"
 
 echo "==> Checking archive"
@@ -118,6 +129,10 @@ if echo "$LISTING" | grep -Eq '(^|/)(node_modules|test|tests)(/|$)|^[^/]+/local(
 fi
 ARCHIVED_VISIBLE="$(tar -xzOf "$ARCHIVE" "$APP_ID/default/app.conf" | sed -nE 's/^is_visible[[:space:]]*=[[:space:]]*([01]).*/\1/p')"
 [ "$ARCHIVED_VISIBLE" = "$IS_VISIBLE" ] || die "archived app.conf has is_visible=$ARCHIVED_VISIBLE, expected $IS_VISIBLE"
+if [ "$APP_ENV" = test ]; then
+    ARCHIVED_BUILD="$(tar -xzOf "$ARCHIVE" "$APP_ID/default/app.conf" | sed -nE 's/^build[[:space:]]*=[[:space:]]*([0-9]+).*/\1/p')"
+    [ "$ARCHIVED_BUILD" = "$BUILD_STAMP" ] || die "archived app.conf has build=$ARCHIVED_BUILD, expected $BUILD_STAMP"
+fi
 if [ "$APP_ENV" = production ] && echo "$LISTING" | grep -Eq 'mitre_heatmap_test|/nav/'; then
     die "production archive contains test-only files"
 fi
